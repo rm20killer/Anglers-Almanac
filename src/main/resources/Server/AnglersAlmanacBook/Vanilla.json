@@ -8,7 +8,8 @@
         "ProgressBarColour": "#b5d06e",
         "DisplayName": "Global Fish",
         "TabIcon": "UI/Custom/Almanac/Utils/Assets/Tabs/Global_Tab.png",
-        "TabColour": "#b5d06e"
+        "TabColour": "#b5d06e",
+        "ZoneRank": 2
       },
       "Spread": [
         {
@@ -40,7 +41,8 @@
         "ProgressBarColour": "#0059b6",
         "DisplayName": "Ocean",
         "TabColour": "#2A5A82",
-        "TabIcon": "UI/Custom/Almanac/Utils/Assets/Tabs/Ocean_tab.png"
+        "TabIcon": "UI/Custom/Almanac/Utils/Assets/Tabs/Ocean_tab.png",
+        "ZoneRank": 3
       },
       "Spread": [
         {

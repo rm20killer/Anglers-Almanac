@@ -8,7 +8,10 @@
           "LeftPage": "DO NOT TOUCH Stats",
           "RightPage": "DO NOT TOUCH Stats"
         }
-      ]
+      ],
+      "ZoneInfo": {
+        "ZoneRank": 1
+      }
     },
     {
       "ZoneName": "alamanacglossary",
@@ -18,7 +21,10 @@
           "LeftPage": "DO NOT TOUCH Stats",
           "RightPage": "DO NOT TOUCH Stats"
         }
-      ]
+      ],
+      "ZoneInfo": {
+        "ZoneRank": 99
+      }
     }
   ]
 }

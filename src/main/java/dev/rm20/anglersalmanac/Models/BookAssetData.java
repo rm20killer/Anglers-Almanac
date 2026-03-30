@@ -39,6 +39,7 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
             .append(new KeyedCodec<>("TabIcon", Codec.STRING), (z, v) -> z.tabIcon = v, z -> z.tabIcon)
             .addValidator(CustomAssetValidator.UI_TAB_VALIDATOR).add()
             .append(new KeyedCodec<>("TabColour", ProtocolCodecs.COLOR), (z, v) -> z.tabColour = v, z -> z.tabColour).add()
+            .append(new KeyedCodec<>("ZoneRank", Codec.INTEGER), (z,v) -> z.ZoneRank = v,  z-> z.ZoneRank).add()
             .build();
 
     public static final BuilderCodec<SpreadTemplate> SPREAD_CODEC = BuilderCodec.builder(SpreadTemplate.class, SpreadTemplate::new)
@@ -110,6 +111,7 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
         public Color ProgressBarColour;
         public String tabIcon;
         public Color tabColour;
+        public Integer ZoneRank = 98;
     }
 
     public BookAssetData() {
@@ -248,7 +250,8 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
         });
 
         master.habitats = mergedMap.values().stream()
-                .sorted(Comparator.comparingInt(h -> getZoneRank(h.ZoneName)))
+                .sorted(Comparator.comparingInt(h ->
+                        (h.zoneInfo != null) ? h.zoneInfo.ZoneRank : 98))
                 .toArray(habitatsInfo[]::new);
 
         master.buildCache();
@@ -329,13 +332,14 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
     }
 
     public static int getZoneRank(String name) {
-        return switch (name.toLowerCase()) {
-            case "almanacstats" -> 0;
-            case "global" -> 1;
-            case "ocean" -> 2;
-            case "alamanacglossary" -> 99;
-            default -> 98;
-        };
+        if (name == null) return 98;
+        BookAssetData master = getMasterMergedBook();
+        if (master.habitats == null) return 98;
+        return Arrays.stream(master.habitats)
+                .filter(h -> h.ZoneName != null && h.ZoneName.equalsIgnoreCase(name))
+                .map(h -> h.zoneInfo != null ? h.zoneInfo.ZoneRank : 98)
+                .findFirst()
+                .orElse(98);
     }
 
 
