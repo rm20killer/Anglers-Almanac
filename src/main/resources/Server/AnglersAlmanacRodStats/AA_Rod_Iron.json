@@ -6,5 +6,8 @@
     "Stamina": 1,
     "FishWeightMul": 1,
     "RarityMul": 1
+  },
+  "Modifiers": {
+    "DefaultMultiplier": 0
   }
 }

@@ -1,13 +1,13 @@
 {
   "TranslationProperties": {
-    "Name": "Crude Rod",
-    "Description": "[W.I.P] Use to catch fish in any water."
+    "Name": "Crude Fishing Rod",
+    "Description": "Use to catch fish in any water."
   },
   "Categories": [
     "Items.Tools"
   ],
   "Set": "Tool_Stone",
-  "Icon": "Icons/ItemsGenerated/Rod_Crude.png",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Crude.png",
   "Quality": "Uncommon",
   "MaxStack": 1,
   "ItemLevel": 1,
@@ -54,8 +54,8 @@
       }
     }
   },
-  "Model": "Items/FishingRods/Rod_Crude.blockymodel",
-  "Texture": "Items/FishingRods/Rod_Crude.png",
+  "Model": "Items/Tools/Fishing_Rod/Rod_Crude.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Rod_Crude.png",
   "MaxDurability": 100,
   "PlayerAnimationsId": "Hoe",
   "IconProperties": {

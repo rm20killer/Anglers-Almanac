@@ -1,0 +1,80 @@
+{
+  "TranslationProperties": {
+    "Name": "Cobalt Fishing Rod",
+    "Description": "Use to catch fish in any water."
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "Set": "Tool_Stone",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Cobalt.png",
+  "Quality": "Uncommon",
+  "MaxStack": 1,
+  "ItemLevel": 1,
+  "Recipe": {
+    "TimeSeconds": 1.0,
+    "Input": [
+      {
+        "ResourceTypeId": "Ingredient_Bar_Cobalt",
+        "Quantity": 4
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Fabric_Scrap_Linen"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": [
+          "Farming"
+        ],
+        "Id": "Farmingbench"
+      },
+      {
+        "Id": "Workbench",
+        "Categories": [
+          "Workbench_Tools"
+        ]
+      }
+    ]
+  },
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        "LaunchBobberInteraction"
+      ]
+    },
+    "Primary": {
+      "Interactions": [
+        "MinigameInteraction"
+      ],
+      "Cooldown": {
+        "Cooldown": 0
+      }
+    }
+  },
+  "Model": "Items/Tools/Fishing_Rod/Rod_Cobalt.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Rod_Cobalt.png",
+  "MaxDurability": 100,
+  "PlayerAnimationsId": "Hoe",
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [
+      45,
+      226,
+      0
+    ],
+    "Translation": [
+      21,
+      -30
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Weapons_Wood"
+}

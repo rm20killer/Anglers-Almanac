@@ -55,7 +55,7 @@ javadoc {
 // compile against their code. This requires you to have Hytale installed using
 // the official launcher for now.
 dependencies {
-    compileOnly(files("$hytaleHome/install/$patchline/package/game/latest/Server/HytaleServer.jar"))
+    implementation(files("$hytaleHome/install/$patchline/package/game/latest/Server/HytaleServer.jar"))
     implementation("com.google.guava:guava:33.5.0-jre")
     implementation("org.xerial:sqlite-jdbc:3.51.1.0")
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")

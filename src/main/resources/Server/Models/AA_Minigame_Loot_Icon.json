@@ -1,0 +1,31 @@
+{
+  "Model": "VFX/Fishing/AA_Minigame_Loot_Icon.blockymodel",
+  "HitBox": {
+    "Max": {
+      "X": 1,
+      "Y": 1,
+      "Z": 1
+    },
+    "Min": {
+      "X": -1,
+      "Y": -1,
+      "Z": -1
+    }
+  },
+  "MinScale": 0.1,
+  "MaxScale": 1,
+  "Texture": "VFX/Fishing/AA_Minigame_Loot_Icon.png",
+  "Icon": "Icons/ModelsGenerated/AA_Minigame_Loot_Icon.png",
+  "IconProperties": {
+    "Scale": 2,
+    "Rotation": [
+      0,
+      -45,
+      0
+    ],
+    "Translation": [
+      0,
+      0
+    ]
+  }
+}

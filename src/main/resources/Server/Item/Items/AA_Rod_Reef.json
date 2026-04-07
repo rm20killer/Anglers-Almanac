@@ -15,12 +15,12 @@
     }
   },
   "MaxStack": 1,
-  "Quality": "Uncommon",
+  "Quality": "Rare",
   "Categories": [
     "Items.Tools"
   ],
   "TranslationProperties": {
-    "Name": "Iron Fishing Rod",
+    "Name": "Reef Fishing Rod",
     "Description": "Used to get fish from water"
   },
   "Recipe": {
@@ -49,19 +49,19 @@
       }
     ]
   },
-  "Model": "Items/Tools/Fishing_Rod/Iron_rod.blockymodel",
-  "Texture": "Items/Tools/Fishing_Rod/Iron_rod_Texture.png",
-  "Icon": "Icons/ItemsGenerated/Fishing_Rod_Iron.png",
+  "Model": "Items/Tools/Fishing_Rod/Rod_Reef.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Rod_Reef.png",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Reef.png",
   "IconProperties": {
-    "Scale": 0.4,
+    "Scale": 0.5,
     "Rotation": [
-      0,
-      24,
-      333
+      35,
+      258,
+      360
     ],
     "Translation": [
-      -31,
-      -33
+      31,
+      -39
     ]
   },
   "PlayerAnimationsId": "Stick"

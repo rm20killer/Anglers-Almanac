@@ -20,8 +20,8 @@
    
     "Min_depth": 2,
     "Height": {
-      "Miny": 0,
-      "Maxy": -1
+      "Min_y": 0,
+      "Max_y": -1
     },
     "Exclude_zones": [
       "Ocean"

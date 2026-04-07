@@ -1,0 +1,68 @@
+{
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        "LaunchBobberInteraction"
+      ]
+    },
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0
+      },
+      "Interactions": [
+        "MinigameInteraction"
+      ]
+    }
+  },
+  "MaxStack": 1,
+  "Quality": "Uncommon",
+  "Categories": [
+    "Items.Tools"
+  ],
+  "TranslationProperties": {
+    "Name": "Iron Fishing Rod",
+    "Description": "Used to get fish from water"
+  },
+  "Recipe": {
+    "TimeSeconds": 3.5,
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 3
+      },
+      {
+        "ItemId": "Ingredient_Leather_Light",
+        "Quantity": 3
+      },
+      {
+        "ItemId": "Ingredient_Fabric_Scrap_Linen",
+        "Quantity": 3
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Workbench",
+        "Type": "Crafting",
+        "Categories": [
+          "Workbench_Tools"
+        ]
+      }
+    ]
+  },
+  "Model": "Items/Tools/Fishing_Rod/Iron_rod.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Iron_rod_Texture.png",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Iron.png",
+  "IconProperties": {
+    "Scale": 0.4,
+    "Rotation": [
+      0,
+      24,
+      333
+    ],
+    "Translation": [
+      -31,
+      -33
+    ]
+  },
+  "PlayerAnimationsId": "Stick"
+}

@@ -11,14 +11,17 @@ public class AnglersAlmanacConfig {
             .append(new KeyedCodec<>("MinigameToUse", Codec.STRING),
                     (config, value) -> config.minigameToUse = value,
                     (config) -> config.minigameToUse)
-            .documentation("The name of the minigame logic to use for fishing.")
-            .add()
+            .documentation("The name of the minigame logic to use for fishing.").add()
+            .append(new KeyedCodec<>("UseBait", Codec.BOOLEAN),
+                    (config, value) -> config.ShouldUseBait = value,
+                    (config) -> config.ShouldUseBait)
+            .documentation("If fishing should use bait when casting").add()
             .build();
 
     public static final KeyedCodec<AnglersAlmanacConfig> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
 
     private String minigameToUse = "TensionBar";
-
+    private Boolean ShouldUseBait = true;
     public AnglersAlmanacConfig() {
     }
 
@@ -30,5 +33,13 @@ public class AnglersAlmanacConfig {
     // Setter
     public void setMinigameToUse(String minigameToUse) {
         this.minigameToUse = minigameToUse;
+    }
+
+    public Boolean getShouldUseBait() {
+        return ShouldUseBait;
+    }
+
+    public void setShouldUseBait(Boolean shouldUseBait) {
+        ShouldUseBait = shouldUseBait;
     }
 }
