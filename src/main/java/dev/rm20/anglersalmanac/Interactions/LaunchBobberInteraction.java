@@ -205,21 +205,24 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
         if(meta != null) {
             if(meta.getBoundBobber() != null) {
                 Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(meta.getBoundBobber());
-                    if (bobberRef != null && bobberRef.isValid()) {
-                        commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
-                    }
+                if (bobberRef != null && bobberRef.isValid()) {
+                    commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
+                }
+                meta.setBoundBobber(null);
             }
             if(meta.getBoundMinigame() != null) {
                 Ref<EntityStore> minigameRef = world.getEntityStore().getRefFromUUID(meta.getBoundMinigame());
                 if (minigameRef != null && minigameRef.isValid()) {
                     MinigameManager.CancelGame(commandBuffer, minigameRef);
                 }
+                meta.setBoundMinigame(null);
             }
         }
 
         updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
 
     }
+
     public static void cancelFishing(CommandBuffer<EntityStore> commandBuffer, Player player, ItemStack heldItem, byte slot) {
         //AnglersAlmanac.LOGGER.atInfo().log("Cancelling fishing.");
         World world = commandBuffer.getExternalData().getWorld();
