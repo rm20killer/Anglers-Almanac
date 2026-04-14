@@ -1,0 +1,42 @@
+{
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        "LaunchBobberInteraction"
+      ]
+    },
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0
+      },
+      "Interactions": [
+        "MinigameInteraction"
+      ]
+    }
+  },
+  "MaxStack": 1,
+  "Quality": "Rare",
+  "Categories": [
+    "Items.Tools"
+  ],
+  "TranslationProperties": {
+    "Name": "Reef Fishing Rod",
+    "Description": "Used to get fish from water"
+  },
+  "Model": "Items/Tools/Fishing_Rod/Rod_Reef.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Rod_Reef.png",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Reef.png",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      35,
+      258,
+      360
+    ],
+    "Translation": [
+      31,
+      -39
+    ]
+  },
+  "PlayerAnimationsId": "Stick"
+}

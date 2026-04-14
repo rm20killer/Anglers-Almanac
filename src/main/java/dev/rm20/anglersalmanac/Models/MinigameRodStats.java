@@ -8,6 +8,7 @@ import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
+import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
 
@@ -21,6 +22,7 @@ public class MinigameRodStats implements JsonAssetWithMap<String, DefaultAssetMa
     public String name;
     public String description;
     public RodStats stats;
+    public FishingModifier.Modifiers modifiers = new FishingModifier.Modifiers();
 
     public static final String KEY = "AA_MinigameRodStats";
 
@@ -36,7 +38,7 @@ public class MinigameRodStats implements JsonAssetWithMap<String, DefaultAssetMa
         .appendInherited(new KeyedCodec<>("Name", Codec.STRING), (t, v) -> t.name = v, t -> t.name, (t, p) -> t.name = p.name).add()
         .appendInherited(new KeyedCodec<>("Description", Codec.STRING), (t, v) -> t.description = v, t -> t.description, (t, p) -> t.description = p.description).add()
         .appendInherited(new KeyedCodec<>("Stats", RodStats.CODEC), (t, v) -> t.stats = v, t -> t.stats, (t, p) -> t.stats = p.stats).add()
-        //.append(RodStats.KEYED_CODEC, (s, v) -> s.stats = v, (g) -> g.stats).add()
+        .appendInherited(new KeyedCodec<>("Modifiers", FishingModifier.Modifiers.CODEC), (t, v) -> t.modifiers = v, t -> t.modifiers, (t, p) -> t.modifiers = p.modifiers).add()
     .build();
 
     public static final KeyedCodec<MinigameRodStats> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
@@ -60,5 +62,15 @@ public class MinigameRodStats implements JsonAssetWithMap<String, DefaultAssetMa
         stats = getAssetStore().getAssetMap().getAsset(rodId).stats;
         assert stats != null;
         return stats;
+    }
+
+    public static FishingModifier.Modifiers getModifiersFromRodId(String rodId){
+        FishingModifier.Modifiers modifiers;
+        modifiers = getAssetStore().getAssetMap().getAsset(rodId).modifiers;
+        if(modifiers ==null)
+        {
+            modifiers = new FishingModifier.Modifiers();
+        }
+        return modifiers;
     }
 }

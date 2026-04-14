@@ -51,7 +51,7 @@
   },
   "Model": "Items/Tools/Fishing_Rod/Iron_rod.blockymodel",
   "Texture": "Items/Tools/Fishing_Rod/Iron_rod_Texture.png",
-  "Icon": "Icons/ItemsGenerated/Fishing_Rod_Iron.png",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Iron.png",
   "IconProperties": {
     "Scale": 0.4,
     "Rotation": [

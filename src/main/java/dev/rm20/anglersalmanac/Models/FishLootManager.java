@@ -16,10 +16,12 @@ import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
+import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
 import dev.rm20.anglersalmanac.Utils.Validator.MinigameBehaviour;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -277,6 +279,7 @@ public class FishLootManager implements JsonAssetWithMap<String, DefaultAssetMap
         geoLootCache.invalidateAll();
     }
 
+    @Deprecated
     public static FishLootManager getRandomWeightedLoot(FishingContext ctx) {
         GeoKey key = new GeoKey(ctx.biome(), ctx.region(), ctx.zone(), ctx.tier());
         List<FishLootManager> geoPossible = geoLootCache.get(key);
@@ -303,6 +306,41 @@ public class FishLootManager implements JsonAssetWithMap<String, DefaultAssetMap
 
         for (FishLootManager loot : possibleLoot) {
             currentSum += loot.getExclusionWeight(loot, ctx);
+            if (randomIndex < currentSum) return loot;
+        }
+        return possibleLoot.getFirst();
+    }
+
+    public static FishLootManager getRandomWeightedLoot(FishingContext ctx, @Nullable FishingModifier.Modifiers modifiers) {
+        GeoKey key = new GeoKey(ctx.biome(), ctx.region(), ctx.zone(), ctx.tier());
+        List<FishLootManager> geoPossible = geoLootCache.get(key);
+
+        List<FishLootManager> possibleLoot = new ArrayList<>();
+        Map<FishLootManager, Float> calculatedWeights = new HashMap<>();
+        float totalWeight = 0f;
+
+        for (FishLootManager loot : Objects.requireNonNull(geoPossible)) {
+            if (checkEnvironment(loot, ctx)) {
+                float weight = (float) loot.getExclusionWeight(loot, ctx);
+                if (weight > 0) {
+                    if (modifiers != null) {
+                        weight *= calculateFinalMultiplier(loot, ctx, modifiers);
+                    }
+
+                    if (weight > 0) {
+                        possibleLoot.add(loot);
+                        calculatedWeights.put(loot, weight);
+                        totalWeight += weight;
+                    }
+                }
+            }
+        }
+
+        if (possibleLoot.isEmpty()) return null;
+        float randomIndex = ThreadLocalRandom.current().nextFloat() * totalWeight;
+        float currentSum = 0f;
+        for (FishLootManager loot : possibleLoot) {
+            currentSum += calculatedWeights.get(loot);
             if (randomIndex < currentSum) return loot;
         }
         return possibleLoot.getFirst();
@@ -450,6 +488,25 @@ public class FishLootManager implements JsonAssetWithMap<String, DefaultAssetMap
         }
         return false;
     }
+
+    private static float calculateFinalMultiplier(FishLootManager loot, FishingContext ctx, FishingModifier.Modifiers m) {
+        float val;
+        if ((val = getVal(m.itemModifiers, loot.getItemID())) != -1f) return val;
+        if ((val = getVal(m.familyModifiers, loot.getFamilyId())) != -1f) return val;
+        if ((val = getVal(m.biomeModifiers, ctx.biome())) != -1f) return val;
+        if ((val = getVal(m.zoneModifiers, ctx.zone())) != -1f) return val;
+
+        return m.defaultMultiplier;
+    }
+
+    private static float getVal(FishingModifier[] array, String id) {
+        if (array == null || id == null) return -1f;
+        for (FishingModifier mod : array) {
+            if (id.equalsIgnoreCase(mod.targetId)) return mod.chanceMultiplier;
+        }
+        return -1f;
+    }
+
 
     public static int getRarityWeight(String fishId) {
         var data = FishLootManager.getFishData(fishId);

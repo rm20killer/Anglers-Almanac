@@ -25,12 +25,16 @@ import com.hypixel.hytale.server.core.util.EventTitleUtil;
 import com.hypixel.hytale.server.npc.util.InventoryHelper;
 import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
 import dev.rm20.anglersalmanac.Interactions.LaunchBobberInteraction;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
+import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
 import dev.rm20.anglersalmanac.Metadata.ZoneInfo;
+import dev.rm20.anglersalmanac.Models.FishBaitData;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
+import dev.rm20.anglersalmanac.Models.MinigameRodStats;
 import dev.rm20.anglersalmanac.Utils.EnvironmentParser;
 import dev.rm20.anglersalmanac.Utils.TimeUtils;
 import org.jspecify.annotations.NonNull;
@@ -40,13 +44,13 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import static com.hypixel.hytale.server.core.universe.world.WorldConfig.formatDisplayName;
+import static dev.rm20.anglersalmanac.Metadata.FishingModifier.mergeModifiers;
 import static dev.rm20.anglersalmanac.MinigameManager.Minigame.PerformanceRating.NIL;
 
 public class MinigameManager {
     public static void StartGame(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
 
         InventoryComponent.Hotbar hotbarComp = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
-        //Assuming active hotbar item has not changed.
         if(hotbarComp ==null)
         {
             return;
@@ -137,7 +141,24 @@ public class MinigameManager {
     public static FishLootManager FirstRoll(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
         //AnglersAlmanac.LOGGER.atInfo().log("Doing first roll");
         //AnglersAlmanac plugin = AnglersAlmanac.getInstance();
+
+        // Modifiers
         Store<EntityStore> store = bobberRef.getStore();
+        BobberComponent bobberComp = store.getComponent(bobberRef, BobberComponent.getComponentType());
+        FishingModifier.Modifiers baitMods = null;
+        if (bobberComp != null && bobberComp.getBaitName() != null) {
+            FishBaitData baitAsset = FishBaitData.getAssetStore().getAssetMap().getAsset(bobberComp.getBaitName());
+            if (baitAsset != null) baitMods = baitAsset.modifiers;
+        }
+        FishingModifier.Modifiers rodMods = null;
+        InventoryComponent.Hotbar hotbarComp = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
+        ItemStack fishingRod = hotbarComp != null ? hotbarComp.getActiveItem() : null;
+        if(fishingRod!=null)
+        {
+            rodMods = MinigameRodStats.getModifiersFromRodId(fishingRod.getItemId());
+        }
+
+        FishingModifier.Modifiers masterModifier = mergeModifiers(baitMods, rodMods);
 
         // Location
         var transform = store.getComponent(bobberRef, TransformComponent.getComponentType());
@@ -211,28 +232,13 @@ public class MinigameManager {
                 depth
         );
         // get fish
-        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo);
+
+        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo,masterModifier);
         if (lootEntry == null) {
-            return null;
+            return FishLootManager.getFishData("Stick");
         }
         String lootID = lootEntry.getItemID();
-        //plugin.getLogger().atInfo().log(lootID);
-
-        //TODO 2nd roll depending on minigame
-
-        //return lootID;
         return lootEntry;
-        /*
-        //Drop loot
-        if(lootID ==null) return;
-        ItemStack fishStack;
-        fishStack = InventoryHelper.createItem(lootID);
-        if (fishStack == null) {
-            return;
-        }
-        DropItem(fishStack, player, commandBuffer, bobberRef);
-
-         */
 
     }
 
@@ -280,7 +286,7 @@ public class MinigameManager {
         var playerRef = player.getReference();
         assert playerRef != null;
         UUIDComponent uuid = playerRef.getStore().getComponent(playerRef, UUIDComponent.getComponentType());
-        com.hypixel.hytale.server.core.universe.PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+        PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
         assert uuid != null;
         boolean isLegendary = loot.getRarity().equalsIgnoreCase("Legendary");
 

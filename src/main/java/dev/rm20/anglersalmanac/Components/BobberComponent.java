@@ -16,6 +16,7 @@ public class BobberComponent implements Component<EntityStore> {
     private boolean InWater;
     private int WaterDepth;
     private Player player;
+    private String baitName;
 
     public BobberComponent() {
         this.bobberAge = 0;
@@ -24,7 +25,19 @@ public class BobberComponent implements Component<EntityStore> {
         this.catchTimer = 0;
         this.InWater = false;
         this.WaterDepth = 0;
+        this.baitName = null;
     }
+
+    public BobberComponent(String Bait) {
+        this.bobberAge = 0;
+        this.canCatch = false;
+        this.timeUntilCatch = -1;
+        this.catchTimer = 0;
+        this.InWater = false;
+        this.WaterDepth = 0;
+        this.baitName = Bait;
+    }
+
 
     public static ComponentType<EntityStore, BobberComponent> getComponentType() {
         return AnglersAlmanac.bobberComponent;
@@ -98,6 +111,14 @@ public class BobberComponent implements Component<EntityStore> {
         this.player = player;
     }
 
+    public String getBaitName() {
+        return baitName;
+    }
+
+    public void setBaitName(String baitName) {
+        this.baitName = baitName;
+    }
+
     @Override
     public Component<EntityStore> clone() {
         BobberComponent component = new BobberComponent();
@@ -108,6 +129,7 @@ public class BobberComponent implements Component<EntityStore> {
         component.InWater = this.InWater;
         component.WaterDepth = this.WaterDepth;
         component.player = this.player;
+        component.baitName = this.baitName;
         return component;
     }
 }

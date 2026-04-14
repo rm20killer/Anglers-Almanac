@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.PhysicsComponent;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 
@@ -127,7 +128,11 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
 
         // Remove if under the maps
         if (position.getY() < -16.0) {
-            commandBuffer.removeEntity(archetypeChunk.getReferenceTo(index), RemoveReason.REMOVE);
+            try {
+                commandBuffer.removeEntity(archetypeChunk.getReferenceTo(index), RemoveReason.REMOVE);
+            } catch (RuntimeException e) {
+                AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
+            }
         }
     }
 

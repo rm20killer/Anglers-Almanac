@@ -32,6 +32,7 @@ import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.PhysicsComponent;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
+import dev.rm20.anglersalmanac.Utils.BaitUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -125,6 +126,16 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
         bobberHolder.addComponent(PhysicsComponent.getComponentType(), new PhysicsComponent());
         BobberComponent bobberComp = new BobberComponent();
         bobberComp.setPlayer(player);
+        ItemStack bait = BaitUtils.findBait(player.getReference().getStore(), player.getReference());
+
+        if (bait != null) {
+            BaitUtils.removeBait(player,bait.getItemId());
+            bobberComp.setBaitName(bait.getItemId());
+        }
+        else
+        {
+            BaitUtils.SendBaitNotification(player);
+        }
         bobberHolder.addComponent(BobberComponent.getComponentType(), bobberComp);
         ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset("Bobber");
         if (modelAsset == null) modelAsset = ModelAsset.DEBUG;
@@ -172,6 +183,7 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
                     //launchFishAtPlayer(bobberRef,player,commandBuffer,depth);
                 } else {
                     // Didn't hook fish, just stop fishing.
+                    BaitUtils.giveBait(player,bobberComp.getBaitName(),commandBuffer);
                     cancelFishing(commandBuffer, player, heldItem);
                 }
             }
@@ -206,7 +218,11 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
             if(meta.getBoundBobber() != null) {
                 Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(meta.getBoundBobber());
                 if (bobberRef != null && bobberRef.isValid()) {
-                    commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
+                    try {
+                        commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
+                    } catch (RuntimeException e) {
+                        AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
+                    }
                 }
                 meta.setBoundBobber(null);
             }
@@ -238,7 +254,11 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
             if(meta.getBoundBobber() != null) {
                 Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(meta.getBoundBobber());
                 if (bobberRef != null && bobberRef.isValid()) {
-                    commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
+                    try {
+                        commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
+                    } catch (RuntimeException e) {
+                        AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
+                    }
                 } else if (bobberRef == null) {
                     updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
                 }
