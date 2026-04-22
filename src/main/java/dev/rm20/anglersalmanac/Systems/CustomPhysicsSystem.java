@@ -129,7 +129,10 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         // Remove if under the maps
         if (position.getY() < -16.0) {
             try {
-                commandBuffer.removeEntity(archetypeChunk.getReferenceTo(index), RemoveReason.REMOVE);
+                commandBuffer.getExternalData().getWorld().execute(() -> {
+                    store.removeEntity(archetypeChunk.getReferenceTo(index), RemoveReason.REMOVE);
+                });
+
             } catch (RuntimeException e) {
                 AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
             }

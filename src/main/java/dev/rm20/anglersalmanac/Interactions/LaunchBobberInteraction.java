@@ -205,33 +205,39 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
 
     public static void cancelFishing(CommandBuffer<EntityStore> commandBuffer, Player player, ItemStack heldItem) {
         //AnglersAlmanac.LOGGER.atInfo().log("Cancelling fishing.");
-        World world = commandBuffer.getExternalData().getWorld();
         if(heldItem==null)
         {
             return;
         }
+
+        World world = commandBuffer.getExternalData().getWorld();
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
         InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
 
         // Attempt to remove bobber and minigame if not already.
         if(meta != null) {
             if(meta.getBoundBobber() != null) {
-                Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(meta.getBoundBobber());
+                UUID bobberUuid = meta.getBoundBobber();
+                meta.setBoundBobber(null);
+
+                Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(bobberUuid);
                 if (bobberRef != null && bobberRef.isValid()) {
                     try {
-                        commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
-                    } catch (RuntimeException e) {
+                        commandBuffer.getExternalData().getWorld().execute(() -> {
+                            world.getEntityStore().getStore().removeEntity(bobberRef,RemoveReason.REMOVE);
+                        });
+                    } catch (Throwable e) {
                         AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                     }
                 }
-                meta.setBoundBobber(null);
             }
             if(meta.getBoundMinigame() != null) {
-                Ref<EntityStore> minigameRef = world.getEntityStore().getRefFromUUID(meta.getBoundMinigame());
+                UUID minigameUUID = meta.getBoundMinigame();
+                meta.setBoundMinigame(null);
+                Ref<EntityStore> minigameRef = world.getEntityStore().getRefFromUUID(minigameUUID);
                 if (minigameRef != null && minigameRef.isValid()) {
                     MinigameManager.CancelGame(commandBuffer, minigameRef);
                 }
-                meta.setBoundMinigame(null);
             }
         }
 
@@ -241,40 +247,42 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
 
     public static void cancelFishing(CommandBuffer<EntityStore> commandBuffer, Player player, ItemStack heldItem, byte slot) {
         //AnglersAlmanac.LOGGER.atInfo().log("Cancelling fishing.");
-        World world = commandBuffer.getExternalData().getWorld();
         if(heldItem==null)
         {
             return;
         }
+        World world = commandBuffer.getExternalData().getWorld();
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
         InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
 
         // Attempt to remove bobber and minigame if not already.
         if(meta != null) {
             if(meta.getBoundBobber() != null) {
-                Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(meta.getBoundBobber());
+                UUID bobberUuid = meta.getBoundBobber();
+                meta.setBoundBobber(null);
+
+                Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(bobberUuid);
                 if (bobberRef != null && bobberRef.isValid()) {
                     try {
-                        commandBuffer.removeEntity(bobberRef, RemoveReason.REMOVE);
-                    } catch (RuntimeException e) {
+                        commandBuffer.getExternalData().getWorld().execute(() -> {
+                            world.getEntityStore().getStore().removeEntity(bobberRef,RemoveReason.REMOVE);
+                        });
+                    } catch (Throwable e) {
                         AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                     }
-                } else if (bobberRef == null) {
-                    updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
                 }
             }
             if(meta.getBoundMinigame() != null) {
-                Ref<EntityStore> minigameRef = world.getEntityStore().getRefFromUUID(meta.getBoundMinigame());
+                UUID minigameUUID = meta.getBoundMinigame();
+                meta.setBoundMinigame(null);
+                Ref<EntityStore> minigameRef = world.getEntityStore().getRefFromUUID(minigameUUID);
                 if (minigameRef != null && minigameRef.isValid()) {
                     MinigameManager.CancelGame(commandBuffer, minigameRef);
-                }
-                else if (minigameRef != null && !minigameRef.isValid()) {
-                    updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
                 }
             }
         }
 
-        updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
+        updateMetadata(inv, slot, heldItem, null, null, 0);
 
     }
 
