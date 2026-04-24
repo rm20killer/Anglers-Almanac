@@ -4,12 +4,15 @@ import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import dev.rm20.anglersalmanac.IEvents.FishingFailedEvent;
+import dev.rm20.anglersalmanac.IEvents.LootCaughtEvent;
 import dev.rm20.anglersalmanac.MinigameManager.Minigame;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Components.AudioPlayerComponent;
@@ -100,6 +103,10 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
             case FAIL:
                 //AnglersAlmanac.LOGGER.atInfo().log("YOU FAIL");
                 // Reel in the rod which the bobber owner is using.
+                var eventBus = HytaleServer.get().getEventBus();
+                FishingFailedEvent mainEvent = new FishingFailedEvent(game.fishHooked,player);
+                eventBus.dispatchFor(FishingFailedEvent.class).dispatch(mainEvent);
+                
                 LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
                 break;
             case SUCCESS:
@@ -111,11 +118,11 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
 
                 if(game.fishHooked!=null)
                 {
-                    MinigameManager.DropLoot(game.fishHooked, player, commandBuffer,game.bobberRef,rating);
+                    MinigameManager.DropLoot(game.fishHooked, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
                 }
                 else {
                     FishLootManager lootID = MinigameManager.FirstRoll(game.bobberRef, player, commandBuffer, store.getComponent(game.bobberRef, BobberComponent.getComponentType()).getWaterDepth());
-                    MinigameManager.DropLoot(lootID, player, commandBuffer,game.bobberRef,rating);
+                    MinigameManager.DropLoot(lootID, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
                 }
                 if(rating == Minigame.PerformanceRating.PERFECT){
                     // TODO Deal chance of bonus loot.

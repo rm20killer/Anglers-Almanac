@@ -557,9 +557,8 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
     @Override
     public int getPerformancePercentage() {
         int totalGameTicks = ticksReeling + ticksEscaping;
-        int performancePercentage = (int) (((float) ticksReeling / (float) totalGameTicks) * 100);
         //AnglersAlmanac.LOGGER.atInfo().log("Minigame performance percentage = %s", performancePercentage);
-        return performancePercentage;
+        return (int) (((float) ticksReeling / (float) totalGameTicks) * 100);
     }
 
 // ----------  GAME MODIFIER ADAPTION  ----------------------------------------------------------------------------

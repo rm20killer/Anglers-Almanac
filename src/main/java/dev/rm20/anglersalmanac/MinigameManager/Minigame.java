@@ -43,7 +43,7 @@ public abstract class Minigame {
         return (int) (Points / perfectScore) * 100;
     }
 
-    public PerformanceRating getPerformanceRating(int performancePercentage){
+    public static PerformanceRating getPerformanceRating(int performancePercentage){
         if(performancePercentage >= 95){
             return PerformanceRating.PERFECT;
         }
@@ -52,6 +52,10 @@ public abstract class Minigame {
         }
         if(performancePercentage >= 40){
             return PerformanceRating.GOOD;
+        }
+        if(performancePercentage == -1)
+        {
+            return PerformanceRating.NIL;
         }
 
        return PerformanceRating.FAIL;

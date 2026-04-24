@@ -5,6 +5,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.SoundCategory;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
@@ -27,6 +28,7 @@ import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
+import dev.rm20.anglersalmanac.IEvents.LootCaughtEvent;
 import dev.rm20.anglersalmanac.Interactions.LaunchBobberInteraction;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
@@ -51,14 +53,12 @@ public class MinigameManager {
     public static void StartGame(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
 
         InventoryComponent.Hotbar hotbarComp = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
-        if(hotbarComp ==null)
-        {
+        if (hotbarComp == null) {
             return;
         }
 
         ItemStack fishingRod = hotbarComp.getActiveItem();
-        if(fishingRod==null)
-        {
+        if (fishingRod == null) {
             return;
         }
 
@@ -76,11 +76,11 @@ public class MinigameManager {
 
                 break;
             case "NoMinigame":
-                DropLoot(FirstRoll(bobberRef, player, commandBuffer, depth), player, commandBuffer, bobberRef, NIL);
+                DropLoot(FirstRoll(bobberRef, player, commandBuffer, depth), player, commandBuffer, bobberRef, -1);
                 LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
                 break;
             default: // No Minigame, just reel fish.
-                DropLoot(FirstRoll(bobberRef, player, commandBuffer, depth), player, commandBuffer, bobberRef, NIL);
+                DropLoot(FirstRoll(bobberRef, player, commandBuffer, depth), player, commandBuffer, bobberRef, -1);
                 LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
                 break;
         }
@@ -95,13 +95,10 @@ public class MinigameManager {
             case "TensionBar":
                 AnglersAlmanac.LOGGER.atInfo().log("Canceling TensionBar Minigame");
                 MinigameComponent_TensionBar minigame = commandBuffer.getComponent(minigameRef, MinigameComponent_TensionBar.COMPONENT_TYPE);
-                if(minigame == null)
-                {
+                if (minigame == null) {
                     AnglersAlmanac.LOGGER.atWarning().log("Missing ref for minigame");
                     return;
-                }
-                else
-                {
+                } else {
                     minigame.despawnSelf(commandBuffer.getExternalData().getWorld());
                 }
                 break;
@@ -118,14 +115,11 @@ public class MinigameManager {
         switch (AnglersAlmanac.MOD_CONFIG.get().getMinigameToUse()) {
             case "TensionBar":
                 MinigameComponent_TensionBar minigame = commandBuffer.getComponent(minigameRef, MinigameComponent_TensionBar.COMPONENT_TYPE);
-                if(minigame == null)
-                {
-                    CancelGame(commandBuffer,minigameRef);
+                if (minigame == null) {
+                    CancelGame(commandBuffer, minigameRef);
                     AnglersAlmanac.LOGGER.atWarning().log("Missing ref for minigame");
                     return false;
-                }
-                else
-                {
+                } else {
                     minigame.DoInteraction(interactionType, context, cooldownHandler);
                 }
                 break;
@@ -153,8 +147,7 @@ public class MinigameManager {
         FishingModifier.Modifiers rodMods = null;
         InventoryComponent.Hotbar hotbarComp = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
         ItemStack fishingRod = hotbarComp != null ? hotbarComp.getActiveItem() : null;
-        if(fishingRod!=null)
-        {
+        if (fishingRod != null) {
             rodMods = MinigameRodStats.getModifiersFromRodId(fishingRod.getItemId());
         }
 
@@ -181,36 +174,27 @@ public class MinigameManager {
         String Biome = "Unknown";
         String zone = "Unknown";
         int tier = 1;
-        if(currentZone!=null)
-        {
+        if (currentZone != null) {
             String RawZone = currentZone.regionName();
             Region = currentZone.zoneName();
             Biome = worldMapTracker.getCurrentBiomeName();
             ZoneInfo info = EnvironmentParser.parse(RawZone);
             zone = info.zone();
             tier = info.tier();
-        }
-        else
-        {
+        } else {
             World world = player.getWorld();
             //AnglersAlmanac.LOGGER.atInfo().log(world.getName());
             String worldName = world.getName();
             if (worldName.contains("Portals_Taiga")) {
                 zone = "3";
                 Region = "Portals_Taiga";
-            }
-            else if(worldName.contains("Portals_Hedera"))
-            {
+            } else if (worldName.contains("Portals_Hedera")) {
                 zone = "3";
                 Region = "Portals_Hedera";
-            }
-            else if (worldName.contains("Portals_Oasis"))
-            {
+            } else if (worldName.contains("Portals_Oasis")) {
                 zone = "2";
                 Region = "Portals_Oasis";
-            }
-            else if(worldName.contains("Portals_Jungles"))
-            {
+            } else if (worldName.contains("Portals_Jungles")) {
                 Region = "Portals_Jungles";
             } else if (worldName.contains("Portals_Henges")) {
                 zone = "3";
@@ -233,7 +217,7 @@ public class MinigameManager {
         );
         // get fish
 
-        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo,masterModifier);
+        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         if (lootEntry == null) {
             return FishLootManager.getFishData("Stick");
         }
@@ -248,14 +232,14 @@ public class MinigameManager {
         assert player.getReference() != null;
         TransformComponent transform = player.getReference().getStore().getComponent(player.getReference(), TransformComponent.getComponentType());
 
-        ItemUtils.interactivelyPickupItem(player.getReference(), loot, transform.getPosition(),commandBuffer);
+        ItemUtils.interactivelyPickupItem(player.getReference(), loot, transform.getPosition(), commandBuffer);
 
         //TODO
         //Rework to make it look like the fish is coming from the bobber and fly to the player?
 
     }
 
-    public static void DropLoot(FishLootManager loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef, Minigame.PerformanceRating rating) {
+    public static void DropLoot(FishLootManager loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef, int rating) {
         if (loot == null) return;
         if (loot.getItemID() == null) return;
         ItemStack fishStack;
@@ -278,9 +262,10 @@ public class MinigameManager {
         }
         DropItem(fishStack, player, commandBuffer, bobberRef);
         SaveLoot(player, loot, rating);
+
     }
 
-    public static void SaveLoot(Player player, FishLootManager loot, Minigame.PerformanceRating rating) {
+    public static void SaveLoot(Player player, FishLootManager loot, int ratingScore) {
         long startTime = System.currentTimeMillis();
         //save to database
         var playerRef = player.getReference();
@@ -289,20 +274,21 @@ public class MinigameManager {
         PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
         assert uuid != null;
         boolean isLegendary = loot.getRarity().equalsIgnoreCase("Legendary");
-
+        Minigame.PerformanceRating rating = Minigame.getPerformanceRating(ratingScore);
         CompletableFuture.supplyAsync(() -> {
             return AnglersAlmanac.getInstance().database.saveCatch(uuid.getUuid().toString(), loot.getId(), isLegendary, rating);
         }).thenAccept(isNewDiscovery -> {
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
             if (duration > 100) {
-                AnglersAlmanac.LOGGER.atWarning().log("Slow DB Write: " +duration+"ms for player "+uuid.getUuid());
+                AnglersAlmanac.LOGGER.atWarning().log("Slow DB Write: " + duration + "ms for player " + uuid.getUuid());
             }
 
             //AnglersAlmanac.LOGGER.atInfo().log("DB Write: " +duration+"ms for player "+uuid.getUuid());
 
 
             if (playerRef1 == null) return;
+            dispatchCaughtFishEvents(loot, isNewDiscovery, isLegendary, player, ratingScore);
             if (isNewDiscovery) {
                 String fishDisplayName = formatDisplayName(loot.getName());
                 if (isLegendary) {
@@ -328,6 +314,11 @@ public class MinigameManager {
         });
     }
 
+    public static void dispatchCaughtFishEvents(FishLootManager item, boolean isNew, boolean isLegendary, Player player, int ratingScore) {
+        var eventBus = HytaleServer.get().getEventBus();
+        LootCaughtEvent mainEvent = new LootCaughtEvent(item, isNew,isLegendary, player, ratingScore);
+        eventBus.dispatchFor(LootCaughtEvent.class).dispatch(mainEvent);
+    }
 
     private static void showDiscoveryUI(PlayerRef ref, String fishName, String header, Color color) {
         Message fishDisplay = Message.raw(fishName).color(color);

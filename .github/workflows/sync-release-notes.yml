@@ -1,0 +1,47 @@
+name: Sync Release Notes to Docs
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Docs Repo
+        uses: actions/checkout@v4
+        with:
+          repository: rm20killer/Anglers-Almanac-Doc
+          token: ${{ secrets.DOC_REPO_PAT }}
+          path: docs-repo
+
+      - name: Create Release Note File
+        run: |
+          # Get the tag name (e.g., v1.0.1) and current date
+          RAW_TAG=${{ github.event.release.tag_name }}
+          TAG_NAME=${RAW_TAG#v}
+          
+          RELEASE_DATE=$(date +%Y-%m-%d)
+          BODY="${{ github.event.release.body }}"
+          
+          # Define the file path
+          FILE_PATH="docs-repo/content/ReleaseNotes/${TAG_NAME}.md"
+          
+          # Construct the Markdown content
+          echo "---" > $FILE_PATH
+          echo "draft: true" >> $FILE_PATH
+          echo "date: ${RELEASE_DATE}" >> $FILE_PATH
+          echo "tags:" >> $FILE_PATH
+          echo "  - PatchNotes" >> $FILE_PATH
+          echo "---" >> $FILE_PATH
+          echo "" >> $FILE_PATH
+          echo "${BODY}" >> $FILE_PATH
+
+      - name: Commit and Push
+        run: |
+          cd docs-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add content/ReleaseNotes/
+          git commit -m "Add release notes for ${{ github.event.release.tag_name }}"
+          git push
