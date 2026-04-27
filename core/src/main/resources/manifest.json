@@ -1,0 +1,35 @@
+{
+    "Group": "dev.rm20",
+    "Name": "AnglersAlmanac",
+    "Version": "1.0.8",
+    "Description": "The Ultimate Fishing Overhaul for Orbis",
+    "Authors": [
+        {
+            "Name": "RM20",
+            "Email": "rm20killer@gmail.com",
+            "Url": "https://rm20.dev"
+        },
+        {
+            "Name": "CapnSloth",
+            "Email": "",
+            "Url": ""
+        }
+    ],
+    "Website": "https://rm20killer.github.io/Anglers-Almanac-Doc/",
+    "Main": "dev.rm20.anglersalmanac.AnglersAlmanac",
+    "ServerVersion": "2026.03.26-89796e57b",
+    "Dependencies": {
+        
+    },
+    "OptionalDependencies": {
+        
+    },
+    "LoadBefore": {
+        
+    },
+    "DisabledByDefault": false,
+    "IncludesAssetPack": true,
+    "SubPlugins": [
+        
+    ]
+}

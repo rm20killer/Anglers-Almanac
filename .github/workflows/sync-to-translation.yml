@@ -1,0 +1,26 @@
+name: Sync to Translation Repo
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '../../Core/src/main/resources/Server/Languages/**'
+
+jobs:
+  copy-to-translation:
+    runs-on: ubuntu-latest
+    if: github.actor != 'SyncBot'
+    steps:
+      - name: Checkout Main Repo
+        uses: actions/checkout@v4
+
+      - name: Pushes to Translation Repo
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.SYNC_TOKEN }}
+        with:
+          source_file: 'src/main/resources/Server/Languages/'
+          destination_repo: 'rm20killer/Anglers-Almanac-Translation'
+          destination_folder: 'Languages'
+          user_email: 'action@github.com'
+          user_name: 'SyncBot'
+          commit_message: 'Sync: Updated languages from Main repo [skip ci]'
