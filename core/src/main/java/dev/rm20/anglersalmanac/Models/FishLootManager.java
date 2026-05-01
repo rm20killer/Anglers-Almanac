@@ -17,8 +17,10 @@ import com.hypixel.hytale.codec.validation.Validators;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
+import dev.rm20.anglersalmanac.Utils.Validator.GameIcon;
 import dev.rm20.anglersalmanac.Utils.Validator.MinigameBehaviour;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
+import dev.rm20.anglersalmanac.api.ILootProvider;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -29,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 @HytaleAsset(
         path = "AnglersAlmanac"
 )
-public class FishLootManager extends FishLoot implements JsonAssetWithMap<String, DefaultAssetMap<String, FishLootManager>> {
+public class FishLootManager extends FishLoot implements JsonAssetWithMap<String, DefaultAssetMap<String, FishLootManager>>, ILootProvider {
 
     // Codecs
     public static final BuilderCodec<BookInfo> Book_CODEC = BuilderCodec.builder(BookInfo.class, BookInfo::new)
@@ -90,9 +92,13 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
             .addValidator(Validators.uniqueInArray()).add()
             .append(new KeyedCodec<>("Weight_multiplier", Codec.FLOAT), (h, v) -> h.weight_multiplier = v, h -> h.weight_multiplier)
             .add()
+            .append(new KeyedCodec<>("Required_Bait", new ArrayCodec<>(Codec.STRING, String[]::new)), (h, v) -> h.required_bait = v, h -> h.required_bait)
+            .documentation("List of Bait ID that can get the loot")
+            .addValidator(Validators.uniqueInArray()).add()
+            .append(new KeyedCodec<>("Required_Power", Codec.INTEGER), (s, v) -> s.required_power = v, s -> s.required_power)
+            .addValidator(Validators.min(0)).add()
             //.append(new KeyedCodec<>("Exclude_Habitats", EXHABITATS_CODEC), (h, v) -> h.excludeHabitats = v, h -> h.excludeHabitats).add()
             .build();
-
 
     public static final BuilderCodec<MinigameStats> STATS_CODEC = BuilderCodec.builder(MinigameStats.class, MinigameStats::new)
             .append(new KeyedCodec<>("Difficulty", Codec.INTEGER), (s, v) -> s.difficulty = v, s -> s.difficulty)
@@ -101,6 +107,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
             .addValidator(Validators.nonNull()).add()
             .append(new KeyedCodec<>("Stamina", Codec.INTEGER), (s, v) -> s.stamina = v, s -> s.stamina)
             .addValidator(Validators.nonNull()).add()
+            .append(new KeyedCodec<>("GameIcon", new EnumCodec<>(GameIcon.class)), (s, v) -> s.gameIcon = v, s -> s.gameIcon).add()
             .build();
 
 
@@ -113,8 +120,12 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
                     (t, data) -> t.data = data,
                     t -> t.data
             )
+            .appendInherited(new KeyedCodec<>("Category",  new ArrayCodec<>(Codec.STRING, String[]::new)), (t, v) -> t.category = v, t -> t.category, (t, p) -> t.category = p.category)
+            .add()
             .appendInherited(new KeyedCodec<>("ItemId", Codec.STRING), (t, v) -> t.itemID = v, t -> t.itemID, (t, p) -> t.itemID = p.itemID)
-            .addValidator(Validators.nonEmptyString()).add()
+            .add()
+            .appendInherited(new KeyedCodec<>("EntityId", Codec.STRING), (t, v) -> t.entityID = v, t -> t.entityID, (t, p) -> t.entityID = p.entityID)
+            .add()
             .appendInherited(new KeyedCodec<>("Name", Codec.STRING), (t, v) -> t.name = v, t -> t.name, (t, p) -> t.name = p.name)
             .addValidator(Validators.nonEmptyString()).add()
             .appendInherited(new KeyedCodec<>("Description", Codec.STRING), (t, v) -> t.description = v, t -> t.description, (t, p) -> t.description = p.description).add()
@@ -147,7 +158,6 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     private AssetExtraInfo.Data data;
 
     private int size;
-    private BookInfo bookInfo;
 
     public FishLootManager() {
     }
@@ -158,22 +168,11 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
 
-    public BookInfo getBookInfo() {
-        return bookInfo;
-    }
     // Classes used by BuilderCodec
 
 
     public static class ExcludeHabitats {
         Map<String, Float> exclude_zones = new HashMap<>();
-    }
-
-
-
-    public static class BookInfo {
-        public String image_file;
-        public String habitat_info;
-        public String PageFileUI;
     }
 
 
@@ -196,6 +195,10 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
         geoLootCache.invalidateAll();
     }
 
+    @Override
+    public FishLoot getRandomFish(FishingContext ctx, @Nullable Object modifiers) {
+        return getRandomWeightedLoot(ctx, (FishingModifier.Modifiers) modifiers);
+    }
 
     public static FishLootManager getRandomWeightedLoot(FishingContext ctx, @Nullable FishingModifier.Modifiers modifiers) {
         GeoKey key = new GeoKey(ctx.biome(), ctx.region(), ctx.zone(), ctx.tier());
@@ -204,13 +207,29 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
         List<FishLootManager> possibleLoot = new ArrayList<>();
         Map<FishLootManager, Float> calculatedWeights = new HashMap<>();
         float totalWeight = 0f;
-
+        float fishingPower = 1.0f;
+        if (modifiers != null) {
+            fishingPower = fishingPower + modifiers.fishingPower;
+        }
         for (FishLootManager loot : Objects.requireNonNull(geoPossible)) {
             if (checkEnvironment(loot, ctx)) {
                 float weight = (float) loot.getExclusionWeight(loot, ctx);
                 if (weight > 0) {
                     if (modifiers != null) {
                         weight *= calculateFinalMultiplier(loot, ctx, modifiers);
+                        //AnglersAlmanac.LOGGER.atInfo().log(loot.getId() + ":" + weight);
+                    }
+                    if (loot.habitats != null && loot.habitats.required_power > fishingPower) {
+                        weight = 0;
+                    }
+                    if (fishingPower > 1.0f) {
+                        int rarityTier = getRarityWeight(loot.getId());
+                        if(rarityTier == 99)
+                        {
+                            rarityTier = 0;
+                        }
+                        float powerBonus = (fishingPower - 1.0f) * 0.5f * rarityTier;
+                        weight += powerBonus;
                     }
 
                     if (weight > 0) {
@@ -346,12 +365,15 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     public int getExclusionWeight(FishLootManager loot, FishingContext ctx) {
         if (loot.habitats == null) return this.weight;
 
-        boolean isExcluded = containsIgnoreCase(loot.habitats.exclude_biomes, ctx.biome()) || containsIgnoreCase(loot.habitats.exclude_regions, ctx.region()) || containsIgnoreCase(loot.habitats.exclude_zones, ctx.zone()) || Arrays.asList(loot.habitats.exclude_tiers).contains(ctx.tier());
+        boolean isExcluded = containsIgnoreCase(loot.habitats.exclude_biomes, ctx.biome()) ||
+                containsIgnoreCase(loot.habitats.exclude_regions, ctx.region()) ||
+                containsIgnoreCase(loot.habitats.exclude_zones, ctx.zone()) ||
+                Arrays.asList(loot.habitats.exclude_tiers).contains(ctx.tier()) ||
+                containsIgnoreCase(loot.habitats.required_bait, ctx.baitAsset());
 
         if (isExcluded) {
             return Math.round(this.weight * loot.habitats.weight_multiplier);
         }
-
         return this.weight;
     }
 
@@ -387,6 +409,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
         if (data == null) return 99;
 
         return switch (data.getRarity().toLowerCase()) {
+            case "junk" -> -1;
             case "common" -> 0;
             case "uncommon" -> 1;
             case "rare" -> 2;

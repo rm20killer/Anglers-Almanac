@@ -18,6 +18,7 @@ public class FishingModifier {
             .build();
 
     public static class Modifiers {
+        public float fishingPower = 0f;
         public FishingModifier[] biomeModifiers;
         public FishingModifier[] zoneModifiers;
         public FishingModifier[] regionModifiers;
@@ -29,6 +30,7 @@ public class FishingModifier {
         }
 
         public static final BuilderCodec<Modifiers> CODEC = BuilderCodec.builder(Modifiers.class, Modifiers::new)
+                .append(new KeyedCodec<>("Fishing_Power", Codec.FLOAT), (t, v) -> t.fishingPower = v, t -> t.fishingPower).add()
                 .append(new KeyedCodec<>("Biomes", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.biomeModifiers = v, t -> t.biomeModifiers).add()
                 .append(new KeyedCodec<>("Zones", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.zoneModifiers = v, t -> t.zoneModifiers).add()
                 .append(new KeyedCodec<>("Regions", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.regionModifiers = v, t -> t.regionModifiers).add()
@@ -47,10 +49,10 @@ public class FishingModifier {
         java.util.Map<String, Float> familyMap = new java.util.HashMap<>();
         java.util.Map<String, Float> itemMap = new java.util.HashMap<>();
         float combinedDefault = 1.0f;
-
+        float combinedPower = 1.0f;
         for (FishingModifier.Modifiers mod : modifiers) {
             if (mod == null) continue;
-
+            combinedPower+=mod.fishingPower;
             mergeIntoMap(biomeMap, mod.biomeModifiers);
             mergeIntoMap(zoneMap, mod.zoneModifiers);
             mergeIntoMap(regionMap, mod.regionModifiers);
@@ -59,7 +61,7 @@ public class FishingModifier {
 
             combinedDefault *= mod.defaultMultiplier;
         }
-
+        master.fishingPower = combinedPower;
         master.biomeModifiers = mapToArray(biomeMap);
         master.zoneModifiers = mapToArray(zoneMap);
         master.regionModifiers = mapToArray(regionMap);

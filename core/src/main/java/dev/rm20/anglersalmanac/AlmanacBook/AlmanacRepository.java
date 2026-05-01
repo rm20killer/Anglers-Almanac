@@ -1,7 +1,5 @@
 package dev.rm20.anglersalmanac.AlmanacBook;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 
 import java.io.File;
@@ -12,7 +10,7 @@ import java.util.Map;
 public class AlmanacRepository {
 
     private static final String DB_PATH = "mods/dev.rm20_AnglersAlmanac/Data/BookIDs.db";
-    private static HikariDataSource dataSource;
+    private static Connection connection;
 
     public static class BookEntry {
         public final String customId;
@@ -42,39 +40,39 @@ public class AlmanacRepository {
                     AnglersAlmanac.LOGGER.atInfo().log("Created database directory: " + parentDir.getPath());
                 }
             }
-            HikariConfig config = getHikariConfig();
-            dataSource = new HikariDataSource(config);
+
+            Class.forName("org.sqlite.JDBC");
+            String url = "jdbc:sqlite:" + DB_PATH;
+            connection = DriverManager.getConnection(url);
+
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("PRAGMA journal_mode=WAL;");
+                stmt.execute("PRAGMA synchronous=NORMAL;");
+            }
+
             setupDatabase();
-        } catch (Exception e) {
-            AnglersAlmanac.LOGGER.atSevere().withCause(e).log("Failed to make folder for BookIDs.db");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("SQLite Driver not found in classpath!", e);
+        } catch (SQLException e) {
+            AnglersAlmanac.LOGGER.atSevere().withCause(e).log("Failed to initialize SQLite connection");
         }
 
     }
 
-
-    private static HikariConfig getHikariConfig() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:sqlite:" + DB_PATH);
-        config.setPoolName("AlmanacBookPool");
-        config.setMaximumPoolSize(1);
-        config.setMinimumIdle(1);
-        config.setIdleTimeout(30000);
-        config.setMaxLifetime(1800000);
-        config.setConnectionTimeout(5000);
-
-        // Performance properties for SQLite
-        config.addDataSourceProperty("journal_mode", "WAL");
-        config.addDataSourceProperty("synchronous", "NORMAL");
-        return config;
-    }
-
     public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
+        }
+        return connection;
     }
 
     public void close() {
-        if (dataSource != null && !dataSource.isClosed()) {
-            dataSource.close();
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -85,7 +83,7 @@ public class AlmanacRepository {
                 "custom_id TEXT NOT NULL, " +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
 
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {

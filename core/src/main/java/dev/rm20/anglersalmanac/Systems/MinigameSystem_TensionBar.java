@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.IEvents.FishingFailedEvent;
+import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
 import dev.rm20.anglersalmanac.MinigameManager.Minigame;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Components.AudioPlayerComponent;
@@ -110,9 +111,9 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 break;
             case SUCCESS:
                 //AnglersAlmanac.LOGGER.atInfo().log("YOU WIN");
-                Minigame.PerformanceRating  rating = game.getPerformanceRating(game.getPerformancePercentage());
+                MinigamePRating.PerformanceRating  rating = game.getPerformanceRating(game.getPerformancePercentage());
                 //AnglersAlmanac.LOGGER.atInfo().log("Minigame performance rating = %s", rating);
-                if(rating == Minigame.PerformanceRating.FAIL) LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
+                if(rating == MinigamePRating.PerformanceRating.FAIL) LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
                 // Deal rewards.
 
                 if(game.fishHooked!=null)
@@ -123,7 +124,7 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                     FishLootManager lootID = MinigameManager.FirstRoll(game.bobberRef, player, commandBuffer, store.getComponent(game.bobberRef, BobberComponent.getComponentType()).getWaterDepth());
                     MinigameManager.DropLoot(lootID, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
                 }
-                if(rating == Minigame.PerformanceRating.PERFECT){
+                if(rating == MinigamePRating.PerformanceRating.PERFECT){
                     // TODO Deal chance of bonus loot.
                 }
 

@@ -15,9 +15,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.ZoneInfo;
+import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Registration.CommandInfo;
 import dev.rm20.anglersalmanac.Utils.EnvironmentParser;
-import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Utils.TimeUtils;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
 
@@ -39,8 +39,7 @@ public class SimulateFishingCommand extends AbstractPlayerCommand {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
             return;
         }
-        if(!((Player) commandContext.sender()).hasPermission("AnglersAlmanac.admin"))
-        {
+        if (!((Player) commandContext.sender()).hasPermission("AnglersAlmanac.admin")) {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.noPerms"));
             return;
         }
@@ -63,7 +62,9 @@ public class SimulateFishingCommand extends AbstractPlayerCommand {
                 worldMapTracker.getCurrentBiomeName(),
                 y,
                 "clear",
-                20
+                20,
+                null,
+                1
         );
 
         java.util.Map<String, Integer> results = new java.util.HashMap<>();
@@ -91,7 +92,7 @@ public class SimulateFishingCommand extends AbstractPlayerCommand {
         sb.append("\n Depth: 20 | Time: ").append(ctx.time().getKeyword());
         sb.append("\n-------------------------------------------");
         results.forEach((id, count) -> {
-            sb.append(String.format("\n- %-25s : %d%% (%d)", id, (count * 100 / total),count));
+            sb.append(String.format("\n- %-25s : %d%% (%d)", id, (count * 100 / total), count));
         });
         if (fails > 0) {
             sb.append(String.format("\n- %-25s : %d%%", "EMPTY_ROLL (Fail)", (fails * 100 / total)));

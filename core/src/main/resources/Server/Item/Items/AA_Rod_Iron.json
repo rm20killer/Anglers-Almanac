@@ -20,8 +20,8 @@
     "Items.Tools"
   ],
   "TranslationProperties": {
-    "Name": "Iron Fishing Rod",
-    "Description": "Used to get fish from water"
+    "Name": "fishingrods.iron.name",
+    "Description": "fishingrods.iron.description"
   },
   "Recipe": {
     "TimeSeconds": 3.5,

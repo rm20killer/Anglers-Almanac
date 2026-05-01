@@ -11,5 +11,7 @@ public record FishingContext(
         String biome,
         double yPos,
         String weather,
-        int waterDepth
+        int waterDepth,
+        String baitAsset,
+        int fishingPower
 ) { }

@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - '../../Core/src/main/resources/Server/Languages/**'
+      - '../../core/src/main/resources/Server/Languages/**'
 
 jobs:
   copy-to-translation:
@@ -18,9 +18,9 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.SYNC_TOKEN }}
         with:
-          source_file: 'src/main/resources/Server/Languages/'
+          source_file: 'core/src/main/resources/Server/Languages/'
           destination_repo: 'rm20killer/Anglers-Almanac-Translation'
-          destination_folder: 'Languages'
+          destination_folder: ''
           user_email: 'action@github.com'
           user_name: 'SyncBot'
           commit_message: 'Sync: Updated languages from Main repo [skip ci]'

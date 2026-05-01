@@ -15,6 +15,8 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AlmanacBook.AlmanacDatabase;
+import dev.rm20.anglersalmanac.AnglersAlmanac;
+import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
 import dev.rm20.anglersalmanac.MinigameManager.Minigame;
 import dev.rm20.anglersalmanac.Models.BookAssetData;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
@@ -66,9 +68,9 @@ public class StatUiPage extends InteractiveCustomUIPage<pageUtils.AlmanacGuiData
 
         uiCommandBuilder.set("#TotalFish.TextSpans", Message.translation("anglersalmanac.almanac.stats.total").param("count", stats.totalCatches));
         uiCommandBuilder.set("#LegendaryCount.TextSpans", Message.translation("anglersalmanac.almanac.stats.legendary").param("count", stats.legendaryCount));
-        int perfects = stats.getRatingCount(Minigame.PerformanceRating.PERFECT);
+        int perfects = stats.getRatingCount(MinigamePRating.PerformanceRating.PERFECT);
         uiCommandBuilder.set("#PerfectCount.TextSpans", Message.translation("anglersalmanac.almanac.stats.perfect").param("count", perfects));
-        int great = stats.getRatingCount(Minigame.PerformanceRating.GREAT);
+        int great = stats.getRatingCount(MinigamePRating.PerformanceRating.GREAT);
         uiCommandBuilder.set("#GreatCount.TextSpans", Message.translation("anglersalmanac.almanac.stats.great").param("count", great));
         uiCommandBuilder.set("#Header.TextSpans", Message.translation("anglersalmanac.almanac.stats.player").param("name", (this.PlayerName != null ? this.PlayerName : Message.translation("anglersalmanac.almanac.unknown").toString())));
 
@@ -105,17 +107,23 @@ public class StatUiPage extends InteractiveCustomUIPage<pageUtils.AlmanacGuiData
                     uiCommandBuilder.set(labelId + ".TextSpans", Message.raw("- " + loot.getName() + " : " + entry.getValue()));
 
                     //todo: FIX this
-//                    ItemStack item = new ItemStack(loot.getItemID());
-//                    if(item.isValid())
-//                    {
-//                        String itemName =  Message.translation(item.getItem().getTranslationKey()).toString();
-//                        uiCommandBuilder.set(labelId + ".TextSpans", Message.raw("- " + itemName + " : " + entry.getValue()));
-//                    }
-//                    else
-//                    {
-//                        uiCommandBuilder.set(labelId + ".TextSpans", Message.raw("- " + loot.getName() + " : " + entry.getValue()));
-//
-//                    }
+                    ItemStack item = new ItemStack(loot.getItemID());
+                    if(item.isValid())
+                    {
+                        String itemName =  Message.translation(item.getItem().getTranslationKey()).getAnsiMessage();
+                        if(itemName.isEmpty()||itemName.equals("server.items.Unknown.name"))
+                        {
+                            uiCommandBuilder.set(labelId + ".TextSpans", Message.raw("- " + loot.getName() + " : " + entry.getValue()));
+                        }
+                        else
+                        {
+                            uiCommandBuilder.set(labelId + ".TextSpans", Message.raw("- " + itemName + " : " + entry.getValue()));
+                        }
+                    }
+                    else
+                    {
+                        uiCommandBuilder.set(labelId + ".TextSpans", Message.raw("- " + loot.getName() + " : " + entry.getValue()));
+                    }
 
                 }
             } else {

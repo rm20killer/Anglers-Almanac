@@ -1,0 +1,18 @@
+# ============================================================
+# Angler's Almanac Fishing rods - English (US) Translation File
+# Language: en-US
+# Keys format: {category}.{key}
+# Usage: fishingrods.{category}.{key}
+# ============================================================
+
+crude.name = Crude Fishing Rod
+crude.description = Used to get fish from water
+
+iron.name = Iron Fishing Rod
+iron.description = Used to get fish from water
+
+cobalt.name = Cobalt Fishing Rod
+cobalt.description = Used to get fish from water
+
+reef.name = Reef Fishing Rod
+reef.description = Used to get fish from water

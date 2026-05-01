@@ -5,6 +5,12 @@
 # Usage: anglersalmanac.{category}.{key}
 # ============================================================
 
+### book stuff
+book.name = {name}'s Angler's Almanac
+book.description = Bound to ID:
+book.item.name = Angler's Almanac
+book.item.description = Right click the bind to you
+
 ### Command general error
 cmd.error.notPlayer = This command can only be run by a player!
 cmd.error.noPerms = You do not have permission to run this command

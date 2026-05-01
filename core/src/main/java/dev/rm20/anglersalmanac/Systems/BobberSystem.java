@@ -101,11 +101,11 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 String baitName = component.getBaitName();
                 if (requiresBait && (baitName == null || baitName.isEmpty())) {
                     SendBaitNotification(player);
-                    AnglersAlmanac.LOGGER.atInfo().log("No bait on rod");
+                    //AnglersAlmanac.LOGGER.atInfo().log("No bait on rod");
                     resetWaitTimer(component);
                     return;
                 }
-                AnglersAlmanac.LOGGER.atInfo().log(baitName);
+                //AnglersAlmanac.LOGGER.atInfo().log(baitName);
                 // Fish bite logic
                 component.setCanCatch(true);
                 ParticleUtil.spawnParticleEffect("Fish_Alert", transform.getPosition().clone().add(0, 0.5, 0), store);

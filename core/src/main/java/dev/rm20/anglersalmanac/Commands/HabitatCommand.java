@@ -77,7 +77,9 @@ public class HabitatCommand extends AbstractPlayerCommand {
                     biome,
                     y,
                     "clear", // Hardcoded for test
-                    0
+                    0,
+                    null,
+                    1
             );
 
             // 5. Output

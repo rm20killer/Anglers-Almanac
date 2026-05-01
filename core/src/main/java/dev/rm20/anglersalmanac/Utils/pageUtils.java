@@ -24,7 +24,12 @@ public class pageUtils {
         slotPath = slotPath+"[0] ";
         boolean caught = Stats.hasCaught(data.getId());
         String cleanName = data.getItemID().replace("Fish_", "").replace("_Item", "");
-
+        String imageFile = cleanName;
+        if(data.getBookInfo()!=null) {
+            if(data.getBookInfo().image_file != null){
+                imageFile = data.getBookInfo().image_file;
+            }
+        }
         ui.set(slotPath+ "#CountLabel.Text", Message.translation("anglersalmanac.almanac.fish.totalLabel"));
         //ui.set(slotPath+ "#FamilyLabel.Text", Message.translation("anglersalmanac.almanac.fish.speciesLabel"));
         //ui.set(slotPath+ "#HabitatTitle.Text", Message.translation("anglersalmanac.almanac.fish.habitatLabel"));
@@ -35,7 +40,7 @@ public class pageUtils {
             int fishCount = Stats.getFishCount(data.getId());
             String imagePath = (data.getBookInfo() != null && data.getBookInfo().image_file != null)
                     ? data.getBookInfo().image_file
-                    : "UI/Custom/Almanac/Fish/FishAssets/" + cleanName + ".png";
+                    : "UI/Custom/Almanac/Fish/FishAssets/" + imageFile + ".png";
 
             // Habitat
             String habitat = (data.getBookInfo() != null) ? Objects.requireNonNullElse(data.getBookInfo().habitat_info, "") : "";
@@ -68,7 +73,7 @@ public class pageUtils {
             //Not caught
             String imagePath = (data.getBookInfo() != null && data.getBookInfo().image_file != null)
                     ? data.getBookInfo().image_file
-                    : "UI/Custom/Almanac/Fish/FishAssets/" + cleanName + "_Missing.png";
+                    : "UI/Custom/Almanac/Fish/FishAssets/" + imageFile + "_Missing.png";
             ui.set(slotPath + "#Header" + ".TextSpans", Message.raw(TextUtils.seededScrambleText(data.getName())));
             ui.set(slotPath + "#CountNumber" + ".TextSpans", Message.raw(" Not found"));
             ui.set(slotPath + "#Family"  + ".TextSpans", Message.raw(TextUtils.seededScrambleText(data.getFamilyId())));

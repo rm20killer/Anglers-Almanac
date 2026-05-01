@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "Crude Fishing Rod",
-    "Description": "Use to catch fish in any water."
+    "Name": "fishingrods.crude.name",
+    "Description": "fishingrods.crude.description"
   },
   "Categories": [
     "Items.Tools"

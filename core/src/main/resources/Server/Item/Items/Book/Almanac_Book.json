@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "Angler's Almanac",
-    "Description": "Right click the bind to you"
+    "Name": "anglersalmanac.book.item.name",
+    "Description": "anglersalmanac.book.item.description"
   },
   "Categories": [
     "Items.Tools"

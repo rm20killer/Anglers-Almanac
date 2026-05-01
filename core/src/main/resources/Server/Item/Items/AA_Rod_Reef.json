@@ -20,8 +20,8 @@
     "Items.Tools"
   ],
   "TranslationProperties": {
-    "Name": "Reef Fishing Rod",
-    "Description": "Used to get fish from water"
+    "Name": "fishingrods.reef.name",
+    "Description": "fishingrods.reef.description"
   },
   "Model": "Items/Tools/Fishing_Rod/Rod_Reef.blockymodel",
   "Texture": "Items/Tools/Fishing_Rod/Rod_Reef.png",

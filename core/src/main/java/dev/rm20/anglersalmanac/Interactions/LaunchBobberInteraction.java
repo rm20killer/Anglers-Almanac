@@ -211,37 +211,15 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
 
         World world = commandBuffer.getExternalData().getWorld();
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
-        InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
-
         // Attempt to remove bobber and minigame if not already.
-        if(meta != null) {
-            if(meta.getBoundBobber() != null) {
-                UUID bobberUuid = meta.getBoundBobber();
-                meta.setBoundBobber(null);
-
-                Ref<EntityStore> bobberRef = world.getEntityStore().getRefFromUUID(bobberUuid);
-                if (bobberRef != null && bobberRef.isValid()) {
-                    try {
-                        commandBuffer.getExternalData().getWorld().execute(() -> {
-                            world.getEntityStore().getStore().removeEntity(bobberRef,RemoveReason.REMOVE);
-                        });
-                    } catch (Throwable e) {
-                        AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
-                    }
-                }
-            }
-            if(meta.getBoundMinigame() != null) {
-                UUID minigameUUID = meta.getBoundMinigame();
-                meta.setBoundMinigame(null);
-                Ref<EntityStore> minigameRef = world.getEntityStore().getRefFromUUID(minigameUUID);
-                if (minigameRef != null && minigameRef.isValid()) {
-                    MinigameManager.CancelGame(commandBuffer, minigameRef);
-                }
+        RemoveFishingEntities(commandBuffer, meta, world);
+        Ref<EntityStore> playerRef = player.getReference();
+        if(playerRef != null) {
+            InventoryComponent.Hotbar inv = playerRef.getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
+            if (inv != null) {
+                updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
             }
         }
-
-        updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
-
     }
 
     public static void cancelFishing(CommandBuffer<EntityStore> commandBuffer, Player player, ItemStack heldItem, byte slot) {
@@ -252,9 +230,17 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
         }
         World world = commandBuffer.getExternalData().getWorld();
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
-        InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
-
         // Attempt to remove bobber and minigame if not already.
+        RemoveFishingEntities(commandBuffer, meta, world);
+        Ref<EntityStore> playerRef = player.getReference();
+        if(playerRef != null) {
+            InventoryComponent.Hotbar inv = playerRef.getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
+            updateMetadata(inv, slot, heldItem, null, null, 0);
+        }
+
+    }
+
+    private static void RemoveFishingEntities(CommandBuffer<EntityStore> commandBuffer, FishingRodData meta, World world) {
         if(meta != null) {
             if(meta.getBoundBobber() != null) {
                 UUID bobberUuid = meta.getBoundBobber();
@@ -280,9 +266,6 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
                 }
             }
         }
-
-        updateMetadata(inv, slot, heldItem, null, null, 0);
-
     }
 
 

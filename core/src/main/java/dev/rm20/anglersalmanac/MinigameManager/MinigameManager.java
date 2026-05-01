@@ -1,8 +1,12 @@
 package dev.rm20.anglersalmanac.MinigameManager;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -14,31 +18,36 @@ import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
+import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
+import com.hypixel.hytale.server.core.modules.projectile.system.StandardPhysicsTickSystem;
 import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
+import com.hypixel.hytale.server.core.universe.world.npc.INonPlayerCharacter;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
+import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.util.InventoryHelper;
 import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
+import dev.rm20.anglersalmanac.Components.PhysicsComponent;
 import dev.rm20.anglersalmanac.IEvents.LootCaughtEvent;
 import dev.rm20.anglersalmanac.Interactions.LaunchBobberInteraction;
-import dev.rm20.anglersalmanac.Metadata.FishingContext;
-import dev.rm20.anglersalmanac.Metadata.FishingModifier;
-import dev.rm20.anglersalmanac.Metadata.FishingRodData;
-import dev.rm20.anglersalmanac.Metadata.ZoneInfo;
+import dev.rm20.anglersalmanac.Metadata.*;
 import dev.rm20.anglersalmanac.Models.FishBaitData;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Models.MinigameRodStats;
+import dev.rm20.anglersalmanac.Utils.BaitUtils;
 import dev.rm20.anglersalmanac.Utils.EnvironmentParser;
 import dev.rm20.anglersalmanac.Utils.TimeUtils;
+import it.unimi.dsi.fastutil.Pair;
 import org.jspecify.annotations.NonNull;
 
 import java.awt.*;
@@ -138,9 +147,15 @@ public class MinigameManager {
         Store<EntityStore> store = bobberRef.getStore();
         BobberComponent bobberComp = store.getComponent(bobberRef, BobberComponent.getComponentType());
         FishingModifier.Modifiers baitMods = null;
+        String baitID = null;
         if (bobberComp != null && bobberComp.getBaitName() != null) {
-            FishBaitData baitAsset = FishBaitData.getAssetStore().getAssetMap().getAsset(bobberComp.getBaitName());
-            if (baitAsset != null) baitMods = baitAsset.modifiers;
+            FishBaitData baitAsset = BaitUtils.getBaitData(bobberComp.getBaitName());
+            //AnglersAlmanac.LOGGER.atInfo().log(baitAsset.getId());
+            if (baitAsset != null)
+            {
+                baitMods = baitAsset.modifiers;
+                baitID = baitAsset.getId();
+            }
         }
         FishingModifier.Modifiers rodMods = null;
         InventoryComponent.Hotbar hotbarComp = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
@@ -211,7 +226,9 @@ public class MinigameManager {
                 Biome,
                 y,
                 "clear",
-                depth
+                depth,
+                baitID,
+                1
         );
         // get fish
 
@@ -219,6 +236,7 @@ public class MinigameManager {
         if (lootEntry == null) {
             return FishLootManager.getFishData("Stick");
         }
+        AnglersAlmanac.LOGGER.atInfo().log(lootEntry.getId());
         String lootID = lootEntry.getItemID();
         return lootEntry;
 
@@ -238,7 +256,46 @@ public class MinigameManager {
     }
 
     public static void DropLoot(FishLootManager loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef, int rating) {
+        AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID());
         if (loot == null) return;
+        if (loot.getEntityID() !=null)
+        {
+            AnglersAlmanac.LOGGER.atInfo().log("Spawning entity");
+            //spawn entity
+            World world = player.getWorld();
+            Store<EntityStore> store = world.getEntityStore().getStore();
+            Vector3d position = bobberRef.getStore().getComponent(bobberRef, TransformComponent.getComponentType()).getPosition();
+            position.setY(position.getY() + 4);
+            TransformComponent transform = player.getReference().getStore().getComponent(player.getReference(), TransformComponent.getComponentType());
+            Vector3d PlayerPos = transform.getPosition();
+            Vector3d direction = PlayerPos.clone().subtract(position).normalize();
+            Vector3f lookat = new Vector3f(Vector3f.lookAt(PlayerPos));
+            world.execute(() -> {
+                Pair<Ref<EntityStore>, INonPlayerCharacter> result = NPCPlugin.get().spawnNPC(store, loot.getEntityID(), null, position, new Vector3f(0,lookat.y,0));
+
+                if (result != null) {
+                    Ref<EntityStore> npcRef = result.first();
+                    INonPlayerCharacter npc = result.second();
+                    Vector3d launchVelocity = new Vector3d(direction.x * 15, 1, direction.z * 15).scale(30);
+                    Velocity velocity = npcRef.getStore().getComponent(npcRef, Velocity.getComponentType());
+                    if (velocity != null) {
+                        AnglersAlmanac.LOGGER.atInfo().log("applied velocity");
+                        AnglersAlmanac.LOGGER.atInfo().log(launchVelocity.toString());
+                        velocity.addInstruction(launchVelocity, null, ChangeVelocityType.Add);
+                    }
+                    else
+                    {
+                        AnglersAlmanac.LOGGER.atInfo().log("applied velocity with new compoent");
+                        Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
+                        holder.addComponent(Velocity.getComponentType(), new Velocity(launchVelocity));
+                    }
+                }
+            });
+
+            SaveLoot(player, loot, rating);
+            return;
+        }
+        //loot item
         if (loot.getItemID() == null) return;
         ItemStack fishStack;
         fishStack = InventoryHelper.createItem(loot.getItemID());
@@ -272,7 +329,7 @@ public class MinigameManager {
         PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
         assert uuid != null;
         boolean isLegendary = loot.getRarity().equalsIgnoreCase("Legendary");
-        Minigame.PerformanceRating rating = Minigame.getPerformanceRating(ratingScore);
+        MinigamePRating.PerformanceRating rating = Minigame.getPerformanceRating(ratingScore);
         CompletableFuture.supplyAsync(() -> {
             return AnglersAlmanac.getInstance().database.saveCatch(uuid.getUuid().toString(), loot.getId(), isLegendary, rating);
         }).thenAccept(isNewDiscovery -> {
@@ -289,7 +346,7 @@ public class MinigameManager {
             dispatchCaughtFishEvents(loot, isNewDiscovery, isLegendary, player, ratingScore);
             if (isNewDiscovery) {
                 ItemStack itemStack = new ItemStack(loot.getItemID(),1);
-                String fishDisplayName = Message.translation(itemStack.getItem().getTranslationKey()).toString();
+                String fishDisplayName = Message.translation(itemStack.getItem().getTranslationKey()).getAnsiMessage();
                 if (isLegendary) {
                     showDiscoveryUI(playerRef1, fishDisplayName, Message.translation("fishing.caught.legDiscovered").toString(), Color.YELLOW);
                     int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Book_New_Fish_2");

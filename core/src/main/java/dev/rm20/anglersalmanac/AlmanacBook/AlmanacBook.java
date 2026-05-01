@@ -8,6 +8,7 @@ import com.hypixel.hytale.protocol.ItemTranslationProperties;
 import com.hypixel.hytale.protocol.UpdateType;
 import com.hypixel.hytale.protocol.packets.assets.UpdateItems;
 import com.hypixel.hytale.protocol.packets.assets.UpdateTranslations;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -17,11 +18,16 @@ import dev.rm20.anglersalmanac.AnglersAlmanac;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.StampedLock;
 
 //TODO: what ever I was doing here.
 public class AlmanacBook {
+    public static String getNameTranslate()
+    {
+        return Message.translation("anglersalmanac.book.name").toString();
+    }
     public static Item syncCustomBookDisplay(PlayerRef playerRef, String playerUuid, String playerName) {
         Item baseItem = Item.getAssetMap().getAsset("Almanac_Book");
         String customId = "almanac.book." + playerUuid;
@@ -39,8 +45,11 @@ public class AlmanacBook {
         Map<String, String> translations = new HashMap<>();
         AlmanacRepository.saveBookId(playerUuid, customId, playerName);
 
-        translations.put(customId+".name", playerName + "'s Angler's Almanac");
-        translations.put(customId+".description", "<color is=\"#AAAAAA\">Bound to ID:</color>\n<i>" + playerUuid + "</i>");
+        String localizedName = Message.translation("anglersalmanac.book.name").param("name", playerName).getAnsiMessage();
+        String localizedDesc = Message.translation("anglersalmanac.book.description").getAnsiMessage();
+
+        translations.put(customId+".name", localizedName);
+        translations.put(customId+".description", "<color is=\"#AAAAAA\">"+localizedDesc+"</color>\n<i>" + playerUuid + "</i>");
 
         UpdateTranslations packet = new UpdateTranslations();
         packet.type = UpdateType.AddOrUpdate;
@@ -133,6 +142,11 @@ public class AlmanacBook {
             String customId = entry.getValue().customId;
             String playerName = entry.getValue().playerName;
 
+
+            String localizedName = Message.translation("anglersalmanac.book.name").param("name", playerName).getAnsiMessage();
+            String localizedDesc = Message.translation("anglersalmanac.book.description").getAnsiMessage();
+            AnglersAlmanac.LOGGER.atInfo().log(localizedName);
+
             ItemBase definition = baseItem.toPacket().clone();
             definition.id = customId;
             definition.translationProperties = new ItemTranslationProperties(
@@ -141,8 +155,8 @@ public class AlmanacBook {
             );
 
             allItemDefinitions.put(customId, definition);
-            allTranslations.put(customId + ".name", playerName + "'s Angler's Almanac");
-            allTranslations.put(customId + ".description", "<color is=\"#AAAAAA\">Bound to ID:</color>\n<i>" + playerUuid + "</i>");
+            allTranslations.put(customId + ".name", localizedName);
+            allTranslations.put(customId + ".description", "<color is=\"#AAAAAA\">"+localizedDesc+"</color>\n<i>" + playerUuid + "</i>");
         }
 
         UpdateTranslations transPacket = new UpdateTranslations();
@@ -179,11 +193,14 @@ public class AlmanacBook {
             return def;
         });
 
+        String localizedName = Message.translation("anglersalmanac.book.name").param("name", targetUuid).getAnsiMessage();
+        String localizedDesc = Message.translation("anglersalmanac.book.description").getAnsiMessage();
+
         UpdateTranslations transPacket = new UpdateTranslations();
         transPacket.type = UpdateType.AddOrUpdate;
         transPacket.translations = Map.of(
-                customId + ".name", targetName + "'s Angler's Almanac",
-                customId + ".description", "<color is=\"#AAAAAA\">Bound to ID:</color>\n<i>" + targetUuid + "</i>"
+                customId + ".name", localizedName,
+                customId + ".description", "<color is=\"#AAAAAA\">"+localizedDesc+"</color>\n<i>" + targetUuid + "</i>"
         );
         recipient.getPacketHandler().writeNoCache(transPacket);
 

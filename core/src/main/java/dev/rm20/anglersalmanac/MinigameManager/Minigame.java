@@ -1,5 +1,6 @@
 package dev.rm20.anglersalmanac.MinigameManager;
 
+import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 
@@ -11,7 +12,6 @@ public abstract class Minigame {
     private int Points = 0;
     // PerfectScore
     private float perfectScore = 100;
-    public enum PerformanceRating {FAIL, GOOD, GREAT, PERFECT, NIL}
 
     public FishLootManager fishHooked;
 
@@ -43,22 +43,22 @@ public abstract class Minigame {
         return (int) (Points / perfectScore) * 100;
     }
 
-    public static PerformanceRating getPerformanceRating(int performancePercentage){
+    public static MinigamePRating.PerformanceRating getPerformanceRating(int performancePercentage){
         if(performancePercentage >= 95){
-            return PerformanceRating.PERFECT;
+            return MinigamePRating.PerformanceRating.PERFECT;
         }
         if(performancePercentage >= 80){
-            return PerformanceRating.GREAT;
+            return MinigamePRating.PerformanceRating.GREAT;
         }
         if(performancePercentage >= 40){
-            return PerformanceRating.GOOD;
+            return MinigamePRating.PerformanceRating.GOOD;
         }
         if(performancePercentage == -1)
         {
-            return PerformanceRating.NIL;
+            return MinigamePRating.PerformanceRating.NIL;
         }
 
-       return PerformanceRating.FAIL;
+       return MinigamePRating.PerformanceRating.FAIL;
     }
 
 
