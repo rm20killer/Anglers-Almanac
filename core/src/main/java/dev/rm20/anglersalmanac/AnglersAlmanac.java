@@ -7,7 +7,6 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
-import dev.rm20.anglersalmanac.AlmanacBook.AlmanacBook;
 import dev.rm20.anglersalmanac.AlmanacBook.AlmanacDatabase;
 import dev.rm20.anglersalmanac.AlmanacBook.AlmanacRepository;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
@@ -16,6 +15,7 @@ import dev.rm20.anglersalmanac.Config.MinigameConfig_TensionBar;
 import dev.rm20.anglersalmanac.Models.BookAssetData;
 import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
+import dev.rm20.anglersalmanac.Utils.Intergration.MMOSkillTree;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 
 
@@ -32,6 +32,8 @@ public class AnglersAlmanac extends JavaPlugin {
     public AlmanacRepository Book_IDs;
     public FishLootManager fishLootManager;
     public BookAssetData bookAssetData;
+
+    public MMOSkillTree skillTree;
     public AnglersAlmanac(@Nonnull JavaPluginInit init) {
         super(init);
         instance = this;

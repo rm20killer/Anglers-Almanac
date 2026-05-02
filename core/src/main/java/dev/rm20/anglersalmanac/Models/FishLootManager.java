@@ -197,17 +197,25 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
 
     @Override
     public FishLoot getRandomFish(FishingContext ctx, @Nullable Object modifiers) {
-        return getRandomWeightedLoot(ctx, (FishingModifier.Modifiers) modifiers);
+        return getRandomWeightedLoot(ctx, (FishingModifier.Modifiers) modifiers , 1);
+    }
+
+    public FishLoot getRandomFish(FishingContext ctx, @Nullable Object modifiers,float fishingPower) {
+        return getRandomWeightedLoot(ctx, (FishingModifier.Modifiers) modifiers , fishingPower);
     }
 
     public static FishLootManager getRandomWeightedLoot(FishingContext ctx, @Nullable FishingModifier.Modifiers modifiers) {
+        return getRandomWeightedLoot(ctx,modifiers,1);
+    }
+
+    public static FishLootManager getRandomWeightedLoot(FishingContext ctx, @Nullable FishingModifier.Modifiers modifiers, float fishingPower) {
+
         GeoKey key = new GeoKey(ctx.biome(), ctx.region(), ctx.zone(), ctx.tier());
         List<FishLootManager> geoPossible = geoLootCache.get(key);
 
         List<FishLootManager> possibleLoot = new ArrayList<>();
         Map<FishLootManager, Float> calculatedWeights = new HashMap<>();
         float totalWeight = 0f;
-        float fishingPower = 1.0f;
         if (modifiers != null) {
             fishingPower = fishingPower + modifiers.fishingPower;
         }

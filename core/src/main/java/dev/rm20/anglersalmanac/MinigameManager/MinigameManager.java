@@ -46,6 +46,7 @@ import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Models.MinigameRodStats;
 import dev.rm20.anglersalmanac.Utils.BaitUtils;
 import dev.rm20.anglersalmanac.Utils.EnvironmentParser;
+import dev.rm20.anglersalmanac.Utils.FishingPowerUtils;
 import dev.rm20.anglersalmanac.Utils.TimeUtils;
 import it.unimi.dsi.fastutil.Pair;
 import org.jspecify.annotations.NonNull;
@@ -232,7 +233,7 @@ public class MinigameManager {
         );
         // get fish
 
-        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
+        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier, FishingPowerUtils.getTotalFishingPower(store,player.getReference()));
         if (lootEntry == null) {
             return FishLootManager.getFishData("Stick");
         }
@@ -348,14 +349,14 @@ public class MinigameManager {
                 ItemStack itemStack = new ItemStack(loot.getItemID(),1);
                 String fishDisplayName = Message.translation(itemStack.getItem().getTranslationKey()).getAnsiMessage();
                 if (isLegendary) {
-                    showDiscoveryUI(playerRef1, fishDisplayName, Message.translation("fishing.caught.legDiscovered").toString(), Color.YELLOW);
+                    showDiscoveryUI(playerRef1, fishDisplayName, "fishing.caught.legDiscovered", Color.YELLOW);
                     int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Book_New_Fish_2");
                     assert player.getWorld() != null;
                     player.getWorld().execute(() -> {
                         SoundUtil.playSoundEvent2dToPlayer(playerRef1, audio, SoundCategory.UI);
                     });
                 } else {
-                    showDiscoveryUI(playerRef1, fishDisplayName, Message.translation("fishing.caught.newFish").toString(), Color.GREEN);
+                    showDiscoveryUI(playerRef1, fishDisplayName, "fishing.caught.newFish", Color.GREEN);
                     int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Book_New_Fish_1");
                     assert player.getWorld() != null;
                     player.getWorld().execute(() -> {
@@ -378,7 +379,7 @@ public class MinigameManager {
 
     private static void showDiscoveryUI(PlayerRef ref, String fishName, String header, Color color) {
         Message fishDisplay = Message.raw(fishName).color(color);
-        Message titleHeader = Message.raw(header);
+        Message titleHeader = Message.translation(header);
         EventTitleUtil.showEventTitleToPlayer(ref, fishDisplay, titleHeader, false, null, 2, 0.5f, 0.5f);
     }
 
