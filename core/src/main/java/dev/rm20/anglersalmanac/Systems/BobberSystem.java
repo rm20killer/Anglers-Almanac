@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
@@ -32,6 +33,11 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
     private final Random random = new Random();
     ItemStack fishingRod = null;
     byte slot = 0;
+
+
+    private static final float DespawnRange = 64.0f * 64.0f; // 64 blocks
+
+
     @Override
     public void tick(float v, int i, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         BobberComponent component = archetypeChunk.getComponent(i, BobberComponent.getComponentType());
@@ -49,6 +55,16 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                     AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                 }
                 return;
+            }
+            else
+            {
+                Vector3d playerPos = commandBuffer.getComponent(player.getReference(), TransformComponent.getComponentType()).getPosition().clone();
+                double distSq = getDistanceSquared(playerPos,transform.getPosition());
+                if (distSq > DespawnRange) {
+                    AnglersAlmanac.LOGGER.atInfo().log(player.getDisplayName()+" To far away from bobber, Despawn");
+                    LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod, slot);
+                    return;
+                }
             }
 
             ItemStack heldItem = player.getInventory().getItemInHand();
@@ -142,5 +158,12 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
     @Override
     public Query<EntityStore> getQuery() {
         return Query.and(BobberComponent.getComponentType());
+    }
+
+    private double getDistanceSquared(Vector3d pos1, Vector3d pos2) {
+        double dx = pos1.x - pos2.x;
+        double dy = pos1.y - pos2.y;
+        double dz = pos1.z - pos2.z;
+        return dx * dx + dy * dy + dz * dz;
     }
 }

@@ -59,7 +59,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
     public Ref<EntityStore> bobberRef;
     public UUID selfUUID;
 
-    public enum Trigger {NOTRIGGER, FISHMOVE, SUCCESS, FAIL}
+    public enum Trigger {NOTRIGGER, FISHMOVE, SUCCESS, FAIL, DONE}
 
     public Trigger stateTrigger = Trigger.NOTRIGGER;
     public UUID minigameFishModelId;

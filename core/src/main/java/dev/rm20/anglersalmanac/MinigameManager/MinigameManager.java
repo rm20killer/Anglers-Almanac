@@ -81,7 +81,6 @@ public class MinigameManager {
                 }
                 MinigameComponent_TensionBar minigame = MinigameComponent_TensionBar.spawnMinigame(commandBuffer, player.getReference(), bobberRef, fishingRod.getItemId());
                 LaunchBobberInteraction.updateMetadata(hotbarComp, hotbarComp.getActiveSlot(), hotbarComp.getActiveItem(), meta.getBoundBobber(), minigame.selfUUID, 1);
-
                 break;
             case "NoMinigame":
                 DropLoot(FirstRoll(bobberRef, player, commandBuffer, depth), player, commandBuffer, bobberRef, -1);
@@ -101,7 +100,7 @@ public class MinigameManager {
         // Select which minigame to use from the config and cancel it.
         switch (AnglersAlmanac.MOD_CONFIG.get().getMinigameToUse()) {
             case "TensionBar":
-                AnglersAlmanac.LOGGER.atInfo().log("Canceling TensionBar Minigame");
+                //AnglersAlmanac.LOGGER.atInfo().log("Canceling TensionBar Minigame");
                 MinigameComponent_TensionBar minigame = commandBuffer.getComponent(minigameRef, MinigameComponent_TensionBar.COMPONENT_TYPE);
                 if (minigame == null) {
                     AnglersAlmanac.LOGGER.atWarning().log("Missing ref for minigame");
@@ -237,7 +236,7 @@ public class MinigameManager {
         if (lootEntry == null) {
             return FishLootManager.getFishData("Stick");
         }
-        AnglersAlmanac.LOGGER.atInfo().log(lootEntry.getId());
+        //AnglersAlmanac.LOGGER.atInfo().log(lootEntry.getId());
         String lootID = lootEntry.getItemID();
         return lootEntry;
 
@@ -257,7 +256,7 @@ public class MinigameManager {
     }
 
     public static void DropLoot(FishLootManager loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef, int rating) {
-        AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID());
+        //AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID());
         if (loot == null) return;
         if (loot.getEntityID() !=null)
         {
@@ -280,13 +279,13 @@ public class MinigameManager {
                     Vector3d launchVelocity = new Vector3d(direction.x * 15, 1, direction.z * 15).scale(30);
                     Velocity velocity = npcRef.getStore().getComponent(npcRef, Velocity.getComponentType());
                     if (velocity != null) {
-                        AnglersAlmanac.LOGGER.atInfo().log("applied velocity");
-                        AnglersAlmanac.LOGGER.atInfo().log(launchVelocity.toString());
+                        //AnglersAlmanac.LOGGER.atInfo().log("applied velocity");
+                        //AnglersAlmanac.LOGGER.atInfo().log(launchVelocity.toString());
                         velocity.addInstruction(launchVelocity, null, ChangeVelocityType.Add);
                     }
                     else
                     {
-                        AnglersAlmanac.LOGGER.atInfo().log("applied velocity with new compoent");
+                        //AnglersAlmanac.LOGGER.atInfo().log("applied velocity with new compoent");
                         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
                         holder.addComponent(Velocity.getComponentType(), new Velocity(launchVelocity));
                     }

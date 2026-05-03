@@ -99,8 +99,8 @@ public class AlmanacDatabase implements IAlmanacProvider {
     public boolean saveCatch(String uuid, String fishId, boolean isLegendary, MinigamePRating.PerformanceRating rating) {
         boolean isFirstTime = false;
 
-        try(Connection conn = getConnection())
-        {
+        try {
+            Connection conn = getConnection();
             conn.setAutoCommit(false);
             try (var psCheck = conn.prepareStatement("SELECT 1 FROM catches WHERE player_uuid = ? AND fish_id = ?")) {
                 psCheck.setString(1, uuid);
@@ -159,8 +159,8 @@ public class AlmanacDatabase implements IAlmanacProvider {
         String sqlRatings = "SELECT rating, count FROM performance_stats WHERE player_uuid = ?";
         String sqlAllFish = "SELECT fish_id, count FROM catches WHERE player_uuid = ?";
 
-        try (Connection conn = getConnection()) {
-
+        try {
+            Connection conn = getConnection();
             // 1. Get totals
             try (PreparedStatement ps = conn.prepareStatement(sqlTotal)) {
                 ps.setString(1, uuid);
@@ -215,8 +215,10 @@ public class AlmanacDatabase implements IAlmanacProvider {
     public boolean hasPlayerCaught(String playerUUID, String fishId) {
         String sql = "SELECT 1 FROM catches WHERE player_uuid = ? AND fish_id = ? LIMIT 1";
 
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try
+        {
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setString(1, playerUUID);
             ps.setString(2, fishId);
@@ -224,7 +226,8 @@ public class AlmanacDatabase implements IAlmanacProvider {
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             AnglersAlmanac.LOGGER.atSevere()
                     .withCause(e)
                     .log("Failed to check catch status for player: " + playerUUID);
@@ -235,8 +238,9 @@ public class AlmanacDatabase implements IAlmanacProvider {
     public void addFishEntry(String uuid, String fishId) {
         String sql = "ON CONFLICT DO NOTHING INTO catches(player_uuid, fish_id, count) VALUES(?, ?, 0)";
 
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setString(1, uuid);
             ps.setString(2, fishId);
@@ -254,9 +258,9 @@ public class AlmanacDatabase implements IAlmanacProvider {
                 ? "DELETE FROM catches WHERE player_uuid = ?"
                 : "DELETE FROM catches WHERE player_uuid = ? AND fish_id = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try  {
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, uuid);
             if (!fishId.equals("*")) {
                 ps.setString(2, fishId);
@@ -275,9 +279,9 @@ public class AlmanacDatabase implements IAlmanacProvider {
         Map<String, Integer> counts = new HashMap<>();
         String sql = "SELECT fish_id, count FROM catches WHERE player_uuid = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try {
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, playerUUID);
 
             try (ResultSet rs = ps.executeQuery()) {

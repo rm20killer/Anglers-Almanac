@@ -145,7 +145,7 @@ public class AlmanacBook {
 
             String localizedName = Message.translation("anglersalmanac.book.name").param("name", playerName).getAnsiMessage();
             String localizedDesc = Message.translation("anglersalmanac.book.description").getAnsiMessage();
-            AnglersAlmanac.LOGGER.atInfo().log(localizedName);
+            //AnglersAlmanac.LOGGER.atInfo().log(localizedName);
 
             ItemBase definition = baseItem.toPacket().clone();
             definition.id = customId;

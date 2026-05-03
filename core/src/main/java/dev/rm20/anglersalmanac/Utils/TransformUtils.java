@@ -21,10 +21,16 @@ public class TransformUtils {
     public static void applyBillboard(Ref<EntityStore> looker, Ref<EntityStore>  lookAtTarget, Vector3f finalRotationAdjustment, ComponentAccessor<EntityStore> store){
         Vector3f newRotation = new Vector3f();
 
-        if(looker == null || lookAtTarget == null){
-            LOGGER.atWarning().log("Failed to apply billboard. (Missing entity Ref)");
+        if(looker==null){
+            LOGGER.atWarning().log("Failed to apply billboard. (Missing entity Ref on looker)");
             return;
         }
+
+        if(lookAtTarget == null){
+            LOGGER.atWarning().log("Failed to apply billboard. (Missing entity Ref on lookAtTarget)");
+            return;
+        }
+
 
         Vector3d lookerPos = store.getComponent(looker, TransformComponent.getComponentType()).getPosition();
         Vector3d targetPos = store.getComponent(lookAtTarget, TransformComponent.getComponentType()).getPosition();

@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.IEvents.FishingFailedEvent;
@@ -31,6 +32,7 @@ import java.util.*;
 
 public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> {
     ItemStack fishingRod = null;
+    Byte Slot = null;
     //List<String> soundAssetKeys = Arrays.asList("AA_Fishing_Reel_Slow0", "AA_Fishing_Reel_Slow1", "AA_Fishing_Reel_Slow2", "AA_Fishing_Reel_Slow3");
 
 
@@ -39,8 +41,25 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
 
         MinigameComponent_TensionBar game = commandBuffer.getComponent(archetypeChunk.getReferenceTo(i), MinigameComponent_TensionBar.COMPONENT_TYPE);
 
-        Ref<EntityStore> playerRef = game.ownerRef;
+        Ref<EntityStore> playerRef = null;
+        if (game == null) {
+            AnglersAlmanac.LOGGER.atSevere().log("Something went horribly wrong with the minigame system");
+            AnglersAlmanac.LOGGER.atSevere().log("Attempting to minigame");
+            store.getExternalData().getWorld().execute(() -> {
+                Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
+                    if (ref.isValid()) {
+                        try {
+                            store.removeEntity(ref, RemoveReason.REMOVE);
+                        } catch (RuntimeException e) {
+                            AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove: "+ref.toString());
+                        }
+                    }
+            });
+            return;
+        }
 
+
+        playerRef = game.ownerRef;
         Player player = commandBuffer.getComponent(playerRef, Player.getComponentType());
         ItemStack rodItem = player.getInventory().getActiveHotbarItem(); // TODO ensure that this is always actually the rod. (cancel minigame if switched off)
         Vector3d playerPos = commandBuffer.getComponent(playerRef, TransformComponent.getComponentType()).getPosition().clone();
@@ -54,10 +73,17 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
         if(rodMeta != null)
         {
             fishingRod = rodItem;
+            Slot = player.getInventory().getActiveHotbarSlot();
         }
 
 
         switch (game.stateTrigger){
+            case DONE:
+                World world = store.getExternalData().getWorld();
+                AnglersAlmanac.LOGGER.atWarning().log("Something went wrong- Minigame still alive. ");
+                AnglersAlmanac.LOGGER.atWarning().log("Attempted to despawn minigame "+ game.selfUUID);
+                game.despawnSelf(world);
+                return;
             case FISHMOVE:
 
                 // Reset timers for the next move.
@@ -111,7 +137,7 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 break;
             case SUCCESS:
                 //AnglersAlmanac.LOGGER.atInfo().log("YOU WIN");
-                MinigamePRating.PerformanceRating  rating = game.getPerformanceRating(game.getPerformancePercentage());
+                MinigamePRating.PerformanceRating  rating = Minigame.getPerformanceRating(game.getPerformancePercentage());
                 //AnglersAlmanac.LOGGER.atInfo().log("Minigame performance rating = %s", rating);
                 if(rating == MinigamePRating.PerformanceRating.FAIL) LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
                 // Deal rewards.
@@ -129,7 +155,8 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 }
 
                 // Finish fishing.
-                LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
+                game.stateTrigger = MinigameComponent_TensionBar.Trigger.DONE;
+                LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod,Slot);
                 break;
         }
 

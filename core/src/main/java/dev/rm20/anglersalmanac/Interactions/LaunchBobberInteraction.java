@@ -76,7 +76,8 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
             if (shouldReset) {
                 AnglersAlmanac.LOGGER.atInfo().log("Fixing busted metadata for: "+player.getDisplayName());
                 cancelFishing(commandBuffer, player, heldItem);
-                meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
+                //meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
+                return;
             }
         }
 
@@ -197,6 +198,7 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
             AnglersAlmanac.LOGGER.atWarning().log("Failed to reel in" + bobberId);
             AnglersAlmanac.LOGGER.atInfo().log("Fixing busted metadata");
             cancelFishing(commandBuffer, player, heldItem);
+
         }
 
 
@@ -211,6 +213,11 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
 
         World world = commandBuffer.getExternalData().getWorld();
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
+        if(meta==null)
+        {
+            AnglersAlmanac.LOGGER.atWarning().log("Failed to clear" + heldItem);
+            return;
+        }
         // Attempt to remove bobber and minigame if not already.
         RemoveFishingEntities(commandBuffer, meta, world);
         Ref<EntityStore> playerRef = player.getReference();

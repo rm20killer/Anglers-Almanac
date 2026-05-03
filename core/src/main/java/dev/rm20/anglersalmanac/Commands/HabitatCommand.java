@@ -94,6 +94,6 @@ public class HabitatCommand extends AbstractPlayerCommand {
     }
 
     private void logToConsole(FishingContext ctx) {
-        AnglersAlmanac.LOGGER.atInfo().log();
+        //AnglersAlmanac.LOGGER.atInfo().log();
     }
 }
