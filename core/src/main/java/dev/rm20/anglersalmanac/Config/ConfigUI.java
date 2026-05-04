@@ -27,13 +27,15 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
     public static class BindingData {
         public static final BuilderCodec<BindingData> CODEC = BuilderCodec.builder(BindingData.class, BindingData::new)
                 .addField(new KeyedCodec<>("@BaitRequired", Codec.BOOLEAN), (data, s) -> data.BaitRequired = s, data -> data.BaitRequired)
-                .addField(new KeyedCodec<>("@XpEnabled", Codec.BOOLEAN), (data, s) -> data.XpEnabled = s, data -> data.XpEnabled)
                 .addField(new KeyedCodec<>("@TensionBarEnabled", Codec.BOOLEAN), (data, s) -> data.TensionBarEnabled = s, data -> data.TensionBarEnabled)
+                .addField(new KeyedCodec<>("@LocationCheck", Codec.BOOLEAN), (data, s) -> data.LocationCheck = s, data -> data.LocationCheck)
+                .addField(new KeyedCodec<>("@EnvironmentCheck", Codec.BOOLEAN), (data, s) -> data.EnvironmentCheck = s, data -> data.EnvironmentCheck)
                 .build();
 
         public Boolean BaitRequired;
-        public Boolean XpEnabled;
         public Boolean TensionBarEnabled;
+        public Boolean LocationCheck;
+        public Boolean EnvironmentCheck;
     }
 
 
@@ -45,26 +47,23 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
 
         uiCommandBuilder.set("#TensionBarEnabled.TooltipText", Message.translation("anglersalmanac.config.tensionBar.tooltip"));
         uiCommandBuilder.set("#BaitRequired.TooltipText", Message.translation("anglersalmanac.config.baitRequired.tooltip"));
-        uiCommandBuilder.set("#XpEnabled.TooltipText", Message.translation("anglersalmanac.config.xpEnabled.tooltip"));
-
+        uiCommandBuilder.set("#LocationCheck.TooltipText", Message.translation("anglersalmanac.config.LocationCheck.tooltip"));
+        uiCommandBuilder.set("#EnvironmentCheck.TooltipText", Message.translation("anglersalmanac.config.EnvironmentCheck.tooltip"));
 
 
         var config = AnglersAlmanac.MOD_CONFIG;
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#BaitRequired #CheckBox", EventData.of("@BaitRequired", "#BaitRequired #CheckBox.Value"), false);
-        uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#XpEnabled #CheckBox", EventData.of("@XpEnabled", "#XpEnabled #CheckBox.Value"), false);
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TensionBarEnabled #CheckBox", EventData.of("@TensionBarEnabled", "#TensionBarEnabled #CheckBox.Value"), false);
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#LocationCheck #CheckBox", EventData.of("@LocationCheck", "#LocationCheck #CheckBox.Value"), false);
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#EnvironmentCheck #CheckBox", EventData.of("@EnvironmentCheck", "#EnvironmentCheck #CheckBox.Value"), false);
+
 
         uiCommandBuilder.set("#BaitRequired #CheckBox.Value", config.get().getShouldUseBait());
-        uiCommandBuilder.set("#XpEnabled #CheckBox.Value", false);
-        uiCommandBuilder.set("#XpEnabled #CheckBox.Disabled", true);
-        if(config.get().getMinigameToUse().equalsIgnoreCase("TensionBar"))
-        {
-            uiCommandBuilder.set("#TensionBarEnabled #CheckBox.Value", true);
-        }
-        else
-        {
-            uiCommandBuilder.set("#TensionBarEnabled #CheckBox.Value", false);
-        }
+        uiCommandBuilder.set("#TensionBarEnabled #CheckBox.Value", config.get().getMinigameToUse().equalsIgnoreCase("TensionBar"));
+
+        uiCommandBuilder.set("#LocationCheck #CheckBox.Value", config.get().getShouldHabCheck());
+        uiCommandBuilder.set("#EnvironmentCheck #CheckBox.Value", config.get().getShouldEnvironmentCheck());
+
 
     }
 
@@ -79,10 +78,6 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
             this.playerRef.sendMessage(Message.raw("[AA] Bait required set to: " + data.BaitRequired));
 
         }
-        if (data.XpEnabled != null) {
-            // Logic for @XpEnabled
-            this.playerRef.sendMessage(Message.raw("@XpEnabled updated to: " + data.XpEnabled));
-        }
         if(data.TensionBarEnabled != null)
         {
             if(data.TensionBarEnabled)
@@ -95,6 +90,16 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
                 config.get().setMinigameToUse("NoMinigame");
                 this.playerRef.sendMessage(Message.raw("[AA] No Minigame Enabled"));
             }
+        }
+        if(data.LocationCheck != null)
+        {
+            config.get().setShouldHabCheck(data.LocationCheck);
+            this.playerRef.sendMessage(Message.raw("[AA] Location check set to: " + data.LocationCheck));
+        }
+        if(data.EnvironmentCheck != null)
+        {
+            config.get().setShouldEnvironmentCheck(data.EnvironmentCheck);
+            this.playerRef.sendMessage(Message.raw("[AA] Environment check set to: " + data.EnvironmentCheck));
         }
         AnglersAlmanac.MOD_CONFIG.save();
     }

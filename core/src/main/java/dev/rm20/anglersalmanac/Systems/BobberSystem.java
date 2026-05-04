@@ -50,11 +50,18 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 UUIDComponent uuidComponent = archetypeChunk.getComponent(i, UUIDComponent.getComponentType());
                 if(uuidComponent != null)
                 {
-                    AnglersAlmanac.LOGGER.atInfo().log("No player found for BobberSystem" + uuidComponent.getUuid());
+                    AnglersAlmanac.LOGGER.atInfo().log("No player found for BobberSystem: " + uuidComponent.getUuid());
                 }
                 try {
                     commandBuffer.getExternalData().getWorld().execute(() -> {
-                        store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
+                        if(archetypeChunk.getReferenceTo(i).isValid() && archetypeChunk.getReferenceTo(i) !=null)
+                        {
+                            store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
+                        }
+                        else
+                        {
+                            AnglersAlmanac.LOGGER.atWarning().log("Something went wrong with the bobber");
+                        }
                     });
                 } catch (RuntimeException e) {
                     AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");

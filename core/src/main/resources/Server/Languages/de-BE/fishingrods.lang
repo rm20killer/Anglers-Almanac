@@ -1,0 +1,18 @@
+# ============================================================
+# Angler's Almanac Angelruten - Deutsche Übersetzung
+# Sprache: de-DE
+# Format der Keys: {kategorie}.{key}
+# Nutzung: fishingrods.{kategorie}.{key}
+# ============================================================
+
+crude.name = Holzangel
+crude.description = Wird verwendet, um Fische aus dem Wasser zu fangen.
+
+iron.name = Eisenangel
+iron.description = Wird verwendet, um Fische aus dem Wasser zu fangen.
+
+cobalt.name = Kobaltangel
+cobalt.description = Wird verwendet, um Fische aus dem Wasser zu fangen.
+
+reef.name = Riffangel
+reef.description = Wird verwendet, um Fische aus dem Wasser zu fangen.

@@ -20,6 +20,8 @@
   "Weight": 125,
   "Rarity": "Junk",
   "Minigame_stats": {
-    "Behavior": "None"
+    "Difficulty": 0,
+    "Behavior": "None",
+    "Stamina": 0
   }
 }

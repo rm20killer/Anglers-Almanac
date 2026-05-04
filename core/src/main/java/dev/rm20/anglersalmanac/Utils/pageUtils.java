@@ -12,9 +12,9 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import dev.rm20.anglersalmanac.AlmanacBook.AlmanacDatabase;
 import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
-import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Models.BookAssetData;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
+import dev.rm20.anglersalmanac.Utils.pageUtils;
 
 import java.util.List;
 import java.util.Objects;

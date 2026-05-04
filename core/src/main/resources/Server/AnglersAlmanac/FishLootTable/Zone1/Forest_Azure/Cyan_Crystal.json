@@ -18,5 +18,10 @@
     "Min": 1
   },
   "Weight": 75,
-  "Rarity": "Junk"
+  "Rarity": "Junk",
+  "Minigame_stats": {
+    "Difficulty": 0,
+    "Behavior": "None",
+    "Stamina": 0
+  }
 }

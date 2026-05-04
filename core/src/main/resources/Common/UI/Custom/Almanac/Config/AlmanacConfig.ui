@@ -26,9 +26,14 @@ Group #Group {
         TooltipText: "When fishing bait is needed for";
         Padding: (Top: 10);
       }
-      $C.@CheckBoxWithLabel #XpEnabled {
-        @Text = "XP from fishing";
-        TooltipText: "[WIP] get xp from fishing if you have a XP mod";
+      $C.@CheckBoxWithLabel #LocationCheck {
+        @Text = "Habitat check";
+        TooltipText: "Disabled will mark all fish as global";
+        Padding: (Top: 10);
+      }
+      $C.@CheckBoxWithLabel #EnvironmentCheck {
+        @Text = "Environment check";
+        TooltipText: "Should the mod check environment check, e.g y level, time, depth etc";
         Padding: (Top: 10);
       }
     }

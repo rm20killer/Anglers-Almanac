@@ -145,9 +145,16 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
             commandBuffer.addEntity(holder, AddReason.SPAWN);
         });
         String fishIcon = "SSF_FishIcon";
-        if(game.fishHooked.getMinigameStats().gameIcon != null)
+        if(game.fishHooked.getMinigameStats() !=null)
         {
-            fishIcon = GameIcon.getModelId(game.fishHooked.getMinigameStats().gameIcon);
+            if(game.fishHooked.getMinigameStats().gameIcon != null)
+            {
+                fishIcon = GameIcon.getModelId(game.fishHooked.getMinigameStats().gameIcon);
+            }
+        }
+        else
+        {
+            AnglersAlmanac.LOGGER.atWarning().log("Missing fish icon on" + game.fishHooked.getId());
         }
         game.spawnMinigameAdditionals(commandBuffer, spawnPos.clone(),fishIcon);
 

@@ -14,6 +14,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.EnumCodec;
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.codec.validation.Validators;
+import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
@@ -271,6 +272,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
     private static boolean isEligible(FishLootManager loot, GeoKey key) {
+        if(!AnglersAlmanac.MOD_CONFIG.get().getShouldHabCheck()) return true;
         Habitats hab = loot.getHabitats();
         if (hab == null) {
             //AnglersAlmanac.LOGGER.atInfo().log(loot.getName() + " is has no habitat info");
@@ -337,6 +339,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
     private static boolean checkEnvironment(FishLootManager loot, FishingContext ctx) {
+        if(AnglersAlmanac.MOD_CONFIG.get().getShouldEnvironmentCheck()) return true;
         Habitats hab = loot.getHabitats();
         if (hab == null) return true;
 

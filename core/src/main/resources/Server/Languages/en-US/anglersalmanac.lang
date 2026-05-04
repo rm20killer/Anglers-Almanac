@@ -39,6 +39,12 @@ config.baitRequired.tooltip = When fishing bait is needed for
 config.xpEnabled.text = XP from fishing
 config.xpEnabled.tooltip = [WIP] get xp from fishing if you have a XP mod
 
+config.LocationCheck.text = Habitat check
+config.LocationCheck.tooltip = Disabled will mark all fish as global
+
+config.EnvironmentCheck.text = Environment check
+config.EnvironmentCheck.tooltip = Should the mod check environment check, e.g y level, time, depth etc
+
 ### Fishing
 fishing.bait.no = NO BAIT
 fishing.bait.used = has been used
