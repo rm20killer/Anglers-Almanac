@@ -22,7 +22,7 @@
         
     },
     "OptionalDependencies": {
-        
+        "Ziggfreed:MMOSkillTree": "*"
     },
     "LoadBefore": {
         

@@ -70,8 +70,8 @@ public class AlmanacDatabase implements IAlmanacProvider {
     }
 
     private void createTables() throws SQLException {
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
+        Connection conn = getConnection();
+        try (Statement stmt = conn.createStatement()){
             // Player's overall stats
             stmt.execute("CREATE TABLE IF NOT EXISTS players (" +
                     "uuid TEXT PRIMARY KEY, " +

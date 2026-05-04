@@ -348,14 +348,14 @@ public class MinigameManager {
                 ItemStack itemStack = new ItemStack(loot.getItemID(),1);
                 String fishDisplayName = Message.translation(itemStack.getItem().getTranslationKey()).getAnsiMessage();
                 if (isLegendary) {
-                    showDiscoveryUI(playerRef1, fishDisplayName, "fishing.caught.legDiscovered", Color.YELLOW);
+                    showDiscoveryUI(playerRef1, fishDisplayName, "anglersalmanac.fishing.caught.legDiscovered", Color.YELLOW);
                     int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Book_New_Fish_2");
                     assert player.getWorld() != null;
                     player.getWorld().execute(() -> {
                         SoundUtil.playSoundEvent2dToPlayer(playerRef1, audio, SoundCategory.UI);
                     });
                 } else {
-                    showDiscoveryUI(playerRef1, fishDisplayName, "fishing.caught.newFish", Color.GREEN);
+                    showDiscoveryUI(playerRef1, fishDisplayName, "anglersalmanac.fishing.caught.newFish", Color.GREEN);
                     int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Book_New_Fish_1");
                     assert player.getWorld() != null;
                     player.getWorld().execute(() -> {

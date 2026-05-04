@@ -47,6 +47,11 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
         {
             player = component.getPlayer();
             if (player == null) {
+                UUIDComponent uuidComponent = archetypeChunk.getComponent(i, UUIDComponent.getComponentType());
+                if(uuidComponent != null)
+                {
+                    AnglersAlmanac.LOGGER.atInfo().log("No player found for BobberSystem" + uuidComponent.getUuid());
+                }
                 try {
                     commandBuffer.getExternalData().getWorld().execute(() -> {
                         store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
@@ -58,8 +63,20 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
             }
             else
             {
-                Vector3d playerPos = commandBuffer.getComponent(player.getReference(), TransformComponent.getComponentType()).getPosition().clone();
-                double distSq = getDistanceSquared(playerPos,transform.getPosition());
+                if(player.getReference() == null)
+                {
+                    AnglersAlmanac.LOGGER.atInfo().log("BobberSystem was attached to player that no longer is there, removing");
+                    try {
+                        commandBuffer.getExternalData().getWorld().execute(() -> {
+                            store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
+                        });
+                    } catch (RuntimeException e) {
+                        AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
+                    }
+                }
+                TransformComponent playerTransform = commandBuffer.getComponent(player.getReference(), TransformComponent.getComponentType());
+                Vector3d playerPos = playerTransform != null ? playerTransform.getPosition() : new Vector3d(0,-64,0);
+                double distSq = getDistanceSquared(playerPos, transform != null ? transform.getPosition() : new Vector3d(0,-129,0));
                 if (distSq > DespawnRange) {
                     AnglersAlmanac.LOGGER.atInfo().log(player.getDisplayName()+" To far away from bobber, Despawn");
                     LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod, slot);
@@ -71,6 +88,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
             FishingRodData meta = (heldItem != null) ? heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC) : null;
             UUIDComponent uuidComp = archetypeChunk.getComponent(i, UUIDComponent.getComponentType());
             UUID bobberUuid = (uuidComp != null) ? uuidComp.getUuid() : null;
+
             boolean isLinked = meta != null && bobberUuid != null && bobberUuid.equals(meta.getBoundBobber());
 
             if (!isLinked) {
@@ -83,6 +101,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                         AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                     }
                 } else {
+                    //AnglersAlmanac.LOGGER.atInfo().log(player.getDisplayName() + " fishing rod data changed while fishing.");
                     LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod, slot);
                 }
                 return;

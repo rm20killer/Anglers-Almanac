@@ -83,8 +83,9 @@ public class AlmanacRepository {
                 "custom_id TEXT NOT NULL, " +
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
 
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
@@ -94,8 +95,9 @@ public class AlmanacRepository {
     public static void saveBookId(String playerUuid, String customId, String playerName) {
         String sql = "REPLACE INTO custom_items (player_uuid, player_name, custom_id) VALUES (?, ?, ?)";
 
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, playerUuid);
             pstmt.setString(2, playerName);
             pstmt.setString(3, customId);
@@ -107,8 +109,9 @@ public class AlmanacRepository {
 
     public static BookEntry getBookData(String playerUuid) {
         String sql = "SELECT custom_id, player_name FROM custom_items WHERE player_uuid = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, playerUuid);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -125,10 +128,10 @@ public class AlmanacRepository {
         Map<String, BookEntry> books = new HashMap<>();
         String sql = "SELECT player_uuid, player_name, custom_id FROM custom_items";
 
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 books.put(
                         rs.getString("player_uuid"),

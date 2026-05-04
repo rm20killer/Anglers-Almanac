@@ -55,7 +55,7 @@ public class MMOSkillTree {
             Object result = getLevelMethod.invoke(null, store, ref, "FISHING");
             return (result instanceof Integer) ? (int) result : 0;
         } catch (Exception e) {
-            AnglersAlmanac.LOGGER.atSevere().log("Failed to invoke getLevel: " + e.getMessage());
+            AnglersAlmanac.LOGGER.atSevere().withCause(e).log("Integration failure in getFishingLevel");
             return 0;
         }
     }
