@@ -38,5 +38,6 @@
       -39
     ]
   },
-  "PlayerAnimationsId": "Stick"
+  "PlayerAnimationsId": "Stick",
+  "UsePlayerAnimations": true
 }

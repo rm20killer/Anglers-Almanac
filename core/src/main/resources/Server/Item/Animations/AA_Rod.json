@@ -1,0 +1,11 @@
+{
+  "Parent": "Stick",
+  "Animations": {
+    "Cast": {
+      "ThirdPerson": "Characters/Animations/AA_Rod_Cast.blockyanim",
+      "FirstPerson": "Characters/Animations/AA_Rod_Cast_FP.blockyanim",
+      "Speed": 2,
+      "BlendingDuration": 0.05
+    }
+  }
+}

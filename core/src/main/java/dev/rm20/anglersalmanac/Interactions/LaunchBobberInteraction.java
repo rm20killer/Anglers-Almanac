@@ -6,11 +6,14 @@ import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.protocol.AnimationSet;
+import com.hypixel.hytale.protocol.AnimationSlot;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
+import com.hypixel.hytale.server.core.entity.AnimationUtils;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
@@ -162,6 +165,12 @@ public class LaunchBobberInteraction extends SimpleInstantInteraction {
         //play sound here
         int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Reel");
         SoundUtil.playSoundEvent3d(audio, SoundCategory.SFX, transform.getPosition(), playerRef.getStore());
+
+        // Trigger cast animation
+        //AnimationAction attackAnim = new AnimationAction("attack");
+        //AnimationUtils.playAnimation(player.getReference(), AnimationSlot.Action, "AA_Rod", "AA_Rod_Cast", true, interactionContext.getCommandBuffer().getStore());
+        //attackAnim.execute(ref, role, sensorInfo, dt, store);
+
         //AnglersAlmanac.LOGGER.atInfo().log("Rod metadata %s, %s", heldItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC), heldItem.getFromMetadataOrNull(ItemModeData.KEYED_CODEC));
     }
 

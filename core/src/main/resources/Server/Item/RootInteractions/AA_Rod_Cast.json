@@ -1,0 +1,10 @@
+{
+  "Interactions": [
+    "LaunchBobberInteraction"
+  ],
+  "Tags": {
+    "Attack": [
+      "Melee"
+    ]
+  }
+}
