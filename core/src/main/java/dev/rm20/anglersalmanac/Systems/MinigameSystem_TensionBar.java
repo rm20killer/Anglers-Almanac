@@ -31,8 +31,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> {
-    ItemStack fishingRod = null;
-    Byte Slot = null;
     //List<String> soundAssetKeys = Arrays.asList("AA_Fishing_Reel_Slow0", "AA_Fishing_Reel_Slow1", "AA_Fishing_Reel_Slow2", "AA_Fishing_Reel_Slow3");
 
 
@@ -72,8 +70,8 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
         FishingRodData rodMeta = rodItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
         if(rodMeta != null)
         {
-            fishingRod = rodItem;
-            Slot = player.getInventory().getActiveHotbarSlot();
+            game.fishingRod = rodItem;
+            game.Slot = player.getInventory().getActiveHotbarSlot();
         }
 
 
@@ -133,15 +131,20 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 FishingFailedEvent mainEvent = new FishingFailedEvent(game.fishHooked,player);
                 eventBus.dispatchFor(FishingFailedEvent.class).dispatch(mainEvent);
                 
-                LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
+                LaunchBobberInteraction.cancelFishing(commandBuffer, player, game.fishingRod);
                 break;
             case SUCCESS:
+                if(game.DroppedItem)
+                {
+                    game.stateTrigger = MinigameComponent_TensionBar.Trigger.DONE;
+                    return;
+                }
                 //AnglersAlmanac.LOGGER.atInfo().log("YOU WIN");
                 MinigamePRating.PerformanceRating  rating = Minigame.getPerformanceRating(game.getPerformancePercentage());
                 //AnglersAlmanac.LOGGER.atInfo().log("Minigame performance rating = %s", rating);
-                if(rating == MinigamePRating.PerformanceRating.FAIL) LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod);
+                if(rating == MinigamePRating.PerformanceRating.FAIL) LaunchBobberInteraction.cancelFishing(commandBuffer, player, game.fishingRod);
                 // Deal rewards.
-
+                game.stateTrigger = MinigameComponent_TensionBar.Trigger.DONE;
                 if(game.fishHooked!=null)
                 {
                     MinigameManager.DropLoot(game.fishHooked, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
@@ -153,11 +156,10 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 if(rating == MinigamePRating.PerformanceRating.PERFECT){
                     // TODO Deal chance of bonus loot.
                 }
-
+                game.DroppedItem = true;
                 // Finish fishing.
-                game.stateTrigger = MinigameComponent_TensionBar.Trigger.DONE;
-                LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod,Slot);
-                break;
+                LaunchBobberInteraction.cancelFishing(commandBuffer, player, game.fishingRod,game.Slot);
+                return;
         }
 
 

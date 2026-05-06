@@ -31,8 +31,6 @@ import static dev.rm20.anglersalmanac.Utils.BaitUtils.SendBaitNotification;
 
 public class BobberSystem extends EntityTickingSystem<EntityStore> {
     private final Random random = new Random();
-    ItemStack fishingRod = null;
-    byte slot = 0;
 
 
     private static final float DespawnRange = 64.0f * 64.0f; // 64 blocks
@@ -75,18 +73,43 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                     AnglersAlmanac.LOGGER.atInfo().log("BobberSystem was attached to player that no longer is there, removing");
                     try {
                         commandBuffer.getExternalData().getWorld().execute(() -> {
-                            store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
+                            if(archetypeChunk.getReferenceTo(i).isValid() && archetypeChunk.getReferenceTo(i) !=null)
+                            {
+                                store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
+                            }
+                            else
+                            {
+                                AnglersAlmanac.LOGGER.atWarning().log("Something went wrong with the bobber");
+                            }
                         });
                     } catch (RuntimeException e) {
                         AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                     }
+                }
+                if(player.getReference() == null)
+                {
+                    try {
+                        commandBuffer.getExternalData().getWorld().execute(() -> {
+                            if(archetypeChunk.getReferenceTo(i).isValid() && archetypeChunk.getReferenceTo(i) !=null)
+                            {
+                                store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
+                            }
+                            else
+                            {
+                                AnglersAlmanac.LOGGER.atWarning().log("Something went wrong with the bobber (no player ref)");
+                            }
+                        });
+                    } catch (RuntimeException e) {
+                        AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
+                    }
+                    return;
                 }
                 TransformComponent playerTransform = commandBuffer.getComponent(player.getReference(), TransformComponent.getComponentType());
                 Vector3d playerPos = playerTransform != null ? playerTransform.getPosition() : new Vector3d(0,-64,0);
                 double distSq = getDistanceSquared(playerPos, transform != null ? transform.getPosition() : new Vector3d(0,-129,0));
                 if (distSq > DespawnRange) {
                     AnglersAlmanac.LOGGER.atInfo().log(player.getDisplayName()+" To far away from bobber, Despawn");
-                    LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod, slot);
+                    LaunchBobberInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
                     return;
                 }
             }
@@ -99,7 +122,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
             boolean isLinked = meta != null && bobberUuid != null && bobberUuid.equals(meta.getBoundBobber());
 
             if (!isLinked) {
-                if (fishingRod == null) {
+                if (component.fishingRod == null) {
                     try {
                         commandBuffer.getExternalData().getWorld().execute(() -> {
                             store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
@@ -109,12 +132,12 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                     }
                 } else {
                     //AnglersAlmanac.LOGGER.atInfo().log(player.getDisplayName() + " fishing rod data changed while fishing.");
-                    LaunchBobberInteraction.cancelFishing(commandBuffer, player, fishingRod, slot);
+                    LaunchBobberInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
                 }
                 return;
             }
-            slot = player.getInventory().getActiveHotbarSlot();
-            fishingRod = heldItem;
+            component.slot = player.getInventory().getActiveHotbarSlot();
+            component.fishingRod = heldItem;
         } else {
             player = null;
         }

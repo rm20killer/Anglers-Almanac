@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
@@ -80,6 +81,9 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
     public int ticksReeling = 0;
     public int ticksEscaping = 0;
 
+    public ItemStack fishingRod = null;
+    public Byte Slot = null;
+    public Boolean DroppedItem = false;
 
     public MinigameComponent_TensionBar(Ref<EntityStore> ownerPlayerRef, Ref<EntityStore> bobberRef, UUID selfUUID) {
         this.ownerRef = ownerPlayerRef;
