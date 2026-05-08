@@ -1,0 +1,57 @@
+{
+  "TranslationProperties": {
+    "Name": "fishingrods.cobalt.name",
+    "Description": "fishingrods.cobalt.description"
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "Set": "Tool_Stone",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Cobalt.png",
+  "Quality": "Uncommon",
+  "MaxStack": 1,
+  "ItemLevel": 1,
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        "UseRodInteraction"
+      ],
+      "RequireNewClick": true,
+      "Cooldown": {
+        "Id": "UseRod",
+        "Cooldown": 1
+      }
+    },
+    "Primary": {
+      "Interactions": [
+        "MinigameInteraction"
+      ],
+      "Cooldown": {
+        "Cooldown": 0
+      }
+    }
+  },
+  "Model": "Items/Tools/Fishing_Rod/Rod_Cobalt.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Rod_Cobalt.png",
+  "MaxDurability": 100,
+  "PlayerAnimationsId": "Hoe",
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [
+      45,
+      226,
+      0
+    ],
+    "Translation": [
+      21,
+      -30
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Weapons_Wood"
+}

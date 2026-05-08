@@ -1,0 +1,28 @@
+{
+  "ItemId": "Rock_Crystal_Yellow_Small",
+  "Habitats": {
+    "Zones": [
+      "4",
+      "2"
+    ],
+    "Min_depth": 2,
+    "Height": {
+      "Max_y": 90
+    },
+    "Time_of_day": [
+      "Any"
+    ]
+  },
+  "Name": "Yello Crystal - Small",
+  "Quantity": {
+    "Max": 2,
+    "Min": 1
+  },
+  "Minigame_stats": {
+    "Difficulty": 0,
+    "Behavior": "None",
+    "Stamina": 0
+  },
+  "Weight": 75,
+  "Rarity": "Junk"
+}

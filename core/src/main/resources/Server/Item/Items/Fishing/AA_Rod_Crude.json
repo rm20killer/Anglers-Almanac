@@ -1,0 +1,85 @@
+{
+  "TranslationProperties": {
+    "Name": "fishingrods.crude.name",
+    "Description": "fishingrods.crude.description"
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "Set": "Tool_Stone",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Crude.png",
+  "Quality": "Uncommon",
+  "MaxStack": 1,
+  "ItemLevel": 1,
+  "Recipe": {
+    "TimeSeconds": 1.0,
+    "Input": [
+      {
+        "ResourceTypeId": "Wood_Trunk",
+        "Quantity": 4
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Fabric_Scrap_Linen"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": [
+          "Farming"
+        ],
+        "Id": "Farmingbench"
+      },
+      {
+        "Id": "Workbench",
+        "Categories": [
+          "Workbench_Tools"
+        ]
+      }
+    ]
+  },
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        "UseRodInteraction"
+      ],
+      "RequireNewClick": true,
+      "Cooldown": {
+        "Id": "UseRod",
+        "Cooldown": 1
+      }
+    },
+    "Primary": {
+      "Interactions": [
+        "MinigameInteraction"
+      ],
+      "Cooldown": {
+        "Cooldown": 0
+      }
+    }
+  },
+  "Model": "Items/Tools/Fishing_Rod/Rod_Crude.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Rod_Crude.png",
+  "MaxDurability": 100,
+  "PlayerAnimationsId": "Hoe",
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [
+      36,
+      268,
+      28
+    ],
+    "Translation": [
+      21,
+      -30
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Weapons_Wood"
+}

@@ -1,0 +1,67 @@
+{
+  "TranslationProperties": {
+    "Name": "fishingrods.saltworn.name",
+    "Description": "fishingrods.saltworn.description"
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "Set": "Tool_Stone",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Saltworn.png",
+  "Quality": "Uncommon",
+  "MaxStack": 1,
+  "ItemLevel": 1,
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        "UseRodInteraction"
+      ],
+      "RequireNewClick": true,
+      "Cooldown": {
+        "Id": "UseRod",
+        "Cooldown": 1
+      }
+    },
+    "Primary": {
+      "Interactions": [
+        "MinigameInteraction"
+      ],
+      "Cooldown": {
+        "Cooldown": 0
+      }
+    }
+  },
+  "Model": "Items/Tools/Fishing_Rod/Rod_SaltWorn.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/AA_Rod_SaltWorn.png",
+  "MaxDurability": 100,
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [
+      27,
+      187,
+      326
+    ],
+    "Translation": [
+      25,
+      -32
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Weapons_Wood",
+  "PlayerAnimationsId": "AA_Rod",
+  "Particles": [
+    {
+      "SystemId": "Test_ParticleSystem",
+      "Color": "#707070",
+      "Scale": 0.2,
+      "PositionOffset": {
+        "Y": 1
+      }
+    }
+  ]
+}

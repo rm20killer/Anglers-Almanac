@@ -1,1 +1,3 @@
 rootProject.name = 'AnglersAlmanac'
+include 'api'
+include 'core'

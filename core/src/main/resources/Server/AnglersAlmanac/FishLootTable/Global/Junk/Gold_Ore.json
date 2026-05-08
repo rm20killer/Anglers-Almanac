@@ -1,0 +1,26 @@
+{
+  "ItemId": "Ore_Gold",
+  "Weight": 65,
+  "IsGlobal": true,
+  "Habitats": {
+    "Min_depth": 3,
+    "Height": {
+      "Max_y": 45
+    },
+    "Exclude_zones": [
+      "3"
+    ],
+    "Weight_multiplier": 0.25
+  },
+  "Rarity": "Junk",
+  "Name": "Gold ore",
+  "Minigame_stats": {
+    "Behavior": "HeavySinker",
+    "Difficulty": 4,
+    "Stamina": 50
+  },
+  "Quantity": {
+    "Min": 2,
+    "Max": 5
+  }
+}

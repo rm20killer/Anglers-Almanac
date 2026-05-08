@@ -1,0 +1,25 @@
+{
+  "ItemId": "Ore_Cobalt",
+  "Weight": 120,
+  "IsGlobal": false,
+  "Habitats": {
+    "Zones": [
+      "3"
+    ],
+    "Min_depth": 3,
+    "Height": {
+      "Max_y": 110
+    }
+  },
+  "Rarity": "Junk",
+  "Name": "Cobalt ore",
+  "Minigame_stats": {
+    "Behavior": "HeavySinker",
+    "Difficulty": 6,
+    "Stamina": 50
+  },
+  "Quantity": {
+    "Min": 1,
+    "Max": 4
+  }
+}

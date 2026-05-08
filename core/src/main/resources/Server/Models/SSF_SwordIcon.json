@@ -1,0 +1,18 @@
+{
+  "Model": "VFX/Fishing/SSF_SwordIcon.blockymodel",
+  "HitBox": {
+    "Max": {
+      "X": 1,
+      "Y": 1,
+      "Z": 1
+    },
+    "Min": {
+      "X": -1,
+      "Y": -1,
+      "Z": -1
+    }
+  },
+  "MinScale": 0.1,
+  "MaxScale": 1,
+  "Texture": "VFX/Fishing/SSF_SwordIcon.png"
+}

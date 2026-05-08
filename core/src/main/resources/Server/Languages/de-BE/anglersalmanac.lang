@@ -1,0 +1,77 @@
+# ============================================================
+# Angler's Almanac - Deutsche Übersetzung
+# Sprache: de-DE
+# Format der Keys: {kategorie}.{key}
+# Nutzung: anglersalmanac.{kategorie}.{key}
+# ============================================================
+
+### Buch-Details
+book.name = {name}s Angelbuch
+book.description = Gebunden an ID:
+book.item.name = Angelbuch
+book.item.description = Rechtsklick, um das Buch an dich zu binden
+
+### Allgemeine Befehlsfehler
+cmd.error.notPlayer = Dieser Befehl kann nur von einem Spieler ausgeführt werden!
+cmd.error.noPerms = Du hast keine Berechtigung, diesen Befehl auszuführen.
+cmd.invalidFish = Ungültige Fisch-ID: {name}
+
+### Befehl - Fisch hinzufügen
+cmd.addFish.all = Alle {count} Fische wurden deinem Almanach hinzugefügt!
+cmd.addFish.fish = {name} wurde deinem Almanach hinzugefügt!
+
+### Befehl - Fisch entfernen
+cmd.removeFish.all = Alle {count} Fische wurden aus deinem Almanach entfernt!
+cmd.removeFish.fish = {name} wurde aus deinem Almanach entfernt!
+
+### Befehl - Simulation
+cmd.sim.done = Simulation abgeschlossen. Details findest du in der Serverkonsole.
+
+### Konfigurations-Menü (UI)
+config.label = Angler-Almanach Konfiguration
+config.tensionBar.text = Spannungsanzeige-Test aktivieren
+config.tensionBar.tooltip = Aktiviert das Stardew Valley Minispiel. Wenn deaktiviert, findet kein Minispiel statt.
+
+config.baitRequired.text = Köder zum Fischen benötigt
+config.baitRequired.tooltip = Legt fest, ob Köder zum Angeln zwingend erforderlich sind.
+
+config.xpEnabled.text = EP durch Angeln
+config.xpEnabled.tooltip = [WIP] Erhalte Erfahrungspunkte beim Angeln, falls eine EP-Mod installiert ist.
+
+config.LocationCheck.text = Habitat check
+config.LocationCheck.tooltip = Disabled will mark all fish as global
+
+config.EnvironmentCheck.text = Environment check
+config.EnvironmentCheck.tooltip = Should the mod check environment check, e.g y level, time, depth etc
+
+### Fischen
+fishing.bait.no = KEIN KÖDER
+fishing.bait.used = wurde verbraucht
+fishing.bait.retuned = wurde zurückgegeben
+
+fishing.caught.legDiscovered = LEGENDÄRE ENTDECKUNG
+fishing.caught.newFish = Neuer Fisch entdeckt
+
+### Almanach
+almanac.unknown = Unbekannt
+almanac.glossaryTab.tooltip = Zum Glossar
+almanac.statsTab.tooltip = Zu den Statistiken
+
+### Almanach Statistiken
+almanac.stats.player = Spielerstatistiken:
+almanac.stats.total = Fische gesamt: {count}
+almanac.stats.most = Am häufigsten gefangen: {name}
+almanac.stats.legendary = Legendäre Fische: {count}
+almanac.stats.perfect = Perfekt: {count}
+almanac.stats.great = Großartig: {count}
+almanac.stats.top = Top 10 Fänge:
+
+almanac.stats.collection = Sammelfortschritt
+almanac.stats.glossary = Klicken, um zum Glossar zu gelangen
+
+almanac.stats.habitat_tooltip = {caught}/{total} -> Klicken zum Ansehen
+
+### Almanach Fisch-Details
+almanac.fish.totalLabel = Gesamt gefangen:
+almanac.fish.speciesLabel = Gattung:
+almanac.fish.habitatLabel = Heimisch in:

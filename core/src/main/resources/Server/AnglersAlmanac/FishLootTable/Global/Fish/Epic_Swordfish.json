@@ -1,0 +1,33 @@
+{
+  "ItemId": "AA_SwordFish",
+  "Category": [
+    "fish",
+    "saltwater"
+  ],
+  "Name": "Swordfish",
+  "Description": "Has a nose sharper than adamantite. The most noble among them is said to guard the royal Queenfish.",
+  "FamilyId": "salmonids",
+  "Rarity": "Epic",
+  "IsGlobal": true,
+  "Weight": 12,
+  "Size": 60,
+  "Habitats": {
+    "Zones": [],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 0,
+      "Max_y": -1
+    }
+  },
+  "Minigame_stats": {
+    "Difficulty": 7,
+    "Behavior": "Darting",
+    "Stamina": 55
+  },
+  "Book_info": {
+    "Habitat_Info": "• Everywhere"
+  }
+}

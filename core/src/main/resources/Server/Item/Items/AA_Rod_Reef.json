@@ -1,0 +1,48 @@
+{
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        "UseRodInteraction"
+      ],
+      "RequireNewClick": true,
+      "Cooldown": {
+        "Id": "UseRod",
+        "Cooldown": 1
+      }
+    },
+    "Primary": {
+      "Cooldown": {
+        "Cooldown": 0
+      },
+      "Interactions": [
+        "MinigameInteraction"
+      ]
+    }
+  },
+  "MaxStack": 1,
+  "Quality": "Rare",
+  "Categories": [
+    "Items.Tools"
+  ],
+  "TranslationProperties": {
+    "Name": "fishingrods.reef.name",
+    "Description": "fishingrods.reef.description"
+  },
+  "Model": "Items/Tools/Fishing_Rod/Rod_Reef.blockymodel",
+  "Texture": "Items/Tools/Fishing_Rod/Rod_Reef.png",
+  "Icon": "Icons/ItemsGenerated/AA_Rod_Reef.png",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      35,
+      258,
+      360
+    ],
+    "Translation": [
+      31,
+      -39
+    ]
+  },
+  "PlayerAnimationsId": "AA_Rod",
+  "UsePlayerAnimations": false
+}

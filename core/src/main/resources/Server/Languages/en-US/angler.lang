@@ -1,0 +1,24 @@
+# ============================================================
+# Angler's item - English (US) Translation File
+# Language: en-US
+# Keys format: {category}.{key}
+# Usage: angler.{category}.{key}
+# ============================================================
+
+fish.swordfish.name = Swordfish
+fish.swordfish.description = Has a nose sharper than adamantite.
+
+fish.catfish.golden.name = Golden Catfish
+fish.catfish.golden.description = A Catfish covered in gold.
+
+fish.minnow.golden.name = Golden Minnow
+fish.minnow.golden.description = A Minnow covered in gold.
+
+fish.bluegill.golden.name = Golden Bluegill
+fish.bluegill.golden.description = A Bluegill covered in gold.
+
+fish.salmon.golden.name = Golden Salmon
+fish.salmon.golden.description = A Salmon covered in gold.
+
+bait.golden.name = Golden Fishing Bait
+bait.golden.description = Increase chances of getting golden fish.

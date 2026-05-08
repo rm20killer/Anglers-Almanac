@@ -1,0 +1,95 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Tool_Trap_Bait.name",
+    "Description": "server.items.Tool_Trap_Bait.description"
+  },
+  "Model": "Resources/Plants/Wild_Berry.blockymodel",
+  "Texture": "Resources/Plants/Wild_Berry_Texture.png",
+  "Quality": "Common",
+  "Icon": "Icons/ItemsGenerated/Plant_Fruit_Berries_Red.png",
+  "Categories": [
+    "Items.Tools"
+  ],
+  "Recipe": {
+    "TimeSeconds": 1,
+    "Input": [
+      {
+        "Quantity": 3,
+        "ResourceTypeId": "Fruits"
+      },
+      {
+        "ItemId": "Ingredient_Life_Essence",
+        "Quantity": 5
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Id": "Farmingbench",
+        "Categories": [
+          "Farming"
+        ],
+        "RequiredTierLevel": 0
+      }
+    ],
+    "OutputQuantity": 2
+  },
+  "ItemLevel": 20,
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 1.1,
+    "Rotation": [
+      0.0,
+      72.185,
+      29.435
+    ],
+    "Translation": [
+      1.9,
+      -3.0
+    ]
+  },
+  "Scale": 1,
+  "Interactions": {
+    "Secondary": "Root_ChangeFarmingStage_Set"
+  },
+  "InteractionVars": {
+    "ChangeFarmingStage_Set": {
+      "Interactions": [
+        {
+          "Type": "BlockCondition",
+          "$Comment": "Allows bait to change the listed blocks",
+          "Matchers": [
+            {
+              "Block": {
+                "Id": "Tool_Fishing_Trap",
+                "State": "default"
+              }
+            }
+          ],
+          "Next": {
+            "Type": "ChangeFarmingStage",
+            "Stage": 0,
+            "StageSet": "Baited",
+            "Effects": {
+              "ItemAnimationId": "Till"
+            },
+            "Next": {
+              "Type": "ModifyInventory",
+              "AdjustHeldItemQuantity": -1
+            },
+            "RunTime": 0.15
+          }
+        }
+      ]
+    }
+  },
+  "Tags": {
+    "Type": [
+      "Tool"
+    ],
+    "Family": [
+      "Bait"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Items_Foliage"
+}

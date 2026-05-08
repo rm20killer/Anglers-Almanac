@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+import org.gradle.internal.os.OperatingSystem
+
+
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+    withSourcesJar()
+    withJavadocJar()
+}
+
+// Quiet warnings about missing Javadocs.
+javadoc {
+    options.addStringOption('Xdoclint:-missing', '-quiet')
+}
+
+// Adds the Hytale server as a build dependency, allowing you to reference and
+dependencies {
+    compileOnly("com.hypixel.hytale:Server:$hytale_build")
+}
+
+repositories {
+    mavenCentral()
+    google()
+    maven {
+        name = "hytale-release"
+        url = uri("https://maven.hytale.com/release")
+    }
+    maven {
+        name = "hytale-pre-release"
+        url = uri("https://maven.hytale.com/pre-release")
+    }
+}
+base {
+    archivesName = "AnglersAlmanac-API"
+}
+tasks.named('jar') {
+    archiveFileName.set("AnglersAlmanac-API-${version}.jar")
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            groupId = "com.github.rm20killer"
+            artifactId = "api"
+            version = "${version}"
+        }
+    }
+}

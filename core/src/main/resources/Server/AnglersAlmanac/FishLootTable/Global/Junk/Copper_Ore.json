@@ -1,0 +1,22 @@
+{
+  "ItemId": "Ore_Copper",
+  "Weight": 85,
+  "IsGlobal": true,
+  "Habitats": {
+    "Min_depth": 3,
+    "Height": {
+      "Max_y": 90
+    }
+  },
+  "Rarity": "Junk",
+  "Name": "Copper ore",
+  "Minigame_stats": {
+    "Behavior": "HeavySinker",
+    "Difficulty": 2,
+    "Stamina": 50
+  },
+  "Quantity": {
+    "Min": 4,
+    "Max": 10
+  }
+}

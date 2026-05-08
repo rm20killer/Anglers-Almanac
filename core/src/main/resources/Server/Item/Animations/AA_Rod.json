@@ -1,0 +1,16 @@
+{
+  "Parent": "Stick",
+  "Animations": {
+    "Cast": {
+      "ThirdPerson": "Characters/Animations/AA_Rod_Cast.blockyanim",
+      "FirstPerson": "Characters/Animations/AA_Rod_Cast_FP.blockyanim",
+      "Speed": 2,
+      "BlendingDuration": 0.05
+    },
+    "Reel": {
+      "ThirdPerson": "Characters/Animations/Items/Main_Handed/Handgun/Attacks/Shoot/Shoot.blockyanim",
+      "FirstPerson": "Characters/Animations/Items/Main_Handed/Handgun/Attacks/Shoot/Shoot_FPS.blockyanim",
+      "Speed": 0.5
+    }
+  }
+}
