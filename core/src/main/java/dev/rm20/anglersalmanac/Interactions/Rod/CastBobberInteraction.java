@@ -55,14 +55,8 @@ public class CastBobberInteraction extends SimpleInstantInteraction {
 
         Player player = commandBuffer.getComponent(playerRef, Player.getComponentType());
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
-
-        if(UseRodInteraction.shouldCast(heldItem, commandBuffer)) {
-            castOut(interactionType, context, player);
-            context.getState().state = InteractionState.Finished;
-        }
-        else{
-            context.getState().state = InteractionState.Failed;
-        }
+        //AnglersAlmanac.LOGGER.atInfo().log("Casting out");
+        castOut(interactionType, context, player);
     }
 
     private void castOut(@Nonnull InteractionType interactionType, @Nonnull InteractionContext interactionContext, Player player) {

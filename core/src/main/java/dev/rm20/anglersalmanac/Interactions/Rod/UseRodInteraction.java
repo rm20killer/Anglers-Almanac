@@ -54,17 +54,28 @@ public class UseRodInteraction extends SimpleInstantInteraction {
         if (player == null) return;
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
 
+        if(meta == null)
+        {
+            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+player.getDisplayName());
+            // CastBobberInteraction set as Next in Interaction asset for the rods.
+            context.getState().state = InteractionState.Finished;
+            return;
+        }
+
 
         if(!checkSaneMetadata(heldItem, commandBuffer)){
             AnglersAlmanac.LOGGER.atInfo().log("Fixing busted metadata within UseRodInteraction for: "+player.getDisplayName());
             cancelFishing(commandBuffer, player, heldItem);
             context.getState().state = InteractionState.Failed;
+            return;
         }
 
         if(shouldCast(heldItem, commandBuffer)){
+            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+player.getDisplayName());
             // CastBobberInteraction set as Next in Interaction asset for the rods.
             context.getState().state = InteractionState.Finished;
         }else{
+            AnglersAlmanac.LOGGER.atInfo().log("Not casting to UseRodInteraction for: "+player.getDisplayName());
             // ReelBobberInteraction must be set as Failed interaction in rods Interaction asset.
             context.getState().state = InteractionState.Failed;
         }

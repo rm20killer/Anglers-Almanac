@@ -53,15 +53,5 @@
     ]
   },
   "ItemSoundSetId": "ISS_Weapons_Wood",
-  "PlayerAnimationsId": "AA_Rod",
-  "Particles": [
-    {
-      "SystemId": "Test_ParticleSystem",
-      "Color": "#707070",
-      "Scale": 0.2,
-      "PositionOffset": {
-        "Y": 1
-      }
-    }
-  ]
+  "PlayerAnimationsId": "AA_Rod"
 }
