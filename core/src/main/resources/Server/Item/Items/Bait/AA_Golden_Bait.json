@@ -1,0 +1,58 @@
+{
+  "TranslationProperties": {
+    "Name": "angler.bait.golden.name",
+    "Description": "angler.bait.golden.description"
+  },
+  "Model": "Resources/Golde_Berry.blockymodel",
+  "Texture": "Resources/Golden_Berry_Texture.png",
+  "Icon": "Icons/ItemsGenerated/AA_Golden_Bait.png",
+  "IconProperties": {
+    "Scale": 1.3,
+    "Rotation": [
+      20,
+      42,
+      22.5
+    ],
+    "Translation": [
+      1,
+      -2
+    ]
+  },
+  "PlayerAnimationsId": "Item",
+  "ItemLevel": 35,
+  "Categories": [
+    "Items.Tools"
+  ],
+  "Tags": {
+    "Family": [
+      "Bait"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Items_Metal",
+  "Recipe": {
+    "BenchRequirement": [
+      {
+        "Id": "Farmingbench",
+        "Categories": [
+          "Farming"
+        ],
+        "RequiredTierLevel": 2
+      }
+    ],
+    "Input": [
+      {
+        "ItemId": "Tool_Trap_Bait",
+        "Quantity": 4
+      },
+      {
+        "ItemId": "Ingredient_Bar_Gold"
+      }
+    ],
+    "TimeSeconds": 1.5,
+    "OutputQuantity": 4
+  },
+  "ItemEntity": {
+    "ParticleColor": "#ffd700"
+  },
+  "Quality": "Rare"
+}

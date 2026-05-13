@@ -1,0 +1,116 @@
+{
+  "Parent": "Template_Fish_Item",
+  "Quality": "Legendary",
+  "TranslationProperties": {
+    "Name": "angler.fish.minnow.golden.name",
+    "Description": "angler.fish.minnow.golden.description"
+  },
+  "Model": "NPC/Swimming_Critter/Minnow/Models/Model.blockymodel",
+  "Texture": "NPC/Fish/Minnow/Golden_Minnow.png",
+  "Animation": "NPC/Swimming_Wildlife/Bluegill/Animations/Swim/Swim.blockyanim",
+  "Icon": "Icons/ItemsGenerated/Fish_Golden_Minnow_Item.png",
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      4,
+      -9
+    ]
+  },
+  "InteractionVars": {
+    "SpawnNPC_Entity": {
+      "Interactions": [
+        {
+          "Parent": "SpawnNPC_Entity_Default",
+          "EntityId": "Minnow",
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 1,
+            "Z": 0
+          },
+          "Effects": {
+            "WorldSoundEventId": "SFX_Water_MoveOut"
+          }
+        }
+      ]
+    }
+  },
+  "State": {
+    "Uncommon": {
+      "Variant": true,
+      "Quality": "Uncommon",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Uncommon"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Uncommon"
+        }
+      ]
+    },
+    "Rare": {
+      "Variant": true,
+      "Quality": "Rare",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Rare"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Rare"
+        }
+      ]
+    },
+    "Epic": {
+      "Variant": true,
+      "Quality": "Epic",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Epic"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Rare"
+        }
+      ]
+    },
+    "Legendary": {
+      "Variant": true,
+      "Quality": "Legendary",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Legendary"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Legendary"
+        }
+      ]
+    }
+  },
+  "ResourceTypes": [
+    {
+      "Id": "Fish"
+    },
+    {
+      "Id": "Fish_Legendary"
+    }
+  ]
+}

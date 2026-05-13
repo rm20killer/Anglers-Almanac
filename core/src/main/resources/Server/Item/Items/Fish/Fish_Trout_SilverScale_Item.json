@@ -1,0 +1,88 @@
+{
+  "Parent": "Template_Fish_Item",
+  "Quality": "Rare",
+  "TranslationProperties": {
+    "Name": "angler.fish.trout.silverscaled.name",
+    "Description": "angler.fish.trout.silverscaled.description"
+  },
+  "Model": "NPC/Fish/Trout/Cave Trout/Model.blockymodel",
+  "Texture": "NPC/Fish/Trout/Cave Trout/Texture.png",
+  "Animation": "NPC/Swimming_Wildlife/Bluegill/Animations/Swim/Swim.blockyanim",
+  "Icon": "Icons/ItemsGenerated/Fish_Trout_SilverScale_Item.png",
+  "IconProperties": {
+    "Scale": 0.3,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      4,
+      -13.5
+    ]
+  },
+  "InteractionVars": {
+    "SpawnNPC_Entity": {
+      "Interactions": [
+        {
+          "Parent": "SpawnNPC_Entity_Default",
+          "EntityId": "Trout_Rainbow",
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 1,
+            "Z": 0
+          },
+          "Effects": {
+            "WorldSoundEventId": "SFX_Water_MoveOut"
+          }
+        }
+      ]
+    }
+  },
+  "State": {
+    "Epic": {
+      "Variant": true,
+      "Quality": "Epic",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Epic"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Rare"
+        }
+      ]
+    },
+    "Legendary": {
+      "Variant": true,
+      "Quality": "Legendary",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Legendary"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Legendary"
+        }
+      ]
+    }
+  },
+  "ItemEntity": {
+    "ParticleSystemId": "Drop_Rare"
+  },
+  "ResourceTypes": [
+    {
+      "Id": "Fish",
+      "Quantity": 1
+    },
+    {
+      "Id": "Fish_Rare"
+    }
+  ]
+}

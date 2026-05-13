@@ -18,7 +18,7 @@
     "Biomes": [],
     "Min_depth": 2,
     "Height": {
-      "Min_y": 0,
+      "Min_y": 95,
       "Max_y": -1
     }
   },

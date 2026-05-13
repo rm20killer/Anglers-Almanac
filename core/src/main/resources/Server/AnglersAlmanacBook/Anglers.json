@@ -1,0 +1,49 @@
+{
+  "Habitats": [
+    {
+      "ZoneName": "Global",
+      "Spread": [
+        {
+          "UiFile": "Almanac/Fish/AlmanacFish.ui",
+          "LeftPage": "Rare_Trout_SilverScale"
+        }
+      ]
+    },
+    {
+      "ZoneName": "Zone1",
+      "Spread": [
+        {
+          "UiFile": "Almanac/Fish/AlmanacFish.ui",
+          "LeftPage": "BoneFish_White"
+        }
+      ]
+    },
+    {
+      "ZoneName": "Zone2",
+      "Spread": [
+        {
+          "UiFile": "Almanac/Fish/AlmanacFish.ui",
+          "LeftPage": "BoneFish_Desert"
+        }
+      ]
+    },
+    {
+      "ZoneName": "Zone3",
+      "Spread": [
+        {
+          "UiFile": "Almanac/Fish/AlmanacFish.ui",
+          "LeftPage": "BoneFish_Frost"
+        }
+      ]
+    },
+    {
+      "ZoneName": "Zone4",
+      "Spread": [
+        {
+          "UiFile": "Almanac/Fish/AlmanacFish.ui",
+          "LeftPage": "BoneFish_Burnt"
+        }
+      ]
+    }
+  ]
+}

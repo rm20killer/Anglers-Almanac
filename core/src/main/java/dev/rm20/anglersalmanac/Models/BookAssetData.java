@@ -233,13 +233,23 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
         master.id = "master_almanac_merged";
         Map<String, habitatsInfo> mergedMap = new LinkedHashMap<>();
 
-        getAssetStore().getAssetMap().getAssetMap().values().forEach(book -> {
+        List<BookAssetData> allBooks = new ArrayList<>(getAssetStore().getAssetMap().getAssetMap().values());
+        allBooks.sort((a, b) -> {
+            if ("Vanilla".equals(a.id)) return -1;
+            if ("Vanilla".equals(b.id)) return 1;
+            return 0;
+        });
+
+        allBooks.forEach(book -> {
             if (book.getHabitats() == null) return;
             for (habitatsInfo habitat : book.getHabitats()) {
                 String key = habitat.ZoneName.toLowerCase();
                 if (!mergedMap.containsKey(key)) {
-                    habitat.pages = mergePages(new SpreadTemplate[0], habitat.pages);
-                    mergedMap.put(key, habitat);
+                    habitatsInfo copy = new habitatsInfo();
+                    copy.ZoneName = habitat.ZoneName;
+                    copy.zoneInfo = habitat.zoneInfo;
+                    copy.pages = mergePages(new SpreadTemplate[0], habitat.pages);
+                    mergedMap.put(key, copy);
                 } else {
                     habitatsInfo existing = mergedMap.get(key);
                     existing.pages = mergePages(existing.pages, habitat.pages);

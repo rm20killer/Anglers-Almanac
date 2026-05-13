@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "Salt-worn Rod",
-    "Description": "The rod of a veteran fisherman. Well worn with use."
+    "Name": "fishingrods.saltworn.name",
+    "Description": "fishingrods.saltworn.description"
   },
   "Categories": [
     "Items.Tools"
@@ -14,8 +14,13 @@
   "Interactions": {
     "Secondary": {
       "Interactions": [
-        "LaunchBobberInteraction"
-      ]
+        "UseRodInteraction"
+      ],
+      "RequireNewClick": true,
+      "Cooldown": {
+        "Id": "UseRod",
+        "Cooldown": 1
+      }
     },
     "Primary": {
       "Interactions": [
@@ -48,6 +53,15 @@
     ]
   },
   "ItemSoundSetId": "ISS_Weapons_Wood",
-  "UsePlayerAnimations": false,
-  "PlayerAnimationsId": "AA_Rod"
+  "PlayerAnimationsId": "AA_Rod",
+  "Particles": [
+    {
+      "SystemId": "Test_ParticleSystem",
+      "Color": "#707070",
+      "Scale": 0.2,
+      "PositionOffset": {
+        "Y": 1
+      }
+    }
+  ]
 }

@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Registration.CommandInfo;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
@@ -50,6 +51,7 @@ public class RemoveFishCommand extends AbstractPlayerCommand {
             for (FishLootManager fish : allFish) {
                 AnglersAlmanac.getInstance().database.removeFishEntry(uuid, fish.getId());
             }
+            BookPageManager.invalidateCache(String.valueOf(playerRef.getUuid()));
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.removeFish.all").param("count",allFish.size()));
         } else {
             // Check if the specific fish ID is valid
@@ -57,6 +59,7 @@ public class RemoveFishCommand extends AbstractPlayerCommand {
 
             if (isValid) {
                 AnglersAlmanac.getInstance().database.removeFishEntry(uuid, input);
+                BookPageManager.invalidateCache(String.valueOf(playerRef.getUuid()));
                 commandContext.sendMessage(Message.translation("anglersalmanac.cmd.removeFish.fish").param("name",input));
             } else {
                 commandContext.sendMessage(Message.translation("anglersalmanac.cmd.invalidFish").param("name",input));

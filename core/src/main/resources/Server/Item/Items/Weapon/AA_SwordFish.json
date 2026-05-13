@@ -1,14 +1,15 @@
 {
   "TranslationProperties": {
-    "Name": "Swordfish"
+    "Name": "angler.fish.swordfish.name",
+    "Description": "angler.fish.swordfish.description"
   },
   "Categories": [
     "Items.Weapons"
   ],
   "Quality": "Rare",
   "ItemLevel": 40,
-  "Model": "NPC/Fish/AA_Swordfish.blockymodel",
-  "Texture": "NPC/Fish/AA_Swordfish.png",
+  "Model": "NPC/Fish/Swordfish/AA_Swordfish.blockymodel",
+  "Texture": "NPC/Fish/Swordfish/AA_Swordfish.png",
   "PlayerAnimationsId": "Longsword",
   "Interactions": {
     "Primary": "Longsword_Attack"

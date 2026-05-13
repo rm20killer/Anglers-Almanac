@@ -26,9 +26,9 @@ import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Config.MinigameConfig_TensionBar;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.MinigameManager.Minigame;
-import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Models.MinigameRodStats;
+import dev.rm20.anglersalmanac.Utils.CatchUtils;
 import dev.rm20.anglersalmanac.Utils.TransformUtils;
 import dev.rm20.anglersalmanac.Utils.Validator.GameIcon;
 import org.jspecify.annotations.NonNull;
@@ -125,7 +125,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         // Set minigame config as defaults.
         game.gameConfig = AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().clone();
         // Assign fish and apply modifiers.
-        game.fishHooked = MinigameManager.FirstRoll(bobberRef, commandBuffer.getComponent(playerRef, Player.getComponentType()), commandBuffer, commandBuffer.getComponent(bobberRef, BobberComponent.getComponentType()).getWaterDepth());
+        game.fishHooked = CatchUtils.FirstRoll(bobberRef, commandBuffer.getComponent(playerRef, Player.getComponentType()), commandBuffer, commandBuffer.getComponent(bobberRef, BobberComponent.getComponentType()).getWaterDepth());
         assert game.fishHooked != null;
         //AnglersAlmanac.LOGGER.atInfo().log("Loading modifiers for fish: %s", game.fishHooked.getName());
         game.applyFishModifiers(game.fishHooked.getMinigameStats());

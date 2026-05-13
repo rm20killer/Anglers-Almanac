@@ -12,7 +12,7 @@
   "Name": "Copper ore",
   "Minigame_stats": {
     "Behavior": "HeavySinker",
-    "Difficulty": 50,
+    "Difficulty": 2,
     "Stamina": 50
   },
   "Quantity": {

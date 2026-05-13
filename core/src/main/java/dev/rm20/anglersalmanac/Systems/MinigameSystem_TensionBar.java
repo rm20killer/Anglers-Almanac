@@ -15,13 +15,13 @@ import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.IEvents.FishingFailedEvent;
 import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
 import dev.rm20.anglersalmanac.MinigameManager.Minigame;
-import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Components.AudioPlayerComponent;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
-import dev.rm20.anglersalmanac.Interactions.LaunchBobberInteraction;
+import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
 //import dev.rm20.anglersalmanac.models.FishingRodData;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
+import dev.rm20.anglersalmanac.Utils.CatchUtils;
 import dev.rm20.anglersalmanac.Utils.TransformUtils;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
 import dev.rm20.anglersalmanac.Utils.Validator.MinigameBehaviour;
@@ -130,8 +130,8 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 var eventBus = HytaleServer.get().getEventBus();
                 FishingFailedEvent mainEvent = new FishingFailedEvent(game.fishHooked,player);
                 eventBus.dispatchFor(FishingFailedEvent.class).dispatch(mainEvent);
-                
-                LaunchBobberInteraction.cancelFishing(commandBuffer, player, game.fishingRod);
+
+                UseRodInteraction.cancelFishing(commandBuffer, player, game.fishingRod);
                 break;
             case SUCCESS:
                 if(game.DroppedItem)
@@ -142,23 +142,23 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 //AnglersAlmanac.LOGGER.atInfo().log("YOU WIN");
                 MinigamePRating.PerformanceRating  rating = Minigame.getPerformanceRating(game.getPerformancePercentage());
                 //AnglersAlmanac.LOGGER.atInfo().log("Minigame performance rating = %s", rating);
-                if(rating == MinigamePRating.PerformanceRating.FAIL) LaunchBobberInteraction.cancelFishing(commandBuffer, player, game.fishingRod);
+                if(rating == MinigamePRating.PerformanceRating.FAIL) UseRodInteraction.cancelFishing(commandBuffer, player, game.fishingRod);
                 // Deal rewards.
                 game.stateTrigger = MinigameComponent_TensionBar.Trigger.DONE;
                 if(game.fishHooked!=null)
                 {
-                    MinigameManager.DropLoot(game.fishHooked, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
+                    CatchUtils.DropLoot(game.fishHooked, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
                 }
                 else {
-                    FishLootManager lootID = MinigameManager.FirstRoll(game.bobberRef, player, commandBuffer, store.getComponent(game.bobberRef, BobberComponent.getComponentType()).getWaterDepth());
-                    MinigameManager.DropLoot(lootID, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
+                    FishLootManager lootID = CatchUtils.FirstRoll(game.bobberRef, player, commandBuffer, store.getComponent(game.bobberRef, BobberComponent.getComponentType()).getWaterDepth());
+                    CatchUtils.DropLoot(lootID, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
                 }
                 if(rating == MinigamePRating.PerformanceRating.PERFECT){
                     // TODO Deal chance of bonus loot.
                 }
                 game.DroppedItem = true;
                 // Finish fishing.
-                LaunchBobberInteraction.cancelFishing(commandBuffer, player, game.fishingRod,game.Slot);
+                UseRodInteraction.cancelFishing(commandBuffer, player, game.fishingRod,game.Slot);
                 return;
         }
 

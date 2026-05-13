@@ -1,0 +1,27 @@
+{
+  "Type": "use_rod_interaction",
+  "Failed": "ReelBobberInteraction",
+  "Next": {
+    "Type": "Simple",
+    "Effects": {
+      "ItemPlayerAnimationsId": "AA_Rod",
+      "ItemAnimationId": "Cast",
+      "WaitForAnimationToFinish": false
+    },
+    "Next": "CastBobberInteraction",
+    "RunTime": 0.5,
+    "Rules": {
+      "Blocking": [
+        "Secondary"
+      ]
+    }
+  },
+  "Rules": {
+    "Blocking": [
+      "Secondary"
+    ],
+    "BlockedBy": [
+      "Secondary"
+    ]
+  }
+}

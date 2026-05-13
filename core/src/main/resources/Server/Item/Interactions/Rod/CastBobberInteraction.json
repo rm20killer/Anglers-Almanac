@@ -1,0 +1,11 @@
+{
+  "Type": "cast_bobber_interaction",
+  "Rules": {
+    "Blocking": [
+      "Secondary"
+    ],
+    "BlockedBy": [
+      "Secondary"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "ItemId": "Fish_Bone_Burnt_Item",
+  "Category": [
+    "fish",
+    "Bone"
+  ],
+  "Name": "Burnt BoneFish",
+  "Description": "The blackened skeleton hunter seems like it was taken right off a funeral pyre. Its bones are still warm from within, radiating a dim orange glow through the breaks in its rib cage. It moves with a sharp, malicious clicking, spewing flames of fury at anything that comes near its burned-out domain.",
+  "FamilyId": "Skeleton",
+  "Rarity": "Epic",
+  "IsGlobal": false,
+  "Weight": 30,
+  "Size": 70,
+  "Habitats": {
+    "Zones": [
+      "4"
+    ],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 0,
+      "Max_y": -1
+    },
+    "Exclude_biomes": [],
+    "Weight_multiplier": 1
+  },
+  "Minigame_stats": {
+    "Difficulty": 10,
+    "Behavior": "Aggressive",
+    "Stamina": 90
+  },
+  "Book_info": {
+    "Habitat_Info": "Underground:| • Devastated Lands",
+    "Page_File_Ui": "Almanac/Fish/Pages/FishPage7.ui"
+  }
+}

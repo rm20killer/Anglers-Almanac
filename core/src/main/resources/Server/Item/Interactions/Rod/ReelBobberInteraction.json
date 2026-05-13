@@ -1,0 +1,13 @@
+{
+  "Type": "reel_bobber_interaction",
+  "Effects": {
+    "ItemPlayerAnimationsId": "AA_Rod",
+    "ItemAnimationId": "Reel",
+    "WaitForAnimationToFinish": true
+  },
+  "Rules": {
+    "Blocking": [
+      "Secondary"
+    ]
+  }
+}

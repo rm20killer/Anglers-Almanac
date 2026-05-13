@@ -12,7 +12,7 @@
   "Name": "Gold ore",
   "Minigame_stats": {
     "Behavior": "HeavySinker",
-    "Difficulty": 55,
+    "Difficulty": 4,
     "Stamina": 50
   },
   "Quantity": {

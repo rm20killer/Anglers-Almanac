@@ -1,0 +1,61 @@
+{
+  "Parent": "Template_Fish_Item",
+  "Quality": "Epic",
+  "TranslationProperties": {
+    "Name": "angler.fish.bonefish.frost.name",
+    "Description": "angler.fish.bonefish.frost.description"
+  },
+  "Model": "NPC/Fish/BoneFish/Model.blockymodel",
+  "Texture": "NPC/Fish/BoneFish/Frost.png",
+  "Animation": "NPC/Swimming_Wildlife/Bluegill/Animations/Swim/Swim.blockyanim",
+  "Icon": "Icons/ItemsGenerated/Fish_Bone_Frost_Item.png",
+  "IconProperties": {
+    "Scale": 0.3,
+    "Rotation": [
+      21,
+      63,
+      3
+    ],
+    "Translation": [
+      4,
+      -13.5
+    ]
+  },
+  "InteractionVars": {
+    "SpawnNPC_Entity": {
+      "Interactions": [
+        {
+          "Parent": "SpawnNPC_Entity_Default",
+          "EntityId": "Trout_Rainbow",
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 1,
+            "Z": 0
+          },
+          "Effects": {
+            "WorldSoundEventId": "SFX_Water_MoveOut"
+          }
+        }
+      ]
+    }
+  },
+  "State": {
+    "Epic": {
+      "Variant": true,
+      "Quality": "Epic",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Epic"
+      }
+    },
+    "Legendary": {
+      "Variant": true,
+      "Quality": "Legendary",
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Legendary"
+      }
+    }
+  },
+  "ItemEntity": {
+    "ParticleSystemId": "Drop_Rare"
+  }
+}

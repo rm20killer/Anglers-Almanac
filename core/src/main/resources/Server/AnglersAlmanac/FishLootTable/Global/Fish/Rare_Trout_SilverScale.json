@@ -1,0 +1,33 @@
+{
+  "ItemId": "Fish_Trout_SilverScale_Item",
+  "Category": [
+    "fish",
+    "freshwater"
+  ],
+  "Name": "Silver-Scale Trout",
+  "Description": "The Silver-Scale Trout lives in darkness. The scales on its body have become hard and metal-like, forming layers of armour against the sharp rocks of the underground rapids. It does not depend on vision in the dark world around it, but rather uses its lateral line to detect vibrations within the cavern.",
+  "FamilyId": "salmonids",
+  "Rarity": "Rare",
+  "IsGlobal": true,
+  "Weight": 110,
+  "Size": 60,
+  "Habitats": {
+    "Zones": [],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 95 ,
+      "Max_y": -1
+    }
+  },
+  "Minigame_stats": {
+    "Difficulty": 6,
+    "Behavior": "Darting",
+    "Stamina": 48
+  },
+  "Book_info": {
+    "Habitat_Info": "• Underground"
+  }
+}

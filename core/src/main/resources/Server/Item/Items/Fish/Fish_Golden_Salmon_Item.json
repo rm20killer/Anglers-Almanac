@@ -1,0 +1,88 @@
+{
+  "Parent": "Template_Fish_Item",
+  "Quality": "Legendary",
+  "TranslationProperties": {
+    "Name": "angler.fish.salmon.golden.name",
+    "Description": "angler.fish.salmon.golden.description"
+  },
+  "Model": "NPC/Swimming_Wildlife/Salmon/Models/Model.blockymodel",
+  "Texture": "NPC/Fish/Salmon/Golden_Salmon.png",
+  "Animation": "NPC/Swimming_Wildlife/Bluegill/Animations/Swim/Swim.blockyanim",
+  "IconProperties": {
+    "Scale": 0.3,
+    "Rotation": [
+      22.5,
+      40,
+      22.5
+    ],
+    "Translation": [
+      4,
+      -21
+    ]
+  },
+  "InteractionVars": {
+    "SpawnNPC_Entity": {
+      "Interactions": [
+        {
+          "Parent": "SpawnNPC_Entity_Default",
+          "EntityId": "Salmon",
+          "SpawnOffset": {
+            "X": 0,
+            "Y": 1,
+            "Z": 0
+          },
+          "Effects": {
+            "WorldSoundEventId": "SFX_Water_MoveOut"
+          }
+        }
+      ]
+    }
+  },
+  "State": {
+    "Epic": {
+      "Quality": "Epic",
+      "Variant": true,
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Epic"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Rare"
+        }
+      ]
+    },
+    "Legendary": {
+      "Quality": "Legendary",
+      "Variant": true,
+      "ItemEntity": {
+        "ParticleSystemId": "Drop_Legendary"
+      },
+      "ResourceTypes": [
+        {
+          "Id": "Fish",
+          "Quantity": 1
+        },
+        {
+          "Id": "Fish_Legendary"
+        }
+      ]
+    }
+  },
+  "ItemEntity": {
+    "ParticleSystemId": "Drop_Rare"
+  },
+  "ResourceTypes": [
+    {
+      "Id": "Fish",
+      "Quantity": 1
+    },
+    {
+      "Id": "Fish_Rare"
+    }
+  ],
+  "Icon": "Icons/ItemsGenerated/Fish_Golden_Salmon_Item.png"
+}

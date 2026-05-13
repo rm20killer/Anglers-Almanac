@@ -1,0 +1,34 @@
+{
+  "ItemId": "Fish_Golden_Minnow_Item",
+  "Category": [
+    "fish",
+    "freshwater",
+    "Golden"
+  ],
+  "Name": "Golden Minnow",
+  "Description": "A small fish with scales of silver, found in any body of water, it is the ultimate world traveler of the shallows. Its sleek, metallic finish glints in the sunlight as it moves through the reeds.",
+  "FamilyId": "cyprinidae",
+  "Rarity": "Common",
+  "IsGlobal": true,
+  "Weight": 2,
+  "Size": 5,
+  "Habitats": {
+    "Zones": [],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 0,
+      "Max_y": -1
+    }
+  },
+  "Minigame_stats": {
+    "Difficulty": 4,
+    "Behavior": "Steady",
+    "Stamina": 30
+  },
+  "Book_info": {
+    "Habitat_Info": "• Everywhere"
+  }
+}

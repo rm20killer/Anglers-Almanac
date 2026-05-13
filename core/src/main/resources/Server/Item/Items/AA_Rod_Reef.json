@@ -2,8 +2,13 @@
   "Interactions": {
     "Secondary": {
       "Interactions": [
-        "LaunchBobberInteraction"
-      ]
+        "UseRodInteraction"
+      ],
+      "RequireNewClick": true,
+      "Cooldown": {
+        "Id": "UseRod",
+        "Cooldown": 1
+      }
     },
     "Primary": {
       "Cooldown": {
@@ -38,6 +43,6 @@
       -39
     ]
   },
-  "PlayerAnimationsId": "Stick",
-  "UsePlayerAnimations": true
+  "PlayerAnimationsId": "AA_Rod",
+  "UsePlayerAnimations": false
 }

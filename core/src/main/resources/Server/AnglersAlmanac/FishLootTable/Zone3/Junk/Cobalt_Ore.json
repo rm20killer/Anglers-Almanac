@@ -15,7 +15,7 @@
   "Name": "Cobalt ore",
   "Minigame_stats": {
     "Behavior": "HeavySinker",
-    "Difficulty": 50,
+    "Difficulty": 6,
     "Stamina": 50
   },
   "Quantity": {

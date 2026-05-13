@@ -1,0 +1,35 @@
+{
+  "ItemId": "Fish_Golden_Bluegill_Item",
+  "Category": [
+    "fish",
+    "freshwater",
+    "Golden"
+  ],
+  "Name": "Golden Bluegill",
+  "Description": "It can be spotted by the navy-black flap on the ear of its gill cover, but the Bluegill is a chameleon of fish. Whether it’s a mountain stream or a pound, this fish will make itself right at home. It’s a miniature, sparkling tank with a 360-degree security system, seeing a meal or a predator before they ever lay eyes on it.",
+  "FamilyId": "sunfishes",
+  "Rarity": "Legendary",
+  "IsGlobal": true,
+  "Weight": 2,
+  "Size": 12,
+  "Habitats": {
+    "Zones": [],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 0,
+      "Max_y": -1
+    }
+  },
+  "Minigame_stats": {
+    "Difficulty": 5,
+    "Behavior": "Steady",
+    "Stamina": 30
+  },
+  "Book_info": {
+    "Habitat_Info": "• Everywhere",
+    "Page_File_Ui": "Almanac/Fish/Pages/FishPage7.ui"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "ItemId": "Fish_Bone_Sand_Item",
+  "Category": [
+    "fish",
+    "Bone"
+  ],
+  "Name": "Desert BoneFish",
+  "Description": "This desiccated hunter prowls the ever-shifting sands of the Screaming Desert. Its bones have taken on a color like the desert itself, and it moves through sand and heat shimmer with an eerie, jerking motion. Fuelled by a thirst as old as time itself, it attacks any intruder into its domain with a vicious ferocity.",
+  "FamilyId": "Skeleton",
+  "Rarity": "Epic",
+  "IsGlobal": false,
+  "Weight": 30,
+  "Size": 70,
+  "Habitats": {
+    "Zones": [
+      "2"
+    ],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 0,
+      "Max_y": 95
+    },
+    "Exclude_biomes": [],
+    "Weight_multiplier": 1
+  },
+  "Minigame_stats": {
+    "Difficulty": 10,
+    "Behavior": "Aggressive",
+    "Stamina": 90
+  },
+  "Book_info": {
+    "Habitat_Info": "Underground:| • Howling Sands",
+    "Page_File_Ui": "Almanac/Fish/Pages/FishPage7.ui"
+  }
+}

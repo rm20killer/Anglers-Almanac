@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
 import org.jspecify.annotations.NonNull;
@@ -59,7 +60,7 @@ public class MinigameInteraction extends SimpleInstantInteraction {
             {
                 return;
             }
-            LaunchBobberInteraction.updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
+            UseRodInteraction.updateMetadata(inv, inv.getActiveSlot(), heldItem, null, null, 0);
             AnglersAlmanac.LOGGER.atInfo().log("Fixing busted rod for: "+player.getDisplayName());
         }
 

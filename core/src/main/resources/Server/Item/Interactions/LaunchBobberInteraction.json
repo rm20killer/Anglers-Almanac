@@ -1,7 +1,0 @@
-{
-  "Type": "launch_bobber_interaction",
-  "Effects": {
-    "ItemPlayerAnimationsId": "AA_Rod",
-    "ItemAnimationId": "Cast"
-  }
-}

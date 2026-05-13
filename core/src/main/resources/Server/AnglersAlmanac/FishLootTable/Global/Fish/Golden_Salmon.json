@@ -1,0 +1,35 @@
+{
+  "ItemId": "Fish_Golden_Salmon_Item",
+  "Category": [
+    "fish",
+    "freshwater",
+    "Golden"
+  ],
+  "Name": "Golden Salmon",
+  "Description": "Acrobatic leaps are its hallmark, and this silver scaled fisherman is a true expert in the art of endurance. Though it avoids the Ocean, it is found all over the world in rivers and lakes, employing its muscular body to fight against the currents that would easily wash away other fish. Landing one is a true challenge to the skills of a fisherman.",
+  "FamilyId": "Salmonids",
+  "Rarity": "Rare",
+  "IsGlobal": true,
+  "Weight": 1,
+  "Size": 75,
+  "Habitats": {
+    "Zones": [],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 0,
+      "Max_y": -1
+    }
+  },
+  "Minigame_stats": {
+    "Difficulty": 8,
+    "Behavior": "Sinker",
+    "Stamina": 90
+  },
+  "Book_info": {
+    "Habitat_Info": "• Everywhere",
+    "Page_File_Ui": "Almanac/Fish/Pages/FishPage7.ui"
+  }
+}

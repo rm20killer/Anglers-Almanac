@@ -19,7 +19,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
-import dev.rm20.anglersalmanac.Interactions.LaunchBobberInteraction;
+import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
 
 import javax.annotation.Nonnull;
@@ -109,7 +109,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 double distSq = getDistanceSquared(playerPos, transform != null ? transform.getPosition() : new Vector3d(0,-129,0));
                 if (distSq > DespawnRange) {
                     AnglersAlmanac.LOGGER.atInfo().log(player.getDisplayName()+" To far away from bobber, Despawn");
-                    LaunchBobberInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
+                    UseRodInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
                     return;
                 }
             }
@@ -131,8 +131,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                         AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                     }
                 } else {
-                    //AnglersAlmanac.LOGGER.atInfo().log(player.getDisplayName() + " fishing rod data changed while fishing.");
-                    LaunchBobberInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
+                    UseRodInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
                 }
                 return;
             }

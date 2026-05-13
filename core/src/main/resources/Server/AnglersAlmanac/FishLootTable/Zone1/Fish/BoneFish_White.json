@@ -1,0 +1,39 @@
+{
+  "ItemId": "Fish_Bone_White_Item",
+  "Category": [
+    "fish",
+    "Bone"
+  ],
+  "Name": "BoneFish",
+  "Description": "This bony predator is all that is left of the fish that chose not to emerge from the depths. With unnatural grace and a clicking movement, it swims through the marshes of the Emerald Wilds with its hallowed ribcage releasing bubbles into the water as it dashes among the reeds. This creature is not fishing for sustenance but from pure hostility.",
+  "FamilyId": "Skeleton",
+  "Rarity": "Epic",
+  "IsGlobal": false,
+  "Weight": 30,
+  "Size": 70,
+  "Habitats": {
+    "Zones": [
+      "1",
+      "Ocean"
+    ],
+    "Tiers": [],
+    "Regions": [],
+    "Biomes": [],
+    "Min_depth": 2,
+    "Height": {
+      "Min_y": 0,
+      "Max_y": 95
+    },
+    "Exclude_biomes": [],
+    "Weight_multiplier": 1
+  },
+  "Minigame_stats": {
+    "Difficulty": 10,
+    "Behavior": "Aggressive",
+    "Stamina": 90
+  },
+  "Book_info": {
+    "Habitat_Info": "Underground:|• Emerald Wilds:|• Ocean",
+    "Page_File_Ui": "Almanac/Fish/Pages/FishPage7.ui"
+  }
+}

@@ -236,7 +236,8 @@ public class AlmanacDatabase implements IAlmanacProvider {
     }
 
     public void addFishEntry(String uuid, String fishId) {
-        String sql = "ON CONFLICT DO NOTHING INTO catches(player_uuid, fish_id, count) VALUES(?, ?, 0)";
+        String sql = "INSERT INTO catches(player_uuid, fish_id, count) VALUES(?, ?, 0) " +
+                "ON CONFLICT(player_uuid, fish_id) DO NOTHING";
 
         try {
             Connection conn = getConnection();

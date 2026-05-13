@@ -1,0 +1,25 @@
+{
+  "ItemId": "AA_Golden_Bait",
+  "Modifiers": {
+    "Fishing_Power": 2,
+    "DefaultMultiplier": 1,
+    "Items": [
+      {
+        "TargetId": "Fish_Golden_Bluegill_Item",
+        "Multiplier": 50
+      },
+      {
+        "TargetId": "Fish_Golden_Catfish_Item",
+        "Multiplier": 50
+      },
+      {
+        "TargetId": "Fish_Golden_Salmon_Item",
+        "Multiplier": 100
+      },
+      {
+        "TargetId": "Fish_Golden_Minnow_Item",
+        "Multiplier": 50
+      }
+    ]
+  }
+}
