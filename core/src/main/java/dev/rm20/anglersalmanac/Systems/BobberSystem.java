@@ -73,7 +73,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                     AnglersAlmanac.LOGGER.atInfo().log("BobberSystem was attached to player that no longer is there, removing");
                     try {
                         commandBuffer.getExternalData().getWorld().execute(() -> {
-                            if(archetypeChunk.getReferenceTo(i).isValid() && archetypeChunk.getReferenceTo(i) !=null)
+                            if(archetypeChunk.getReferenceTo(i).isValid())
                             {
                                 store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
                             }
@@ -90,7 +90,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 {
                     try {
                         commandBuffer.getExternalData().getWorld().execute(() -> {
-                            if(archetypeChunk.getReferenceTo(i).isValid() && archetypeChunk.getReferenceTo(i) !=null)
+                            if(archetypeChunk.getReferenceTo(i).isValid())
                             {
                                 store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
                             }
