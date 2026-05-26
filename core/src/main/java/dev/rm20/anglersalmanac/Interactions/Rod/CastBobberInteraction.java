@@ -5,9 +5,10 @@ import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.SoundCategory;
@@ -41,6 +42,8 @@ import dev.rm20.anglersalmanac.Utils.BaitUtils;
 import javax.annotation.Nonnull;
 import java.util.UUID;
 
+import static dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction.updateMetadata;
+
 public class CastBobberInteraction extends SimpleInstantInteraction {
     public static final BuilderCodec<CastBobberInteraction> CODEC = BuilderCodec.builder(
             CastBobberInteraction.class, CastBobberInteraction::new, SimpleInstantInteraction.CODEC
@@ -65,15 +68,15 @@ public class CastBobberInteraction extends SimpleInstantInteraction {
         Ref<EntityStore> playerRef = interactionContext.getOwningEntity();
         TransformComponent transform = playerRef.getStore().getComponent(playerRef, TransformComponent.getComponentType());
         Transform lookTransform = TargetUtil.getLook(playerRef, commandBuffer);
-        Vector3d spawnPos = transform.getPosition().clone();
+        Vector3d spawnPos = new Vector3d(transform.getPosition());
         spawnPos.add(0, 1.5, 0);
         Vector3d lookDir = lookTransform.getDirection();
         Vector3d launchVelocity = new Vector3d(lookDir.x * 15, (lookDir.y * 15) + 2, lookDir.z * 15);
         Holder<EntityStore> bobberHolder = EntityStore.REGISTRY.newHolder();
-        Vector3f rotation = new Vector3f();
+        Rotation3f rotation = new Rotation3f();
         HeadRotation playerHead = commandBuffer.getComponent(playerRef, HeadRotation.getComponentType());
         if (playerHead != null) {
-            rotation.setYaw(playerHead.getRotation().getYaw() + (float) (Math.PI / 180.0) * 180.0F);
+            rotation.setYaw(playerHead.getRotation().yaw() + (float) (Math.PI / 180.0) * 180.0F);
         }
 
         bobberHolder.addComponent(HeadRotation.getComponentType(), new HeadRotation(rotation));
@@ -98,8 +101,6 @@ public class CastBobberInteraction extends SimpleInstantInteraction {
         if (modelAsset == null) modelAsset = ModelAsset.DEBUG;
 
         Model model = Model.createScaledModel(modelAsset, 2f);
-
-
         bobberHolder.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
         bobberHolder.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
         if (model.getBoundingBox() != null) {
@@ -117,16 +118,10 @@ public class CastBobberInteraction extends SimpleInstantInteraction {
         ItemStack heldItem = interactionContext.getHeldItem();
 //        FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
         InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
-        UseRodInteraction.updateMetadata(inv, interactionContext.getHeldItemSlot(), heldItem, bobberId, null, 0);
+        updateMetadata(inv, interactionContext.getHeldItemSlot(), heldItem, bobberId, null, 0);
         //play sound here
         int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Reel");
         SoundUtil.playSoundEvent3d(audio, SoundCategory.SFX, transform.getPosition(), playerRef.getStore());
-
-        // Trigger cast animation
-        //AnimationAction attackAnim = new AnimationAction("attack");
-        //AnimationUtils.playAnimation(player.getReference(), AnimationSlot.Action, "AA_Rod", "AA_Rod_Cast", true, interactionContext.getCommandBuffer().getStore());
-        //attackAnim.execute(ref, role, sensorInfo, dt, store);
-
         //AnglersAlmanac.LOGGER.atInfo().log("Rod metadata %s, %s", heldItem.getFromMetadataOrNull(FishingRodData.KEYED_CODEC), heldItem.getFromMetadataOrNull(ItemModeData.KEYED_CODEC));
     }
 }

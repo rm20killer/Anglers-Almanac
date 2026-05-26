@@ -36,20 +36,24 @@ public class HabitatCommand extends AbstractPlayerCommand {
     @Nullable
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-        if (!(context.sender() instanceof Player player)) {
-            context.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
-            return;
-        }
-        if(!((Player) context.sender()).hasPermission("AnglersAlmanac.admin"))
+        if(!playerRef.hasPermission("AnglersAlmanac.admin"))
         {
             context.sendMessage(Message.translation("anglersalmanac.cmd.error.noPerms"));
             return;
         }
+
+        Player player = playerRef.getComponent(Player.getComponentType());
+        if(player == null)
+        {
+            context.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
+            return;
+        }
+
         if (ref.isValid()) {
             // Position Info
             var transform = store.getComponent(ref, TransformComponent.getComponentType());
             if (transform == null) return;
-            double y = transform.getPosition().getY();
+            double y = transform.getPosition().y;
 
             // Time & Moon Info
             WorldTimeResource timeResource = store.getResource(WorldTimeResource.getResourceType());

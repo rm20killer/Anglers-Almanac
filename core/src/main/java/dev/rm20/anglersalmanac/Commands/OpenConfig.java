@@ -31,16 +31,21 @@ public class OpenConfig extends AbstractPlayerCommand {
 
     @Override
     protected void execute(@Nonnull CommandContext commandContext, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-        if (!(commandContext.sender() instanceof Player player)) {
-            commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
-            return;
-        }
-        if(!((Player) commandContext.sender()).hasPermission("AnglersAlmanac.admin"))
+//        if (!(commandContext.sender().)) {
+//            commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
+//            return;
+//        }
+        if(!commandContext.sender().hasPermission("AnglersAlmanac.admin"))
         {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.noPerms"));
             return;
         }
-
-        ((Player) commandContext.sender()).getPageManager().openCustomPage(ref,store,new ConfigUI(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction));
+        Player player = playerRef.getComponent(Player.getComponentType());
+        if(player == null)
+        {
+            commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
+            return;
+        }
+        player.getPageManager().openCustomPage(ref,store,new ConfigUI(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction));
     }
 }

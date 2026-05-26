@@ -39,7 +39,9 @@ public class AlmanacBook {
         definition.id = customId;
         definition.translationProperties = new ItemTranslationProperties(
                 customId+".name",
-                customId+".description"
+                null,
+                customId+".description",
+                null
         );
 
         Map<String, String> translations = new HashMap<>();
@@ -151,7 +153,9 @@ public class AlmanacBook {
             definition.id = customId;
             definition.translationProperties = new ItemTranslationProperties(
                     customId + ".name",
-                    customId + ".description"
+                    null,
+                    customId + ".description",
+                    null
             );
 
             allItemDefinitions.put(customId, definition);
@@ -189,7 +193,8 @@ public class AlmanacBook {
             Item customItem = CloneItem(customId, baseItem);
             ItemBase def = customItem.toPacket().clone();
             def.id = customId;
-            def.translationProperties = new ItemTranslationProperties(customId + ".name", customId + ".description");
+            def.translationProperties = new ItemTranslationProperties(customId + ".name",
+                    null, customId + ".description",null);
             return def;
         });
 

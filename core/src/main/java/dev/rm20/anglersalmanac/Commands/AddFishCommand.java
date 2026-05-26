@@ -37,15 +37,12 @@ public class AddFishCommand extends AbstractPlayerCommand {
         String input = this.fishArg.get(commandContext);
         String uuid = playerRef.getUuid().toString();
         Collection<FishLootManager> allFish = FishLootManager.getAllLoot();
-        if (!(commandContext.sender() instanceof Player player)) {
-            commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
-            return;
-        }
-        if(!((Player) commandContext.sender()).hasPermission("AnglersAlmanac.admin"))
+        if(!playerRef.hasPermission("AnglersAlmanac.admin"))
         {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.noPerms"));
             return;
         }
+
         if (input.equals("*")) {
             // Initialize every fish in the game
             for (FishLootManager fish : allFish) {

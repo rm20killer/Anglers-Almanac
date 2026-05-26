@@ -35,16 +35,20 @@ public class SimulateFishingCommand extends AbstractPlayerCommand {
 
     @Override
     protected void execute(@Nonnull CommandContext commandContext, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-        if (!(commandContext.sender() instanceof Player player)) {
-            commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
-            return;
-        }
-        if (!((Player) commandContext.sender()).hasPermission("AnglersAlmanac.admin")) {
+        if(!playerRef.hasPermission("AnglersAlmanac.admin"))
+        {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.noPerms"));
             return;
         }
+        Player player = playerRef.getComponent(Player.getComponentType());
+        if(player == null)
+        {
+            commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));
+            return;
+        }
+
         var transform = store.getComponent(ref, TransformComponent.getComponentType());
-        double y = (transform != null) ? transform.getPosition().getY() : 0;
+        double y = (transform != null) ? transform.getPosition().y : 0;
 
         WorldTimeResource timeResource = store.getResource(WorldTimeResource.getResourceType());
         TimePeriod timeKeyword = TimeUtils.getTimePeriod(timeResource.getGameTime().toString());

@@ -4,7 +4,7 @@ import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.shape.Box;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.modules.collision.BlockCollisionData;
@@ -70,7 +70,8 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         }
 
         // 3. Collision
-        Vector3d scaledVel = new Vector3d(velocity).scale(dt);
+        Vector3d scaledVel = new Vector3d();
+        velocity.mul(dt, scaledVel);
         CollisionResult result = new CollisionResult();
         Box box = boundingBoxComponent.getBoundingBox();
 
@@ -82,7 +83,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
 
         if (result.getFirstBlockCollision() != null) {
             BlockCollisionData data = result.getFirstBlockCollision();
-            position.assign(data.collisionPoint);
+            position.set(data.collisionPoint);
 
             // Bounce Logic
             // Formula: v_new = v - 2 * (v . n) * n
@@ -98,7 +99,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
                     velocity.x *= 0.8;
                     velocity.z *= 0.8;
                 } else if (!inWater) {
-                    velocity.scale(0);
+                    velocity.mul(0);
                 } else {
                     velocity.y = Math.max(0, velocity.y);
                 }
@@ -127,7 +128,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         transform.setPosition(position);
 
         // Remove if under the maps
-        if (position.getY() < -16.0) {
+        if (position.y() < -16.0) {
             try {
                 commandBuffer.getExternalData().getWorld().execute(() -> {
                     store.removeEntity(archetypeChunk.getReferenceTo(index), RemoveReason.REMOVE);

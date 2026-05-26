@@ -4,8 +4,9 @@ package dev.rm20.anglersalmanac.Interactions.Rod;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
@@ -56,28 +57,40 @@ public class UseRodInteraction extends SimpleInstantInteraction {
 
         if(meta == null)
         {
-            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+player.getDisplayName());
             // CastBobberInteraction set as Next in Interaction asset for the rods.
             context.getState().state = InteractionState.Finished;
+
+            PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+            if(playerRef1 == null) return;
+            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+playerRef1.getUsername());
             return;
         }
 
 
         if(!checkSaneMetadata(heldItem, commandBuffer)){
-            AnglersAlmanac.LOGGER.atInfo().log("Fixing busted metadata within UseRodInteraction for: "+player.getDisplayName());
-            cancelFishing(commandBuffer, player, heldItem);
             context.getState().state = InteractionState.Failed;
+
+            PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+            if(playerRef1 == null) return;
+            AnglersAlmanac.LOGGER.atInfo().log("Fixing busted metadata within UseRodInteraction for: "+playerRef1.getUsername());
+            cancelFishing(commandBuffer, player, heldItem);
             return;
         }
 
         if(shouldCast(heldItem, commandBuffer)){
-            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+player.getDisplayName());
             // CastBobberInteraction set as Next in Interaction asset for the rods.
             context.getState().state = InteractionState.Finished;
+
+            PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+            if(playerRef1 == null) return;
+            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+playerRef1.getUsername());
         }else{
-            AnglersAlmanac.LOGGER.atInfo().log("Not casting to UseRodInteraction for: "+player.getDisplayName());
             // ReelBobberInteraction must be set as Failed interaction in rods Interaction asset.
             context.getState().state = InteractionState.Failed;
+
+            PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+            if(playerRef1 == null) return;
+            AnglersAlmanac.LOGGER.atInfo().log("Not casting to UseRodInteraction for: "+playerRef1.getUsername());
         }
 
 
@@ -183,7 +196,9 @@ public class UseRodInteraction extends SimpleInstantInteraction {
         }
         else
         {
-            AnglersAlmanac.LOGGER.atWarning().log("Failed to clear" + heldItem.getItem() +" on "+ player.getDisplayName());
+            PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+            if(playerRef1 == null) return;
+            AnglersAlmanac.LOGGER.atWarning().log("Failed to clear" + heldItem.getItem() +" on "+ playerRef1.getUsername());
         }
 
 
@@ -206,7 +221,9 @@ public class UseRodInteraction extends SimpleInstantInteraction {
         }
         else
         {
-            AnglersAlmanac.LOGGER.atWarning().log("Failed to clear" + heldItem.getItem() +" on "+ player.getDisplayName());
+            PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+            if(playerRef1 == null) return;
+            AnglersAlmanac.LOGGER.atWarning().log("Failed to clear" + heldItem.getItem() +" on "+ playerRef1.getUsername());
         }
 
     }

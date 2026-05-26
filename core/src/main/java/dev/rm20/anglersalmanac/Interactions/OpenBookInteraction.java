@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
@@ -15,6 +16,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AlmanacBook.AlmanacRepository;
 import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
+import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Metadata.BookData;
 
 import javax.annotation.Nonnull;
@@ -91,26 +93,31 @@ public class OpenBookInteraction extends SimpleInstantInteraction {
 
     private BookData initializeNewBook(Ref<EntityStore> playerRef, Player player, ItemStack heldItem) {
         UUIDComponent uuidComp = playerRef.getStore().getComponent(playerRef, UUIDComponent.getComponentType());
+
         if (uuidComp == null) return null;
 
         String uuidStr = uuidComp.getUuid().toString();
 
-        BookData newData = new BookData();
-        newData.setPlayerUUID(uuidStr);
-        newData.setPlayerName(player.getDisplayName());
-        newData.setPageNumber(0);
 
+        InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
         //ItemStack updatedItem = heldItem.withMetadata(BookData.KEYED_CODEC, newData);
-        byte slot = player.getInventory().getActiveHotbarSlot();
+        if(inv == null)
+        {
+            AnglersAlmanac.LOGGER.atWarning().log("Something went wrong while creating new book. Missing InventoryComponent");
+            return null;
+        }
+        byte slot = inv.getActiveSlot();
         PlayerRef playerRefComp = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
 
+        BookData newData = new BookData();
+        newData.setPlayerUUID(uuidStr);
+        newData.setPlayerName(playerRefComp != null ? playerRefComp.getUsername() : "NO NAME FOUND");
+        newData.setPageNumber(0);
 
-        if (playerRefComp != null) {
-            Item newbook = syncCustomBookDisplay(playerRefComp, newData.getPlayerUUID(), newData.getPlayerName());
-            ItemStack newHeldedItem = new ItemStack(newbook.getId(), 1);
-            newHeldedItem.withMetadata(BookData.KEYED_CODEC, newData);
-            player.getInventory().getHotbar().replaceItemStackInSlot(slot, heldItem, newHeldedItem);
-        }
+        Item newbook = syncCustomBookDisplay(playerRefComp, newData.getPlayerUUID(), newData.getPlayerName());
+        ItemStack newHeldedItem = new ItemStack(newbook.getId(), 1);
+        newHeldedItem.withMetadata(BookData.KEYED_CODEC, newData);
+        inv.getInventory().replaceItemStackInSlot(slot, heldItem, newHeldedItem);
 
 
         return newData;
@@ -120,13 +127,19 @@ public class OpenBookInteraction extends SimpleInstantInteraction {
         if (existingData == null) {
             return null;
         }
-        byte slot = player.getInventory().getActiveHotbarSlot();
+        InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
+        if(inv == null)
+        {
+            AnglersAlmanac.LOGGER.atWarning().log("Something went wrong while Updating new book. Missing InventoryComponent");
+            return null;
+        }
+        byte slot = inv.getActiveSlot();
         PlayerRef playerRefComp = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
         if (playerRefComp != null) {
             Item newbook = syncCustomBookDisplay(playerRefComp, existingData.getPlayerUUID(), existingData.getPlayerName());
             ItemStack newHeldedItem = new ItemStack(newbook.getId(), 1);
             newHeldedItem.withMetadata(BookData.KEYED_CODEC, existingData);
-            player.getInventory().getHotbar().replaceItemStackInSlot(slot, heldItem, newHeldedItem);
+            inv.getInventory().replaceItemStackInSlot(slot, heldItem, newHeldedItem);
         }
         return existingData;
     }

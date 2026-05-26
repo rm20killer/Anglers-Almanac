@@ -5,7 +5,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 
 public class AnglersAlmanacConfig {
-    public static final String KEY = "MinigameConfig";
+    public static final String KEY = "Config";
 
     public static final BuilderCodec<AnglersAlmanacConfig> CODEC = BuilderCodec.builder(AnglersAlmanacConfig.class, AnglersAlmanacConfig::new)
             .append(new KeyedCodec<>("MinigameToUse", Codec.STRING),

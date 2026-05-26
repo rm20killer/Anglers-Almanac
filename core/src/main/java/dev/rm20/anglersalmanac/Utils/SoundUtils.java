@@ -4,7 +4,7 @@ import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
 import com.hypixel.hytale.builtin.ambience.AmbiencePlugin;
 import com.hypixel.hytale.builtin.ambience.components.AmbientEmitterComponent;
 import com.hypixel.hytale.component.*;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.UpdateType;
 import com.hypixel.hytale.protocol.packets.assets.UpdateSoundEvents;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;

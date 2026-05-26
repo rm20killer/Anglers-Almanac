@@ -3,7 +3,8 @@ package dev.rm20.anglersalmanac.Systems;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
+import org.joml.Vector3d;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -59,8 +60,10 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
 
         playerRef = game.ownerRef;
         Player player = commandBuffer.getComponent(playerRef, Player.getComponentType());
-        ItemStack rodItem = player.getInventory().getActiveHotbarItem(); // TODO ensure that this is always actually the rod. (cancel minigame if switched off)
-        Vector3d playerPos = commandBuffer.getComponent(playerRef, TransformComponent.getComponentType()).getPosition().clone();
+        InventoryComponent.Hotbar inv = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
+
+        ItemStack rodItem = inv != null ? inv.getActiveItem() : null;
+        //Vector3d playerPos = new Vector3d(commandBuffer.getComponent(playerRef, TransformComponent.getComponentType()).getPosition());
 
         if(rodItem == null)
         {
@@ -71,7 +74,7 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
         if(rodMeta != null)
         {
             game.fishingRod = rodItem;
-            game.Slot = player.getInventory().getActiveHotbarSlot();
+            game.Slot = inv.getActiveSlot();
         }
 
 

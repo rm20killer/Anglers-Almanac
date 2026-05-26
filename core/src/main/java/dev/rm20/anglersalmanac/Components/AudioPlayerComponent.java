@@ -3,8 +3,10 @@ package dev.rm20.anglersalmanac.Components;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.*;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Vector3dUtil;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.common.OggVorbisInfoCache;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
@@ -155,22 +157,22 @@ public class AudioPlayerComponent implements Component<EntityStore> {
     }
 
     private Vector3d getAudioPlayerPos(@Nonnull ComponentAccessor<EntityStore> componentAccessor){
-        if(selfUUID == null) return Vector3d.ZERO;
+        if(selfUUID == null) return new Vector3d(0,0,0);
         TransformComponent transform = componentAccessor.getComponent(componentAccessor.getExternalData().getRefFromUUID(selfUUID), TransformComponent.getComponentType());
-        if(transform == null) return Vector3d.ZERO;
-        return transform.getPosition().clone();
+        if(transform == null) return new Vector3d(0,0,0);
+        return new Vector3d(transform.getPosition());
     }
 
 
     public AudioPlayerComponent spawnNewAudioPlayerEntity(@Nonnull ComponentAccessor<EntityStore> componentAccessor){
-        return spawnNewAudioPlayerEntity(Vector3d.ZERO, componentAccessor);
+        return spawnNewAudioPlayerEntity(new Vector3d(0,0,0), componentAccessor);
     }
     public static AudioPlayerComponent spawnNewAudioPlayerEntity(Vector3d spawnPos, @Nonnull ComponentAccessor<EntityStore> componentAccessor){
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
 
         UUID uuid = UUIDUtil.generateVersion3UUID();
         holder.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(uuid));
-        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(spawnPos, Vector3f.ZERO));
+        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(spawnPos, Rotation3f.ZERO));
 
         AudioPlayerComponent apc = new AudioPlayerComponent();
         apc.selfUUID = uuid;
@@ -188,7 +190,7 @@ public class AudioPlayerComponent implements Component<EntityStore> {
 
         UUID uuid = UUIDUtil.generateVersion3UUID();
         holder.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(uuid));
-        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(spawnPos, Vector3f.ZERO));
+        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(spawnPos, Rotation3f.ZERO));
 
         AudioPlayerComponent apc = new AudioPlayerComponent(playerRef);
         apc.selfUUID = uuid;

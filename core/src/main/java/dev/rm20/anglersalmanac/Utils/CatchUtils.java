@@ -4,8 +4,11 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.math.vector.Rotation3f;
+import com.hypixel.hytale.math.vector.Rotation3fc;
+import org.joml.Quaternionf;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -81,7 +84,7 @@ public class CatchUtils {
         if (transform == null) return null;
 
 //        double x = transform.getPosition().getX();
-        double y = transform.getPosition().getY();
+        double y = transform.getPosition().y;
 //        double z = transform.getPosition().getZ();
 
         // time info
@@ -146,7 +149,6 @@ public class CatchUtils {
         if (lootEntry == null) {
             return FishLootManager.getFishData("Stick");
         }
-        //AnglersAlmanac.LOGGER.atInfo().log(lootEntry.getId());
         String lootID = lootEntry.getItemID();
         return lootEntry;
 
@@ -175,18 +177,20 @@ public class CatchUtils {
             World world = player.getWorld();
             Store<EntityStore> store = world.getEntityStore().getStore();
             Vector3d position = bobberRef.getStore().getComponent(bobberRef, TransformComponent.getComponentType()).getPosition();
-            position.setY(position.getY() + 4);
+            position.y = position.y + 4;
             TransformComponent transform = player.getReference().getStore().getComponent(player.getReference(), TransformComponent.getComponentType());
             Vector3d PlayerPos = transform.getPosition();
-            Vector3d direction = PlayerPos.clone().subtract(position).normalize();
-            Vector3f lookat = new Vector3f(Vector3f.lookAt(PlayerPos));
+            Vector3d direction = new Vector3d(PlayerPos).sub(position).normalize();
+            Quaternionf destQuat = new org.joml.Quaternionf().lookAlong((float)direction.x, (float)direction.y, (float)direction.z, 0, 1, 0);
+            Rotation3f lookat = new Rotation3f(0, destQuat.y, 0);
+
             world.execute(() -> {
-                Pair<Ref<EntityStore>, INonPlayerCharacter> result = NPCPlugin.get().spawnNPC(store, loot.getEntityID(), null, position, new Vector3f(0,lookat.y,0));
+                Pair<Ref<EntityStore>, INonPlayerCharacter> result = NPCPlugin.get().spawnNPC(store, loot.getEntityID(), null, position, lookat);
 
                 if (result != null) {
                     Ref<EntityStore> npcRef = result.first();
                     INonPlayerCharacter npc = result.second();
-                    Vector3d launchVelocity = new Vector3d(direction.x * 15, 1, direction.z * 15).scale(30);
+                    Vector3d launchVelocity = new Vector3d(direction.x * 15, 1, direction.z * 15).mul(30);
                     Velocity velocity = npcRef.getStore().getComponent(npcRef, Velocity.getComponentType());
                     if (velocity != null) {
                         //AnglersAlmanac.LOGGER.atInfo().log("applied velocity");
