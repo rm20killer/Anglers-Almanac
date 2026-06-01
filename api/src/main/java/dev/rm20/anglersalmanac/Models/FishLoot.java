@@ -47,6 +47,8 @@ public class FishLoot {
 
     @CodecAnnotations.Field("Book_info")
     protected BookInfo bookInfo;
+    @CodecAnnotations.Field(value = "Size", doc = "NOT IN USE")
+    private int size;
 
     public FishLoot() {
     }

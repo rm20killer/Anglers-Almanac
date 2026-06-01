@@ -75,9 +75,6 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     private String id;
     private AssetExtraInfo.Data data;
 
-    @CodecAnnotations.Field("Size")
-    private int size;
-
     public FishLootManager() {
     }
 
