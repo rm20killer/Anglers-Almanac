@@ -25,6 +25,8 @@ public class AnglersAlmanacConfig {
     @CodecAnnotations.Field(value = "ShouldEnvironmentCheck", doc = "If the loot table should check Environment info like y level, depth, time of day etc")
     private Boolean ShouldEnvironmentCheck = true;
 
+    @CodecAnnotations.Field( value = "ShouldHookEntities", doc = "If entities can be hooked (including players)")
+    private Boolean HookEntities = true;
     public AnglersAlmanacConfig() {
     }
 
@@ -60,5 +62,13 @@ public class AnglersAlmanacConfig {
 
     public void setShouldEnvironmentCheck(Boolean shouldEnvironmentCheck) {
         ShouldEnvironmentCheck = shouldEnvironmentCheck;
+    }
+
+    public Boolean getHookEntities() {
+        return HookEntities;
+    }
+
+    public void setHookEntities(Boolean hookEntities) {
+        HookEntities = hookEntities;
     }
 }

@@ -39,10 +39,14 @@ config.xpEnabled.text = EP durch Angeln
 config.xpEnabled.tooltip = [WIP] Erhalte Erfahrungspunkte beim Angeln, falls eine EP-Mod installiert ist.
 
 config.LocationCheck.text = Habitat check
-config.LocationCheck.tooltip = Disabled will mark all fish as global
+config.LocationCheck.tooltip = Behinderte werden alle Fische als global markieren
+
 
 config.EnvironmentCheck.text = Environment check
-config.EnvironmentCheck.tooltip = Should the mod check environment check, e.g y level, time, depth etc
+config.EnvironmentCheck.tooltip = Sollte die Mod die Umgebung überprüfen, z. B. Y-Achse, Zeit, Tiefe usw.
+
+config.HookEntities.text = Should hook entities
+config.HookEntities.tooltip = Wenn Entitäten (einschließlich Spieler) angebunden werden können
 
 ### Fischen
 fishing.bait.no = KEIN KÖDER

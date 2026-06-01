@@ -37,7 +37,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         TransformComponent transform = archetypeChunk.getComponent(index, TransformComponent.getComponentType());
         Velocity velocityComp = archetypeChunk.getComponent(index, Velocity.getComponentType());
         BoundingBox boundingBoxComponent = archetypeChunk.getComponent(index, BoundingBox.getComponentType());
-
+        Boolean shouldHookEntity = AnglersAlmanac.MOD_CONFIG.get().getHookEntities();
         if (transform == null || velocityComp == null || boundingBoxComponent == null) return;
 
         World world = store.getExternalData().getWorld();
@@ -100,7 +100,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         SpatialResource<Ref<EntityStore>, EntityStore> spatialTree = store.getResource(CollisionModule.get().getTangibleEntitySpatialResourceType());
 
         //entity check start here
-        if (spatialTree != null && bobberComp != null && !bobberComp.isHookedToEntity() && !bobberComp.isMinigameActive()) {
+        if (spatialTree != null && bobberComp != null && !bobberComp.isHookedToEntity() && !bobberComp.isMinigameActive() && shouldHookEntity) {
             Box searchVolume = box.clone().offset(position).extend(scaledVel.x, scaledVel.y, scaledVel.z);
             searchVolume.expand(1f);
             Vector3d minBound = searchVolume.getMin();
