@@ -66,7 +66,7 @@ public class OpenBookInteraction extends SimpleInstantInteraction {
                 if(bookEntry!=null)
                 {
                     newData.setPlayerUUID(UUID);
-                    newData.setPlayerName(bookEntry.playerName);
+                    newData.setPlayerName(bookEntry.playerName());
                     newData.setPageNumber(0);
                     openAndSyncBook(playerRef, player, newData);
                     return;

@@ -1,43 +1,54 @@
 package dev.rm20.anglersalmanac.Metadata;
 
-import com.hypixel.hytale.codec.Codec;
-import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
+import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
+import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
 
 public class FishingModifier {
+
+    public static BuilderCodec<FishingModifier> CODEC;
+
+    @CodecAnnotations.Field("TargetId")
     public String targetId;
+
+    @CodecAnnotations.Field("Multiplier")
     public float chanceMultiplier = 1.0f;
 
     public FishingModifier() {
     }
 
-    public static final BuilderCodec<FishingModifier> CODEC = BuilderCodec.builder(FishingModifier.class, FishingModifier::new)
-            .append(new KeyedCodec<>("TargetId", Codec.STRING), (t, v) -> t.targetId = v, t -> t.targetId).add()
-            .append(new KeyedCodec<>("Multiplier", Codec.FLOAT), (t, v) -> t.chanceMultiplier = v, t -> t.chanceMultiplier).add()
-            .build();
-
     public static class Modifiers {
+
+        public static BuilderCodec<Modifiers> CODEC;
+
+        static {
+            CODEC = AutoCodecBuilder.create(Modifiers.class, Modifiers::new);
+            AutoCodecBuilder.register(Modifiers.class, CODEC);
+        }
+
+        @CodecAnnotations.Field("Fishing_Power")
         public float fishingPower = 0f;
+
+        @CodecAnnotations.Field("Biomes")
         public FishingModifier[] biomeModifiers;
+
+        @CodecAnnotations.Field("Zones")
         public FishingModifier[] zoneModifiers;
+
+        @CodecAnnotations.Field("Regions")
         public FishingModifier[] regionModifiers;
+
+        @CodecAnnotations.Field("Families")
         public FishingModifier[] familyModifiers;
+
+        @CodecAnnotations.Field("Items")
         public FishingModifier[] itemModifiers;
+
+        @CodecAnnotations.Field("DefaultMultiplier")
         public float defaultMultiplier = 1.0f;
 
         public Modifiers() {
         }
-
-        public static final BuilderCodec<Modifiers> CODEC = BuilderCodec.builder(Modifiers.class, Modifiers::new)
-                .append(new KeyedCodec<>("Fishing_Power", Codec.FLOAT), (t, v) -> t.fishingPower = v, t -> t.fishingPower).add()
-                .append(new KeyedCodec<>("Biomes", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.biomeModifiers = v, t -> t.biomeModifiers).add()
-                .append(new KeyedCodec<>("Zones", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.zoneModifiers = v, t -> t.zoneModifiers).add()
-                .append(new KeyedCodec<>("Regions", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.regionModifiers = v, t -> t.regionModifiers).add()
-                .append(new KeyedCodec<>("Families", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.familyModifiers = v, t -> t.familyModifiers).add()
-                .append(new KeyedCodec<>("Items", new ArrayCodec<>(FishingModifier.CODEC, FishingModifier[]::new)), (t, v) -> t.itemModifiers = v, t -> t.itemModifiers).add()
-                .append(new KeyedCodec<>("DefaultMultiplier", Codec.FLOAT), (t, v) -> t.defaultMultiplier = v, t -> t.defaultMultiplier).add()
-                .build();
     }
 
 

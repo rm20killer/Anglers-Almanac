@@ -11,37 +11,51 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
+import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
+import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
 
 @HytaleAsset(
         path = "AnglersAlmanacRodStats"
 )
 public class MinigameRodStats implements JsonAssetWithMap<String, DefaultAssetMap<String, MinigameRodStats>> {
 
-    public String id;
-    public AssetExtraInfo.Data data;
-    public String name;
-    public String description;
-    public RodStats stats;
-    public FishingModifier.Modifiers modifiers = new FishingModifier.Modifiers();
-
     public static final String KEY = "AA_MinigameRodStats";
 
-    public static final AssetBuilderCodec<String, MinigameRodStats> CODEC = AssetBuilderCodec.builder(
-            MinigameRodStats.class,
-            MinigameRodStats::new,
-            Codec.STRING,
-            (t, id) -> t.id = id,
-            t -> t.id,
-            (t, data) -> t.data = data,
-            t -> t.data
-    )
-        .appendInherited(new KeyedCodec<>("Name", Codec.STRING), (t, v) -> t.name = v, t -> t.name, (t, p) -> t.name = p.name).add()
-        .appendInherited(new KeyedCodec<>("Description", Codec.STRING), (t, v) -> t.description = v, t -> t.description, (t, p) -> t.description = p.description).add()
-        .appendInherited(new KeyedCodec<>("Stats", RodStats.CODEC), (t, v) -> t.stats = v, t -> t.stats, (t, p) -> t.stats = p.stats).add()
-        .appendInherited(new KeyedCodec<>("Modifiers", FishingModifier.Modifiers.CODEC), (t, v) -> t.modifiers = v, t -> t.modifiers, (t, p) -> t.modifiers = p.modifiers).add()
-    .build();
+    public static final AssetBuilderCodec<String, MinigameRodStats> CODEC;
+    public static final KeyedCodec<MinigameRodStats> KEYED_CODEC;
 
-    public static final KeyedCodec<MinigameRodStats> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
+    static {
+        if (FishingModifier.CODEC == null) {
+            FishingModifier.CODEC = AutoCodecBuilder.create(FishingModifier.class, FishingModifier::new);
+            AutoCodecBuilder.register(FishingModifier.class, FishingModifier.CODEC);
+        }
+        if (FishingModifier.Modifiers.CODEC == null) {
+            FishingModifier.Modifiers.CODEC = AutoCodecBuilder.create(FishingModifier.Modifiers.class, FishingModifier.Modifiers::new);
+            AutoCodecBuilder.register(FishingModifier.Modifiers.class, FishingModifier.Modifiers.CODEC);
+        }
+
+        AutoCodecBuilder.register(RodStats.class, RodStats.CODEC);
+
+        try {
+            CODEC = AutoCodecBuilder.createAsset(
+                    MinigameRodStats.class,
+                    MinigameRodStats::new,
+                    MinigameRodStats.class.getDeclaredField("id"),
+                    MinigameRodStats.class.getDeclaredField("data")
+            );
+            KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
+        } catch (NoSuchFieldException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    public String id;
+    public AssetExtraInfo.Data data;
+
+    @CodecAnnotations.Field("Name") public String name;
+    @CodecAnnotations.Field("Description") public String description;
+    @CodecAnnotations.Field("Stats") public RodStats stats;
+    @CodecAnnotations.Field("Modifiers") public FishingModifier.Modifiers modifiers = new FishingModifier.Modifiers();
 
     private static AssetStore<String, MinigameRodStats, DefaultAssetMap<String, MinigameRodStats>> ASSET_STORE;
 

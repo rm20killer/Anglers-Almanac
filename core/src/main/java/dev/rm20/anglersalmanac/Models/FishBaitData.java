@@ -6,36 +6,51 @@ import com.hypixel.hytale.assetstore.AssetStore;
 import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
+import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
+import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
 
 @HytaleAsset(
         path = "AnglersAlmanacBaitData"
 )
-public class FishBaitData  implements JsonAssetWithMap<String, DefaultAssetMap<String, FishBaitData>> {
-    public String id;
-    public AssetExtraInfo.Data data;
-    public String itemId;
-    public FishingModifier.Modifiers modifiers = new FishingModifier.Modifiers();
+public class FishBaitData implements JsonAssetWithMap<String, DefaultAssetMap<String, FishBaitData>> {
 
     public static final String KEY = "AA_FishBaitData";
+    public static final AssetBuilderCodec<String, FishBaitData> CODEC;
+    public static final KeyedCodec<FishBaitData> KEYED_CODEC;
 
-    public static final AssetBuilderCodec<String, FishBaitData> CODEC = AssetBuilderCodec.builder(
+    static {
+        if (FishingModifier.CODEC == null) {
+            FishingModifier.CODEC = AutoCodecBuilder.create(FishingModifier.class, FishingModifier::new);
+            AutoCodecBuilder.register(FishingModifier.class, FishingModifier.CODEC);
+        }
+        if (FishingModifier.Modifiers.CODEC == null) {
+            FishingModifier.Modifiers.CODEC = AutoCodecBuilder.create(FishingModifier.Modifiers.class, FishingModifier.Modifiers::new);
+            AutoCodecBuilder.register(FishingModifier.Modifiers.class, FishingModifier.Modifiers.CODEC);
+        }
+        try {
+            CODEC = AutoCodecBuilder.createAsset(
                     FishBaitData.class,
                     FishBaitData::new,
-                    Codec.STRING,
-                    (t, id) -> t.id = id,
-                    t -> t.id,
-                    (t, data) -> t.data = data,
-                    t -> t.data
-            )
-            .appendInherited(new KeyedCodec<>("ItemId", Codec.STRING), (t, v) -> t.itemId = v, t -> t.itemId, (t, p) -> t.itemId = p.itemId).add()
-            .appendInherited(new KeyedCodec<>("Modifiers", FishingModifier.Modifiers.CODEC), (t, v) -> t.modifiers = v, t -> t.modifiers, (t, p) -> t.modifiers = p.modifiers).add()
-            .build();
+                    FishBaitData.class.getDeclaredField("id"),
+                    FishBaitData.class.getDeclaredField("data")
+            );
+            KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
+        } catch (NoSuchFieldException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
-    public static final KeyedCodec<FishBaitData> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
+    public String id;
+    public AssetExtraInfo.Data data;
+
+    @CodecAnnotations.Field("ItemId")
+    public String itemId;
+
+    @CodecAnnotations.Field("Modifiers")
+    public FishingModifier.Modifiers modifiers = new FishingModifier.Modifiers();
 
     private static AssetStore<String, FishBaitData, DefaultAssetMap<String, FishBaitData>> ASSET_STORE;
 
@@ -61,6 +76,4 @@ public class FishBaitData  implements JsonAssetWithMap<String, DefaultAssetMap<S
         }
         return -1f;
     }
-
-
 }

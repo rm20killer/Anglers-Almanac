@@ -100,7 +100,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         SpatialResource<Ref<EntityStore>, EntityStore> spatialTree = store.getResource(CollisionModule.get().getTangibleEntitySpatialResourceType());
 
         //entity check start here
-        if (spatialTree != null && bobberComp != null && !bobberComp.isHookedToEntity()) {
+        if (spatialTree != null && bobberComp != null && !bobberComp.isHookedToEntity() && !bobberComp.isMinigameActive()) {
             Box searchVolume = box.clone().offset(position).extend(scaledVel.x, scaledVel.y, scaledVel.z);
             searchVolume.expand(1f);
             Vector3d minBound = searchVolume.getMin();

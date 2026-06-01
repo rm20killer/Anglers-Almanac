@@ -10,15 +10,12 @@ import com.hypixel.hytale.protocol.packets.assets.UpdateItems;
 import com.hypixel.hytale.protocol.packets.assets.UpdateTranslations;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
-import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.StampedLock;
 
@@ -117,7 +114,7 @@ public class AlmanacBook {
         Map<String, AlmanacRepository.BookEntry> savedBooks = AlmanacRepository.getAllSavedBooks();
 
         for (Map.Entry<String, AlmanacRepository.BookEntry> entry : savedBooks.entrySet()) {
-            String customId = entry.getValue().customId;
+            String customId = entry.getValue().customId();
             Item customItem = CloneItem(customId, baseItem);
             registerItemOnServer(customId, customItem);
         }
@@ -141,8 +138,8 @@ public class AlmanacBook {
 
         for (Map.Entry<String, AlmanacRepository.BookEntry> entry : allBooks.entrySet()) {
             String playerUuid = entry.getKey();
-            String customId = entry.getValue().customId;
-            String playerName = entry.getValue().playerName;
+            String customId = entry.getValue().customId();
+            String playerName = entry.getValue().playerName();
 
 
             String localizedName = Message.translation("anglersalmanac.book.name").param("name", playerName).getAnsiMessage();
@@ -220,7 +217,7 @@ public class AlmanacBook {
         AlmanacRepository.BookEntry entry = AlmanacRepository.getBookData(uuid);
 
         if (entry != null) {
-            sendSingleBookSync(player, uuid, entry.playerName, entry.customId);
+            sendSingleBookSync(player, uuid, entry.playerName(), entry.customId());
             AnglersAlmanac.LOGGER.atInfo().log("Synced personal almanac to " + player.getUsername());
         }
     }
@@ -230,7 +227,7 @@ public class AlmanacBook {
         String targetUuid = bookCustomId.replace("almanac.book.", "");
         AlmanacRepository.BookEntry data = AlmanacRepository.getBookData(targetUuid);
         if (data != null) {
-            sendSingleBookSync(viewer, targetUuid, data.playerName, bookCustomId);
+            sendSingleBookSync(viewer, targetUuid, data.playerName(), bookCustomId);
         }
     }
 

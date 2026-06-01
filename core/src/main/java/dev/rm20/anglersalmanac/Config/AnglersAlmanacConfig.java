@@ -1,37 +1,30 @@
 package dev.rm20.anglersalmanac.Config;
 
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
+import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
 
 public class AnglersAlmanacConfig {
     public static final String KEY = "Config";
 
-    public static final BuilderCodec<AnglersAlmanacConfig> CODEC = BuilderCodec.builder(AnglersAlmanacConfig.class, AnglersAlmanacConfig::new)
-            .append(new KeyedCodec<>("MinigameToUse", Codec.STRING),
-                    (config, value) -> config.minigameToUse = value,
-                    (config) -> config.minigameToUse)
-            .documentation("The name of the minigame logic to use for fishing.").add()
-            .append(new KeyedCodec<>("UseBait", Codec.BOOLEAN),
-                    (config, value) -> config.ShouldUseBait = value,
-                    (config) -> config.ShouldUseBait)
-            .documentation("If fishing should use bait when casting").add()
-            .append(new KeyedCodec<>("ShouldHabCheck", Codec.BOOLEAN),
-                    (config, value) -> config.ShouldHabCheck = value,
-                    (config) -> config.ShouldHabCheck)
-            .documentation("If the loot table should check habitat info").add()
-            .append(new KeyedCodec<>("ShouldEnvironmentCheck", Codec.BOOLEAN),
-                    (config, value) -> config.ShouldEnvironmentCheck = value,
-                    (config) -> config.ShouldEnvironmentCheck)
-            .documentation("If the loot table should check Environment info like y level, depth, time of day etc").add()
-            .build();
+    public static final BuilderCodec<AnglersAlmanacConfig> CODEC =
+            AutoCodecBuilder.create(AnglersAlmanacConfig.class, AnglersAlmanacConfig::new);
 
     public static final KeyedCodec<AnglersAlmanacConfig> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
 
+    @CodecAnnotations.Field(value = "MinigameToUse", doc = "The name of the minigame logic to use for fishing.")
     private String minigameToUse = "TensionBar";
+
+    @CodecAnnotations.Field(value = "UseBait", doc = "If fishing should use bait when casting")
     private Boolean ShouldUseBait = false;
+
+    @CodecAnnotations.Field(value = "ShouldHabCheck", doc = "If the loot table should check habitat info")
     private Boolean ShouldHabCheck = true;
+
+    @CodecAnnotations.Field(value = "ShouldEnvironmentCheck", doc = "If the loot table should check Environment info like y level, depth, time of day etc")
     private Boolean ShouldEnvironmentCheck = true;
+
     public AnglersAlmanacConfig() {
     }
 

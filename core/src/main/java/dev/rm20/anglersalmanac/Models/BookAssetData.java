@@ -8,70 +8,81 @@ import com.hypixel.hytale.assetstore.AssetStore;
 import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.protocol.Color;
-import com.hypixel.hytale.server.core.codec.ProtocolCodecs;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
 import dev.rm20.anglersalmanac.Utils.ColourUtils;
-import dev.rm20.anglersalmanac.Utils.Validator.CustomAssetValidator;
+import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
+import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 @HytaleAsset(
         path = "AnglersAlmanacBook"
 )
 public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<String, BookAssetData>> {
 
-    public static final BuilderCodec<ZoneInfo> ZONE_INFO_CODEC = BuilderCodec.builder(ZoneInfo.class, ZoneInfo::new)
-            .append(new KeyedCodec<>("DisplayName", Codec.STRING), (z, v) -> z.displayName = v, z -> z.displayName).add()
-            .append(new KeyedCodec<>("ZoneDescription", Codec.STRING), (z, v) -> z.zoneDescription = v, z -> z.zoneDescription).add()
-            .append(new KeyedCodec<>("ZoneImage", Codec.STRING), (z, v) -> z.ZoneImage = v, z -> z.ZoneImage)
-            .addValidator(CustomAssetValidator.UI_ZONE_VALIDATOR).add()
-            .append(new KeyedCodec<>("ProgressBarColour", ProtocolCodecs.COLOR), (z, v) -> z.ProgressBarColour = v, z -> z.ProgressBarColour).add()
-            .append(new KeyedCodec<>("TabIcon", Codec.STRING), (z, v) -> z.tabIcon = v, z -> z.tabIcon)
-            .addValidator(CustomAssetValidator.UI_TAB_VALIDATOR).add()
-            .append(new KeyedCodec<>("TabColour", ProtocolCodecs.COLOR), (z, v) -> z.tabColour = v, z -> z.tabColour).add()
-            .build();
+    public static final BuilderCodec<ZoneInfo> ZONE_INFO_CODEC;
+    public static final BuilderCodec<SpreadTemplate> SPREAD_CODEC;
+    public static final BuilderCodec<habitatsInfo> HABITAT_INFO_CODEC;
+    public static final AssetBuilderCodec<String, BookAssetData> CODEC;
 
-    public static final BuilderCodec<SpreadTemplate> SPREAD_CODEC = BuilderCodec.builder(SpreadTemplate.class, SpreadTemplate::new)
-            .append(new KeyedCodec<>("UiFile", Codec.STRING), (s, v) -> s.uiFile = v, s -> s.uiFile).add()
-            .append(new KeyedCodec<>("IsDoublePage", Codec.BOOLEAN), (s, v) -> s.isDoublePage = v, s -> s.isDoublePage).add()
-            .append(new KeyedCodec<>("LeftPage", Codec.STRING), (s, v) -> s.LeftPage = v, s -> s.LeftPage).add()
-            .append(new KeyedCodec<>("RightPage", Codec.STRING), (s, v) -> s.RightPage = v, s -> s.RightPage).add()
-            .build();
+    static {
+        ZONE_INFO_CODEC = AutoCodecBuilder.create(ZoneInfo.class, ZoneInfo::new);
+        AutoCodecBuilder.register(ZoneInfo.class, ZONE_INFO_CODEC);
 
-    public static final BuilderCodec<habitatsInfo> HABITAT_INFO_CODEC = BuilderCodec.builder(habitatsInfo.class, habitatsInfo::new)
-            .append(new KeyedCodec<>("ZoneName", Codec.STRING), (h, v) -> h.ZoneName = v, h -> h.ZoneName).add()
-            .append(new KeyedCodec<>("ZoneInfo", ZONE_INFO_CODEC), (c, v) -> c.zoneInfo = v, c -> c.zoneInfo).add()
-            .append(new KeyedCodec<>("Spread", new ArrayCodec<>(SPREAD_CODEC, SpreadTemplate[]::new)), (h, v) -> h.pages = v, h -> h.pages).add()
-            .build();
+        SPREAD_CODEC = AutoCodecBuilder.create(SpreadTemplate.class, SpreadTemplate::new);
+        AutoCodecBuilder.register(SpreadTemplate.class, SPREAD_CODEC);
 
+        HABITAT_INFO_CODEC = AutoCodecBuilder.create(habitatsInfo.class, habitatsInfo::new);
+        AutoCodecBuilder.register(habitatsInfo.class, HABITAT_INFO_CODEC);
 
-    public static final AssetBuilderCodec<String, BookAssetData> CODEC = AssetBuilderCodec.builder(
+        try {
+            CODEC = AutoCodecBuilder.createAsset(
                     BookAssetData.class,
                     BookAssetData::new,
-                    Codec.STRING,
-                    (t, id) -> t.id = id,
-                    t -> t.id,
-                    (t, data) -> t.data = data,
-                    t -> t.data
-            )
-            .appendInherited(new KeyedCodec<>("Habitats", new ArrayCodec<>(HABITAT_INFO_CODEC, habitatsInfo[]::new)),
-                    (t, v) -> t.habitats = v,
-                    t -> t.habitats,
-                    (t, p) -> t.habitats = p.habitats).add()
-            .build();
+                    BookAssetData.class.getDeclaredField("id"),
+                    BookAssetData.class.getDeclaredField("data")
+            );
+        } catch (NoSuchFieldException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    public static class habitatsInfo {
+        @CodecAnnotations.Field("ZoneName") public String ZoneName;
+        @CodecAnnotations.Field("ZoneInfo") public ZoneInfo zoneInfo;
+        @CodecAnnotations.Field("Spread") public SpreadTemplate[] pages;
+    }
+
+    public static class SpreadTemplate {
+        @CodecAnnotations.Field("UiFile") public String uiFile;
+        @CodecAnnotations.Field("IsDoublePage") public boolean isDoublePage;
+        @CodecAnnotations.Field("LeftPage") public String LeftPage;
+        @CodecAnnotations.Field("RightPage") public String RightPage;
+    }
+
+    public static class ZoneInfo {
+        @CodecAnnotations.Field("DisplayName") public String displayName;
+        @CodecAnnotations.Field("ZoneDescription") public String zoneDescription;
+        @CodecAnnotations.Field("ZoneImage") @CodecAnnotations.CustomValidator("UI_ZONE_VALIDATOR") public String ZoneImage;
+        @CodecAnnotations.Field("ProgressBarColour") public Color ProgressBarColour;
+        @CodecAnnotations.Field("TabIcon") @CodecAnnotations.CustomValidator("UI_TAB_VALIDATOR") public String tabIcon;
+        @CodecAnnotations.Field("TabColour") public Color tabColour;
+    }
+
+    private String id;
+    private AssetExtraInfo.Data data;
+
+    @CodecAnnotations.Field("Habitats")
+    private habitatsInfo[] habitats;
 
     // Asset Store
-
     private static AssetStore<String, BookAssetData, DefaultAssetMap<String, BookAssetData>> ASSET_STORE;
 
     public static AssetStore<String, BookAssetData, DefaultAssetMap<String, BookAssetData>> getAssetStore() {
@@ -83,33 +94,6 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    // Fields
-    private String id;
-    private AssetExtraInfo.Data data;
-    private habitatsInfo[] habitats;
-
-    public static class habitatsInfo {
-        public String ZoneName;
-        public ZoneInfo zoneInfo;
-        public SpreadTemplate[] pages;
-    }
-
-    public static class SpreadTemplate {
-        public String uiFile;
-        public boolean isDoublePage;
-        public String LeftPage;
-        public String RightPage;
-    }
-
-    public static class ZoneInfo {
-        public String displayName;
-        public String zoneDescription;
-        public String ZoneImage;
-        public Color ProgressBarColour;
-        public String tabIcon;
-        public Color tabColour;
     }
 
     public BookAssetData() {
@@ -133,11 +117,8 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
                 .toList();
     }
 
+    public record FishEntry(String id, boolean isItem) {}
 
-    public record FishEntry(String id, boolean isItem) {
-    }
-
-    //HabitatCache
     private static final Cache<String, Map<String, List<FishEntry>>> habitatCache = Caffeine.newBuilder()
             .expireAfterAccess(10, TimeUnit.MINUTES)
             .build();

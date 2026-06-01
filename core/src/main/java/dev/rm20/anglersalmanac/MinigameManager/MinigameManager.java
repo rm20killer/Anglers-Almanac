@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
 import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
 import dev.rm20.anglersalmanac.Metadata.*;
@@ -28,7 +29,10 @@ public class MinigameManager {
         if (fishingRod == null) {
             return;
         }
-
+        BobberComponent bobberComp = bobberRef.getStore().getComponent(bobberRef, BobberComponent.getComponentType());
+        if (bobberComp != null) {
+            bobberComp.setMinigameActive(true);
+        }
 
         // Select which minigame to use from the config and set it up.
         switch (AnglersAlmanac.MOD_CONFIG.get().getMinigameToUse()) {
@@ -55,6 +59,7 @@ public class MinigameManager {
     }
 
     public static void CancelGame(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> minigameRef) {
+
 
         // Select which minigame to use from the config and cancel it.
         switch (AnglersAlmanac.MOD_CONFIG.get().getMinigameToUse()) {
