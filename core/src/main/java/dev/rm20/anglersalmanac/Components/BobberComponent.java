@@ -2,6 +2,7 @@ package dev.rm20.anglersalmanac.Components;
 
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -20,6 +21,7 @@ public class BobberComponent implements Component<EntityStore> {
     private String baitName;
     public ItemStack fishingRod = null;
     public byte slot = 0;
+    private Ref<EntityStore> hookedEntity = null;
     public BobberComponent() {
         this.bobberAge = 0;
         this.canCatch = false;
@@ -121,6 +123,18 @@ public class BobberComponent implements Component<EntityStore> {
         this.baitName = baitName;
     }
 
+    public Ref<EntityStore> getHookedEntity() {
+        return this.hookedEntity;
+    }
+
+    public void setHookedEntity(Ref<EntityStore> hookedEntity) {
+        this.hookedEntity = hookedEntity;
+    }
+
+    public boolean isHookedToEntity() {
+        return this.hookedEntity != null && this.hookedEntity.isValid();
+    }
+
     @Override
     public Component<EntityStore> clone() {
         BobberComponent component = new BobberComponent();
@@ -132,6 +146,7 @@ public class BobberComponent implements Component<EntityStore> {
         component.WaterDepth = this.WaterDepth;
         component.player = this.player;
         component.baitName = this.baitName;
+        component.hookedEntity = this.hookedEntity;
         return component;
     }
 }

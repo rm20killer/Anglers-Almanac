@@ -2,14 +2,19 @@ package dev.rm20.anglersalmanac.Interactions.Rod;
 
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
+import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
@@ -17,6 +22,8 @@ import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Utils.BaitUtils;
+import org.joml.Vector3d;
+import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -53,6 +60,40 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
         if (bobberRef != null) {
             BobberComponent bobberComp = bobberRef.getStore().getComponent(bobberRef, BobberComponent.getComponentType());
             if (bobberComp != null) {
+                if (bobberComp.isHookedToEntity()) {
+                    Ref<EntityStore> targetRef = bobberComp.getHookedEntity();
+
+                    if (targetRef != null && targetRef.isValid()) {
+                        TransformComponent pTransform = commandBuffer.getComponent(playerRef, TransformComponent.getComponentType());
+                        TransformComponent tTransform = targetRef.getStore().getComponent(targetRef, TransformComponent.getComponentType());
+                        Velocity tVelocity = targetRef.getStore().getComponent(targetRef, Velocity.getComponentType());
+
+                        if (pTransform != null && tTransform != null) {
+                            Vector3d pPos = pTransform.getPosition();
+                            Vector3d tPos = tTransform.getPosition();
+
+                            Vector3d direction = new Vector3d(pPos).sub(tPos);
+                            double distance = direction.length();
+
+                            if (distance > 0.1) {
+                                direction.normalize();
+
+                                Vector3d launchVelocity = getVector3d(distance, direction);
+
+                                if (tVelocity != null) {
+                                    tVelocity.addInstruction(launchVelocity, null, ChangeVelocityType.Add);
+                                } else {
+                                    Holder<EntityStore> holder = targetRef.getStore().getRegistry().newHolder();
+                                    holder.addComponent(Velocity.getComponentType(), new Velocity(launchVelocity));
+                                }
+                            }
+                        }
+                    }
+
+                    UseRodInteraction.cancelFishing(commandBuffer, player, heldItem);
+                    return;
+                }
+
                 if (bobberComp.isCanCatch()) {
                     //HytaleLogger.getLogger().atInfo().log("Fished a fish");
                     int depth = bobberComp.getWaterDepth();
@@ -79,5 +120,17 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
         }
 
 
+    }
+
+    private static @NonNull Vector3d getVector3d(double distance, Vector3d direction) {
+        double baseMultiplier = 60;
+        double distanceScale = 5;
+        double horizontalPower = baseMultiplier + (distance * distanceScale);
+
+        return new Vector3d(
+                direction.x * horizontalPower,
+                1 + (distance * 0.2),
+                direction.z * horizontalPower
+        ).mul(5);
     }
 }
