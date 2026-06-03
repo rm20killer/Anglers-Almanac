@@ -3,10 +3,6 @@ plugins {
     id 'maven-publish'
 }
 
-import org.gradle.internal.os.OperatingSystem
-
-
-
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
     withSourcesJar()
@@ -21,6 +17,7 @@ javadoc {
 // Adds the Hytale server as a build dependency, allowing you to reference and
 dependencies {
     compileOnly("com.hypixel.hytale:Server:$hytale_build")
+    implementation 'com.github.rm20killer:CodecAnnotation:1.0.0'
 }
 
 repositories {
@@ -34,6 +31,7 @@ repositories {
         name = "hytale-pre-release"
         url = uri("https://maven.hytale.com/pre-release")
     }
+    maven { url 'https://jitpack.io' }
 }
 base {
     archivesName = "AnglersAlmanac-API"

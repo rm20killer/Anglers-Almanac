@@ -13,10 +13,9 @@ import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
-import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
-import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
 import dev.rm20.anglersalmanac.api.ILootProvider;
+import dev.rm20.codecannotation.AutoCodecBuilder;
 
 import javax.annotation.Nullable;
 import java.util.*;

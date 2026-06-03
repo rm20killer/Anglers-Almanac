@@ -1,9 +1,9 @@
 package dev.rm20.anglersalmanac.Models;
 
-import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
 import dev.rm20.anglersalmanac.Utils.Validator.GameIcon;
 import dev.rm20.anglersalmanac.Utils.Validator.MinigameBehaviour;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
 
 public class FishLoot {
     @CodecAnnotations.Field("ItemId")

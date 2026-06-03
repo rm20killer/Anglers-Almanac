@@ -12,9 +12,9 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.protocol.Color;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
-import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
-import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
 import dev.rm20.anglersalmanac.Utils.ColourUtils;
+import dev.rm20.codecannotation.AutoCodecBuilder;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;

@@ -6,13 +6,12 @@ import com.hypixel.hytale.assetstore.AssetStore;
 import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
-import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
-import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import dev.rm20.codecannotation.AutoCodecBuilder;
 
 @HytaleAsset(
         path = "AnglersAlmanacRodStats"

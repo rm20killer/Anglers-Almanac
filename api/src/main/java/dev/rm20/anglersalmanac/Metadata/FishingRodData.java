@@ -2,8 +2,8 @@ package dev.rm20.anglersalmanac.Metadata;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
-import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
+import dev.rm20.codecannotation.AutoCodecBuilder;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
 
 import java.util.UUID;
 

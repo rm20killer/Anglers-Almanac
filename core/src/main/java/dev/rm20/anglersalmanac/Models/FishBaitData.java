@@ -9,8 +9,8 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.KeyedCodec;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
-import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
-import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
+import dev.rm20.codecannotation.AutoCodecBuilder;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
 
 @HytaleAsset(
         path = "AnglersAlmanacBaitData"

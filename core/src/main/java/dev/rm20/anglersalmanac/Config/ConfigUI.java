@@ -1,7 +1,5 @@
 package dev.rm20.anglersalmanac.Config;
 
-import com.hypixel.hytale.codec.Codec;
-import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -15,8 +13,8 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
-import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
-import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import dev.rm20.codecannotation.AutoCodecBuilder;
 
 import javax.annotation.Nonnull;
 
