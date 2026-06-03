@@ -8,14 +8,13 @@ import com.hypixel.hytale.assetstore.AssetStore;
 import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
-import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.protocol.Color;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
-import dev.rm20.anglersalmanac.Utils.ColourUtils;
-import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
 import dev.rm20.anglersalmanac.Utils.Annotations.CodecAnnotations;
+import dev.rm20.anglersalmanac.Utils.AutoCodecBuilder;
+import dev.rm20.anglersalmanac.Utils.ColourUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -55,25 +54,40 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
     }
 
     public static class habitatsInfo {
-        @CodecAnnotations.Field("ZoneName") public String ZoneName;
-        @CodecAnnotations.Field("ZoneInfo") public ZoneInfo zoneInfo;
-        @CodecAnnotations.Field("Spread") public SpreadTemplate[] pages;
+        @CodecAnnotations.Field("ZoneName")
+        public String ZoneName;
+        @CodecAnnotations.Field("ZoneInfo")
+        public ZoneInfo zoneInfo;
+        @CodecAnnotations.Field("Spread")
+        public SpreadTemplate[] pages;
     }
 
     public static class SpreadTemplate {
-        @CodecAnnotations.Field("UiFile") public String uiFile;
-        @CodecAnnotations.Field("IsDoublePage") public boolean isDoublePage;
-        @CodecAnnotations.Field("LeftPage") public String LeftPage;
-        @CodecAnnotations.Field("RightPage") public String RightPage;
+        @CodecAnnotations.Field("UiFile")
+        public String uiFile;
+        @CodecAnnotations.Field("IsDoublePage")
+        public boolean isDoublePage;
+        @CodecAnnotations.Field("LeftPage")
+        public String LeftPage;
+        @CodecAnnotations.Field("RightPage")
+        public String RightPage;
     }
 
     public static class ZoneInfo {
-        @CodecAnnotations.Field("DisplayName") public String displayName;
-        @CodecAnnotations.Field("ZoneDescription") public String zoneDescription;
-        @CodecAnnotations.Field("ZoneImage") @CodecAnnotations.CustomValidator("UI_ZONE_VALIDATOR") public String ZoneImage;
-        @CodecAnnotations.Field("ProgressBarColour") public Color ProgressBarColour;
-        @CodecAnnotations.Field("TabIcon") @CodecAnnotations.CustomValidator("UI_TAB_VALIDATOR") public String tabIcon;
-        @CodecAnnotations.Field("TabColour") public Color tabColour;
+        @CodecAnnotations.Field("DisplayName")
+        public String displayName;
+        @CodecAnnotations.Field("ZoneDescription")
+        public String zoneDescription;
+        @CodecAnnotations.Field("ZoneImage")
+        @CodecAnnotations.CustomValidator(type = "png", value = "UI/Custom/Almanac/Fish/Assets")
+        public String ZoneImage;
+        @CodecAnnotations.Field("ProgressBarColour")
+        public Color ProgressBarColour;
+        @CodecAnnotations.Field("TabIcon")
+        @CodecAnnotations.CustomValidator(type = "png", value = "UI/Custom/Almanac/Utils/Assets/Tabs")
+        public String tabIcon;
+        @CodecAnnotations.Field("TabColour")
+        public Color tabColour;
     }
 
     private String id;
@@ -117,7 +131,8 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
                 .toList();
     }
 
-    public record FishEntry(String id, boolean isItem) {}
+    public record FishEntry(String id, boolean isItem) {
+    }
 
     private static final Cache<String, Map<String, List<FishEntry>>> habitatCache = Caffeine.newBuilder()
             .expireAfterAccess(10, TimeUnit.MINUTES)

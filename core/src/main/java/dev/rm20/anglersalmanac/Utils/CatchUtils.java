@@ -141,11 +141,11 @@ public class CatchUtils {
                 "clear",
                 depth,
                 baitID,
-                1
+                FishingPowerUtils.getTotalFishingPower(store,player.getReference())
         );
         // get fish
 
-        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier, FishingPowerUtils.getTotalFishingPower(store,player.getReference()));
+        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         if (lootEntry == null) {
             return FishLootManager.getFishData("Stick");
         }

@@ -116,7 +116,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
     public static FishLootManager getRandomWeightedLoot(FishingContext ctx, @Nullable FishingModifier.Modifiers modifiers) {
-        return getRandomWeightedLoot(ctx,modifiers,1);
+        return getRandomWeightedLoot(ctx,modifiers,ctx.fishingPower());
     }
 
     public static FishLootManager getRandomWeightedLoot(FishingContext ctx, @Nullable FishingModifier.Modifiers modifiers, float fishingPower) {

@@ -39,6 +39,8 @@ public final class CodecAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface CustomValidator {
+        String type() default "json";
         String value();
     }
+
 }
