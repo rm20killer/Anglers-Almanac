@@ -1,0 +1,39 @@
+# ============================================================
+# Angler's item - Italian (IT) Translation File
+# Language: it-IT
+# Keys format: {category}.{key}
+# Usage: angler.{category}.{key}
+# ============================================================
+
+fish.swordfish.name = Pesce Spada
+fish.swordfish.description = Has a nose sharper than adamantite.
+
+fish.catfish.golden.name = Pesce Gatto Dorato
+fish.catfish.golden.description = Un Pesce Gatto coperto d'oro.
+
+fish.minnow.golden.name = Golden Vairone
+fish.minnow.golden.description = Un Vairone coperto d'oro.
+
+fish.bluegill.golden.name = Pesce Sole Dorato
+fish.bluegill.golden.description = Un Pesce Sole coperto d'oro.
+
+fish.salmon.golden.name = Salmone Dorato
+fish.salmon.golden.description = Un Salmone coperto d'oro.
+
+bait.golden.name = Esca Per Persci Dorati
+bait.golden.description = Aumenta le possibilità di trovare pesci dorati.
+
+fish.trout.silverscaled.name = Trota Argentata
+fish.trout.silverscaled.description = Una Trota che è cresciuta e evoluta sottoterra.
+
+fish.bonefish.white.name = Pesce Osso
+fish.bonefish.white.description = Una lisca rianimata che vaga tra le correnti.
+
+fish.bonefish.frost.name = Pesce Osso Ghiacciato
+fish.bonefish.frost.description = Uno scheletro ghiacciato congelato nel tempo.
+
+fish.bonefish.burnt.name = Pesce Osso Carbonizzato
+fish.bonefish.burnt.description = Resti carbonizzati ancora incandescenti, illuminati dalle braci di una terra in rovina.
+
+fish.bonefish.sand.name = Pesce Osso Desertico
+fish.bonefish.sand.description = Ossa sbiancate dal sole che nuotano tra le dune mobili.

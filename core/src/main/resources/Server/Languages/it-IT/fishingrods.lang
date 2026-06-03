@@ -1,0 +1,21 @@
+# ============================================================
+# Angler's Almanac Fishing rods - Italian (IT) Translation File
+# Language: it-IT
+# Keys format: {category}.{key}
+# Usage: fishingrods.{category}.{key}
+# ============================================================
+
+crude.name = Canna Da Pesca Grezza
+crude.description = Usata per catturare i pesci dall'acqua
+
+iron.name = Canna Da Pesca In Ferro
+iron.description = Usata per catturare i pesci dall'acqua
+
+cobalt.name = Canna Da Pesca In Cobalto
+cobalt.description = Usata per catturare i pesci dall'acqua
+
+reef.name = Canna Da Pesca Della Barriera
+reef.description = Usata per catturare i pesci dall'acqua
+
+saltworn.name = Canna Da Pesca Logorata Dal Sale
+saltworn.description = La canna di un pescatore veterano. Ben consumata dall'uso.
