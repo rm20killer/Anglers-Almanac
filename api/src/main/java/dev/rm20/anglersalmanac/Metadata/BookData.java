@@ -3,19 +3,28 @@ package dev.rm20.anglersalmanac.Metadata;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import dev.rm20.codecannotation.AutoCodecBuilder;
 
 public class BookData {
     public static final String KEY = "AnglersAlmanacBookOwner";
-    public static final BuilderCodec<BookData> CODEC = BuilderCodec.builder(BookData.class, BookData::new)
-            .append(new KeyedCodec<>("PlayerUUID", Codec.STRING), (metaData, value) -> metaData.playerUUID = value, (config) -> config.playerUUID).add()
-            .append(new KeyedCodec<>("PlayerName", Codec.STRING), (metaData, value) -> metaData.playerName = value, (config) -> config.playerName).add()
-            .append(new KeyedCodec<>("PageNumber", Codec.INTEGER), (metaData, value) -> metaData.pageNumber = value, (config) -> config.pageNumber).add()
-            .build();
+
+    public static final BuilderCodec<BookData> CODEC =
+            AutoCodecBuilder.create(BookData.class, BookData::new);
 
     public static final KeyedCodec<BookData> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
 
+    @CodecAnnotations.Field("PlayerUUID")
     private String playerUUID = "";
+
+    @CodecAnnotations.Field("PlayerName")
     private String playerName = "";
+
+    @CodecAnnotations.Field("PageNumber")
+    private int pageNumber = 0;
+
+    public BookData() {
+    }
 
     public int getPageNumber() {
         return pageNumber;
@@ -24,8 +33,6 @@ public class BookData {
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
     }
-
-    private int pageNumber = 0;
 
     public String getPlayerUUID() {
         return this.playerUUID;
