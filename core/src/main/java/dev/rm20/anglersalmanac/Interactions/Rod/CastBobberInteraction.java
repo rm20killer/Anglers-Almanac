@@ -7,6 +7,9 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.server.core.HytaleServer;
+import dev.rm20.anglersalmanac.IEvents.FishingFailedEvent;
+import dev.rm20.anglersalmanac.IEvents.FishingRodCastEvent;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.InteractionState;
@@ -55,6 +58,15 @@ public class CastBobberInteraction extends SimpleInstantInteraction {
         Ref<EntityStore> playerRef = context.getOwningEntity();
         ItemStack heldItem = context.getHeldItem();
         if (commandBuffer == null || playerRef == null || heldItem == null) return;
+
+        var eventBus = HytaleServer.get().getEventBus();
+        FishingRodCastEvent event = new FishingRodCastEvent(interactionType, context, playerRef);
+
+        eventBus.dispatchFor(FishingRodCastEvent.class).dispatch(event);
+
+        if (event.isCancelled()) {
+            return;
+        }
 
         Player player = commandBuffer.getComponent(playerRef, Player.getComponentType());
         FishingRodData meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
