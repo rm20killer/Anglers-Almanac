@@ -15,6 +15,8 @@ import dev.rm20.anglersalmanac.Registration.HytaleAsset;
 import dev.rm20.anglersalmanac.Utils.ColourUtils;
 import dev.rm20.codecannotation.AutoCodecBuilder;
 import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -90,9 +92,11 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
         public Color tabColour;
     }
 
+    @Setter
     private String id;
     private AssetExtraInfo.Data data;
 
+    @Getter
     @CodecAnnotations.Field("Habitats")
     private habitatsInfo[] habitats;
 
@@ -106,20 +110,12 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
         return ASSET_STORE;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public BookAssetData() {
     }
 
     @Override
     public String getId() {
         return id;
-    }
-
-    public habitatsInfo[] getHabitats() {
-        return habitats;
     }
 
     public List<SpreadTemplate> getFlattenedPages() {
@@ -169,7 +165,7 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
                     .filter(id -> id != null && !id.isEmpty())
                     .distinct()
                     .map(id -> new FishEntry(id, FishLootManager.getFishData(id) != null))
-                    .collect(Collectors.toList());
+                    .toList();
 
             newCache.put(habitat.ZoneName.toLowerCase(), Collections.unmodifiableList(fishList));
         }

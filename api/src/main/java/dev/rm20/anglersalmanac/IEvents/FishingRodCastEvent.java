@@ -6,6 +6,7 @@ import com.hypixel.hytale.event.IEvent;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import lombok.Getter;
 
 import javax.annotation.Nonnull;
 
@@ -21,6 +22,7 @@ public class FishingRodCastEvent extends CancellableEcsEvent implements IEvent<V
     private final InteractionType interactionType;
     private final InteractionContext context;
     private final Ref<EntityStore> playerRef;
+
 
     public FishingRodCastEvent(@Nonnull InteractionType interactionType, @Nonnull InteractionContext context, @Nonnull Ref<EntityStore> playerRef) {
         this.interactionType = interactionType;

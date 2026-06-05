@@ -73,9 +73,7 @@ public class MinigameManager {
                     minigame.despawnSelf(commandBuffer.getExternalData().getWorld());
                 }
                 break;
-            case "NoMinigame":
-                break;
-            default:
+            default: //no Minigame
                 break;
         }
 
@@ -94,9 +92,7 @@ public class MinigameManager {
                     minigame.DoInteraction(interactionType, context, cooldownHandler);
                 }
                 break;
-            case "NoMinigame":
-                break;
-            default:
+            default: //no Minigame
                 break;
         }
         return true;

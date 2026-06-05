@@ -40,7 +40,7 @@ public class OpenConfig extends AbstractPlayerCommand {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.noPerms"));
             return;
         }
-        Player player = playerRef.getComponent(Player.getComponentType());
+        Player player = store.getComponent(ref, Player.getComponentType());
         if(player == null)
         {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));

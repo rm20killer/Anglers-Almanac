@@ -100,7 +100,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         SpatialResource<Ref<EntityStore>, EntityStore> spatialTree = store.getResource(CollisionModule.get().getTangibleEntitySpatialResourceType());
 
         //entity check start here
-        if (spatialTree != null && bobberComp != null && !bobberComp.isHookedToEntity() && !bobberComp.isMinigameActive() && shouldHookEntity) {
+        if (spatialTree != null && !bobberComp.isHookedToEntity() && !bobberComp.isMinigameActive() && shouldHookEntity) {
             Box searchVolume = box.clone().offset(position).extend(scaledVel.x, scaledVel.y, scaledVel.z);
             searchVolume.expand(1f);
             Vector3d minBound = searchVolume.getMin();
@@ -130,7 +130,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
                 store
         );
 
-        if (bobberComp != null && !bobberComp.isHookedToEntity() && result.getCharacterCollisionCount() > 0) {
+        if (!bobberComp.isHookedToEntity() && result.getCharacterCollisionCount() > 0) {
             com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData targetData = result.getCharacterCollision(0);
 
             if (targetData != null && targetData.entityReference != null && targetData.entityReference.isValid()) {
@@ -186,7 +186,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         }
 
         // Water Bobbing
-        if (inWater && bobberComp != null) {
+        if (inWater) {
             long time = System.currentTimeMillis();
             double freq = bobberComp.isCanCatch() ? 0.02 : 0.005;
             double amp = bobberComp.isCanCatch() ? 0.04 : 0.01;

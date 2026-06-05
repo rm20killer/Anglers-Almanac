@@ -7,7 +7,11 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class BobberComponent implements Component<EntityStore> {
     private static final int MAX_CATCH_TIME = 120;
 
@@ -52,17 +56,7 @@ public class BobberComponent implements Component<EntityStore> {
         return AnglersAlmanac.bobberComponent;
     }
 
-    public float getBobberAge() {
-        return bobberAge;
-    }
 
-    public void setBobberAge(float bobberAge) {
-        this.bobberAge = bobberAge;
-    }
-
-    public boolean isCanCatch() {
-        return canCatch;
-    }
 
     public void setCanCatch(boolean canCatch) {
         this.canCatch = canCatch;
@@ -73,76 +67,24 @@ public class BobberComponent implements Component<EntityStore> {
         }
     }
 
-    public void setCatchTimer(float catchTimer) {
-        this.catchTimer = catchTimer;
-    }
-
-    public float getTimeUntilCatch() {
-        return timeUntilCatch;
-    }
-
-    public void setTimeUntilCatch(float timeUntilCatch) {
-        this.timeUntilCatch = timeUntilCatch;
-    }
-
     public void resetTimeUntilCatch() {
         this.timeUntilCatch = -1;
     }
 
-    public float getCatchTimer() {
-        return catchTimer;
-    }
 
     public boolean canCatchFish() {
         return this.canCatch && this.catchTimer > 0;
     }
-    public void setInWater(boolean inWater)
-    {
-        this.InWater = inWater;
-    }
+
     public boolean InWater()
     {
         return this.InWater;
-    }
-    public int getWaterDepth() {
-        return WaterDepth;
-    }
-
-    public void setWaterDepth(int waterDepth) {
-        WaterDepth = waterDepth;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public String getBaitName() {
-        return baitName;
-    }
-
-    public void setBaitName(String baitName) {
-        this.baitName = baitName;
-    }
-
-    public Ref<EntityStore> getHookedEntity() {
-        return this.hookedEntity;
-    }
-
-    public void setHookedEntity(Ref<EntityStore> hookedEntity) {
-        this.hookedEntity = hookedEntity;
     }
 
     public boolean isHookedToEntity() {
         return this.hookedEntity != null && this.hookedEntity.isValid();
     }
 
-    public boolean isMinigameActive() {return this.minigameActive;}
-
-    public void setMinigameActive(boolean active) {this.minigameActive = active;}
 
     @Override
     public Component<EntityStore> clone() {

@@ -92,6 +92,7 @@ public class BookPageManager {
             pageManager.openCustomPage(playerRef, playerRef.getStore(), statUiPage);
         } else if (currentSpread.isDoublePage) {
             //TODO: 1 context 2 pages
+
         } else if (UiFile.equalsIgnoreCase("Almanac/Fish/AlmanacFishZone.ui")) {
             FishLootManager FishDataRight = null;
             if (currentSpread.RightPage != null && !currentSpread.RightPage.isEmpty()) {

@@ -11,7 +11,6 @@ public class MinigameConfig_TensionBar {
     public static final String KEY = "MinigameConfig_TensionBar";
 
     // Automatically processes all fields annotated with @CodecAnnotations.Field below
-    @SuppressWarnings("unchecked")
     public static final BuilderCodec<MinigameConfig_TensionBar> CODEC =
             AutoCodecBuilder.create(MinigameConfig_TensionBar.class, MinigameConfig_TensionBar::new);
 
