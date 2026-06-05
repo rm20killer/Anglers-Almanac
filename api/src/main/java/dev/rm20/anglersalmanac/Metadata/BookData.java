@@ -5,6 +5,8 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import dev.rm20.codecannotation.Annotations.CodecAnnotations;
 import dev.rm20.codecannotation.AutoCodecBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 public class BookData {
     public static final String KEY = "AnglersAlmanacBookOwner";
@@ -14,40 +16,22 @@ public class BookData {
 
     public static final KeyedCodec<BookData> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
 
+    @Getter
+    @Setter
     @CodecAnnotations.Field("PlayerUUID")
-    private String playerUUID = "";
+    private String PlayerUUID = "";
 
+    @Getter
+    @Setter
     @CodecAnnotations.Field("PlayerName")
-    private String playerName = "";
+    private String PlayerName = "";
 
+    @Getter
+    @Setter
     @CodecAnnotations.Field("PageNumber")
-    private int pageNumber = 0;
+    private int PageNumber = 0;
 
     public BookData() {
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    public String getPlayerUUID() {
-        return this.playerUUID;
-    }
-
-    public void setPlayerUUID(String playerUUID) {
-        this.playerUUID = playerUUID;
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 
 }

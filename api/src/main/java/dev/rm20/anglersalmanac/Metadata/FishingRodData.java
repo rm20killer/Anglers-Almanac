@@ -4,6 +4,8 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import dev.rm20.codecannotation.AutoCodecBuilder;
 import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -15,38 +17,25 @@ public class FishingRodData {
 
     public static final KeyedCodec<FishingRodData> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
 
+    @Getter
+    @Setter
     @CodecAnnotations.Field("BoundBobber")
     private UUID boundBobber = null;
 
+    @Getter
+    @Setter
     @CodecAnnotations.Field("BoundMinigame")
     private UUID boundMinigame = null;
 
+    @Getter
+    @Setter
     @CodecAnnotations.Field("Mode")
-    private int mode = 0;
+    private int Mode = 0;
 
     public FishingRodData() {
     }
 
-    public UUID getBoundBobber() {
-        return this.boundBobber;
-    }
-    public void setBoundBobber(UUID uuid) {
-        this.boundBobber = uuid;
-    }
 
-    public UUID getBoundMinigame() {
-        return this.boundMinigame;
-    }
-    public void setBoundMinigame(UUID uuid) {
-        this.boundMinigame = uuid;
-    }
-
-    public int getMode() {
-        return this.mode;
-    }
-    public void setMode(int i) {
-        this.mode = i;
-    }
 
     /*private RodStats rodStats;
     public RodStats getRodStats() {return this.rodStats;

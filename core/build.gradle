@@ -54,8 +54,10 @@ dependencies {
     implementation("com.google.guava:guava:33.5.0-jre")
     implementation("org.xerial:sqlite-jdbc:3.51.1.0")
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
-    implementation "curse.maven:creditor-1560961:8195970"
-    implementation 'com.github.rm20killer:CodecAnnotation:1.0.0'
+    implementation("curse.maven:creditor-1560961:8195970")
+    implementation("com.github.rm20killer:CodecAnnotation:1.0.0")
+    implementation("org.projectlombok:lombok:1.18.46")
+    annotationProcessor('org.projectlombok:lombok:1.18.46')
 }
 
 repositories {

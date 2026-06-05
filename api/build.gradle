@@ -18,6 +18,8 @@ javadoc {
 dependencies {
     compileOnly("com.hypixel.hytale:Server:$hytale_build")
     implementation 'com.github.rm20killer:CodecAnnotation:1.0.0'
+    implementation("org.projectlombok:lombok:1.18.46")
+    annotationProcessor('org.projectlombok:lombok:1.18.46')
 }
 
 repositories {

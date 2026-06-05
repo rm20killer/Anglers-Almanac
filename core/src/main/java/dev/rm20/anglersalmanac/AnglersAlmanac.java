@@ -1,6 +1,7 @@
 package dev.rm20.anglersalmanac;
 
 import com.al3x.HStats;
+import com.creditor.Creditor;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -17,11 +18,13 @@ import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Utils.Intergration.MMOSkillTree;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
+import lombok.Getter;
 
 
 import javax.annotation.Nonnull;
 
 public class AnglersAlmanac extends JavaPlugin {
+    @Getter
     private static AnglersAlmanac instance;
     public static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static ComponentType<EntityStore, BobberComponent> bobberComponent;
@@ -39,9 +42,6 @@ public class AnglersAlmanac extends JavaPlugin {
         instance = this;
         MINIGAME_CONFIG_TENSIONBAR = this.withConfig(MinigameConfig_TensionBar.KEY, MinigameConfig_TensionBar.CODEC);
         MOD_CONFIG = this.withConfig(AnglersAlmanacConfig.KEY, AnglersAlmanacConfig.CODEC);
-    }
-    public static AnglersAlmanac getInstance() {
-        return instance;
     }
 
 
@@ -71,6 +71,7 @@ public class AnglersAlmanac extends JavaPlugin {
         fishLootManager = new FishLootManager();
         AnglersAlmanacAPI.setLootProvider(fishLootManager);
         // Plugin Mod Analytics
+        Creditor.setup(this);
         new HStats("55078602-d7a1-4794-b30c-f42529f3d1d4", getManifest().getVersion().toString());
     }
 

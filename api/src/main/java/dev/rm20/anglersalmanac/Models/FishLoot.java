@@ -4,49 +4,65 @@ import dev.rm20.anglersalmanac.Utils.Validator.GameIcon;
 import dev.rm20.anglersalmanac.Utils.Validator.MinigameBehaviour;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
 import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import lombok.Getter;
+import lombok.Setter;
+
 
 public class FishLoot {
+
     @CodecAnnotations.Field("ItemId")
     protected String itemID;
 
+    @Getter
     @CodecAnnotations.Field("EntityId")
     protected String entityID;
 
+    @Getter
     @CodecAnnotations.Field("Name")
     @CodecAnnotations.NonEmpty
-    protected String name;
+    protected String Name;
 
+    @Getter
     @CodecAnnotations.Field("Description")
-    protected String description;
+    protected String Description;
 
+    @Getter
     @CodecAnnotations.Field("Category")
-    protected String[] category;
+    protected String[] Category;
 
+    @Getter
     @CodecAnnotations.Field("FamilyId")
-    protected String familyId;
+    protected String FamilyId;
 
+    @Getter
     @CodecAnnotations.Field("Rarity")
     @CodecAnnotations.NonEmpty
-    protected String rarity;
+    protected String Rarity;
 
+    @Getter
     @CodecAnnotations.Field("Weight")
     @CodecAnnotations.Min(0)
     protected int weight;
 
+    @Getter
     @CodecAnnotations.Field("IsGlobal")
     protected boolean isGlobal;
 
+    @Getter
     @CodecAnnotations.Field("Habitats")
     protected Habitats habitats;
 
+    @Getter
     @CodecAnnotations.Field("Quantity")
     protected Quantity quantity;
 
     @CodecAnnotations.Field("Minigame_stats")
     protected MinigameStats minigameStats;
 
+    @Getter
     @CodecAnnotations.Field("Book_info")
     protected BookInfo bookInfo;
+
     @CodecAnnotations.Field(value = "Size", doc = "NOT IN USE")
     private int size;
 
@@ -59,50 +75,6 @@ public class FishLoot {
             return "entity:" + entityID;
         }
         return itemID;
-    }
-
-    public String getEntityID() {
-        return entityID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String[] getCategory() {
-        return category;
-    }
-
-    public String getFamilyId() {
-        return familyId;
-    }
-
-    public String getRarity() {
-        return rarity;
-    }
-
-    public int getWeight() {
-        return weight;
-    }
-
-    public Quantity getQuantity() {
-        return quantity;
-    }
-
-    public boolean isGlobal() {
-        return isGlobal;
-    }
-
-    public Habitats getHabitats() {
-        return habitats;
-    }
-
-    public BookInfo getBookInfo() {
-        return bookInfo;
     }
 
     public static class BookInfo {

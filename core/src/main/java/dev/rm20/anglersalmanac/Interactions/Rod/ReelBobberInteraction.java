@@ -7,7 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
-import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -19,6 +18,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
+import dev.rm20.anglersalmanac.Config.AnglersAlmanacConfig;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Utils.BaitUtils;
@@ -61,35 +61,7 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
             BobberComponent bobberComp = bobberRef.getStore().getComponent(bobberRef, BobberComponent.getComponentType());
             if (bobberComp != null) {
                 if (bobberComp.isHookedToEntity()) {
-                    Ref<EntityStore> targetRef = bobberComp.getHookedEntity();
-
-                    if (targetRef != null && targetRef.isValid()) {
-                        TransformComponent pTransform = commandBuffer.getComponent(playerRef, TransformComponent.getComponentType());
-                        TransformComponent tTransform = targetRef.getStore().getComponent(targetRef, TransformComponent.getComponentType());
-                        Velocity tVelocity = targetRef.getStore().getComponent(targetRef, Velocity.getComponentType());
-
-                        if (pTransform != null && tTransform != null) {
-                            Vector3d pPos = pTransform.getPosition();
-                            Vector3d tPos = tTransform.getPosition();
-
-                            Vector3d direction = new Vector3d(pPos).sub(tPos);
-                            double distance = direction.length();
-
-                            if (distance > 0.1) {
-                                direction.normalize();
-
-                                Vector3d launchVelocity = getVector3d(distance, direction);
-
-                                if (tVelocity != null) {
-                                    tVelocity.addInstruction(launchVelocity, null, ChangeVelocityType.Add);
-                                } else {
-                                    Holder<EntityStore> holder = targetRef.getStore().getRegistry().newHolder();
-                                    holder.addComponent(Velocity.getComponentType(), new Velocity(launchVelocity));
-                                }
-                            }
-                        }
-                    }
-
+                    hookEntity(commandBuffer, playerRef, bobberComp);
                     UseRodInteraction.cancelFishing(commandBuffer, player, heldItem);
                     return;
                 }
@@ -97,7 +69,6 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
                 if (bobberComp.isCanCatch()) {
                     //HytaleLogger.getLogger().atInfo().log("Fished a fish");
                     int depth = bobberComp.getWaterDepth();
-
                     MinigameManager.StartGame(bobberRef, player, commandBuffer, depth);
                     //launchFishAtPlayer(bobberRef,player,commandBuffer,depth);
                 } else {
@@ -122,14 +93,46 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
 
     }
 
+    private static void hookEntity(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> playerRef, BobberComponent bobberComp) {
+        Ref<EntityStore> targetRef = bobberComp.getHookedEntity();
+
+        if (targetRef != null && targetRef.isValid()) {
+            TransformComponent pTransform = commandBuffer.getComponent(playerRef, TransformComponent.getComponentType());
+            TransformComponent tTransform = targetRef.getStore().getComponent(targetRef, TransformComponent.getComponentType());
+            Velocity tVelocity = targetRef.getStore().getComponent(targetRef, Velocity.getComponentType());
+
+            if (pTransform != null && tTransform != null) {
+                Vector3d pPos = pTransform.getPosition();
+                Vector3d tPos = tTransform.getPosition();
+
+                Vector3d direction = new Vector3d(pPos).sub(tPos);
+                double distance = direction.length();
+
+                if (distance > 0.1) {
+                    direction.normalize();
+
+                    Vector3d launchVelocity = getVector3d(distance, direction);
+
+                    if (tVelocity != null) {
+                        tVelocity.addInstruction(launchVelocity, null, ChangeVelocityType.Add);
+                    } else {
+                        Holder<EntityStore> holder = targetRef.getStore().getRegistry().newHolder();
+                        holder.addComponent(Velocity.getComponentType(), new Velocity(launchVelocity));
+                    }
+                }
+            }
+        }
+    }
+
     private static @NonNull Vector3d getVector3d(double distance, Vector3d direction) {
-        double baseMultiplier = 60;
-        double distanceScale = 5;
+        AnglersAlmanacConfig config = AnglersAlmanac.MOD_CONFIG.get();
+        double baseMultiplier = config.getEntityPullBaseForce();
+        double distanceScale = config.getEntityPullDistanceMultiplier();
         double horizontalPower = baseMultiplier + (distance * distanceScale);
 
         return new Vector3d(
                 direction.x * horizontalPower,
-                1 + (distance * 0.2),
+                1 + (distance * config.getEntityYMultiplier()),
                 direction.z * horizontalPower
         ).mul(5);
     }
