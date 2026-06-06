@@ -7,13 +7,8 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public interface ILootProvider {
-    static FishLoot getFishData(String id) {
-        return null;
-    }
-
-    static Collection<? extends FishLoot> getAllLoot() {
-        return null;
-    }
+    FishLoot getFishData(String id);
+    Collection<? extends FishLoot> getAllLoot();
 
     FishLoot getRandomFish(FishingContext ctx, @Nullable Object modifiers);
 }

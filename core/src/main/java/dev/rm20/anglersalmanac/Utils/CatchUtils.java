@@ -156,7 +156,7 @@ public class CatchUtils {
             if(itemId == null) {
                 itemId = "Stick";
             }
-            FishLootManager lootEntry = FishLootManager.getFishData(itemId);
+            FishLootManager lootEntry = FishLootManager.getInternalFishData(itemId);
             if (lootEntry == null) {
                 AnglersAlmanac.LOGGER.atWarning().log(modOverriding + " tried to override the item to: " + itemId + " which does not exist, fall back to normal system");
             }
@@ -167,7 +167,7 @@ public class CatchUtils {
 
         FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         if (lootEntry == null) {
-            return FishLootManager.getFishData("Stick");
+            return FishLootManager.getInternalFishData("Stick");
         }
         String lootID = lootEntry.getItemID();
         return lootEntry;

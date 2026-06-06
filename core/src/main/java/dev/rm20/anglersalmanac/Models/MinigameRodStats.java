@@ -55,7 +55,7 @@ public class MinigameRodStats implements JsonAssetWithMap<String, DefaultAssetMa
     @CodecAnnotations.Field("Description") public String description;
     @CodecAnnotations.Field("Stats") public RodStats stats;
     @CodecAnnotations.Field("Modifiers") public FishingModifier.Modifiers modifiers = new FishingModifier.Modifiers();
-
+    @CodecAnnotations.Field("EntityPullStrength") public float entityPullStrength = 1;
     private static AssetStore<String, MinigameRodStats, DefaultAssetMap<String, MinigameRodStats>> ASSET_STORE;
 
     public static AssetStore<String, MinigameRodStats, DefaultAssetMap<String, MinigameRodStats>> getAssetStore() {

@@ -7,6 +7,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
+import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -19,8 +20,11 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Config.AnglersAlmanacConfig;
+import dev.rm20.anglersalmanac.IEvents.FishingRodEntityPullEvent;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
+import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
+import dev.rm20.anglersalmanac.Models.MinigameRodStats;
 import dev.rm20.anglersalmanac.Utils.BaitUtils;
 import org.joml.Vector3d;
 import org.jspecify.annotations.NonNull;
@@ -61,7 +65,7 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
             BobberComponent bobberComp = bobberRef.getStore().getComponent(bobberRef, BobberComponent.getComponentType());
             if (bobberComp != null) {
                 if (bobberComp.isHookedToEntity()) {
-                    hookEntity(commandBuffer, playerRef, bobberComp);
+                    hookEntity(commandBuffer, playerRef, bobberComp, fishingRodData);
                     UseRodInteraction.cancelFishing(commandBuffer, player, heldItem);
                     return;
                 }
@@ -93,7 +97,7 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
 
     }
 
-    private static void hookEntity(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> playerRef, BobberComponent bobberComp) {
+    private static void hookEntity(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> playerRef, BobberComponent bobberComp, FishingRodData fishingRodData) {
         Ref<EntityStore> targetRef = bobberComp.getHookedEntity();
 
         if (targetRef != null && targetRef.isValid()) {
@@ -110,30 +114,44 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
 
                 if (distance > 0.1) {
                     direction.normalize();
+                    RodStats rodStats = MinigameRodStats.getRodStatsFromRodId(bobberComp.fishingRod.getItemId());
+                    float rodMult =1f;
+                    if (rodStats != null) {
+                        rodMult = rodStats.fishWeightMul;
+                    }
+                    Vector3d launchVelocity = getVector3d(distance, direction,rodMult);
+                    if(targetRef.getStore().getComponent(targetRef, Player.getComponentType()) == null){
+                        launchVelocity.mul(2);
+                    }
+                    var eventBus = HytaleServer.get().getEventBus();
+                    FishingRodEntityPullEvent event = new FishingRodEntityPullEvent(playerRef, targetRef, launchVelocity);
 
-                    Vector3d launchVelocity = getVector3d(distance, direction);
+                    eventBus.dispatchFor(FishingRodEntityPullEvent.class).dispatch(event);
+                    if (event.isCancelled()) {
+                        return;
+                    }
 
                     if (tVelocity != null) {
-                        tVelocity.addInstruction(launchVelocity, null, ChangeVelocityType.Add);
+                        tVelocity.addInstruction(event.getLaunchVelocity(), null, ChangeVelocityType.Add);
                     } else {
                         Holder<EntityStore> holder = targetRef.getStore().getRegistry().newHolder();
-                        holder.addComponent(Velocity.getComponentType(), new Velocity(launchVelocity));
+                        holder.addComponent(Velocity.getComponentType(), new Velocity(event.getLaunchVelocity()));
                     }
                 }
             }
         }
     }
 
-    private static @NonNull Vector3d getVector3d(double distance, Vector3d direction) {
+    private static @NonNull Vector3d getVector3d(double distance, Vector3d direction, float rodMult) {
         AnglersAlmanacConfig config = AnglersAlmanac.MOD_CONFIG.get();
         double baseMultiplier = config.getEntityPullBaseForce();
         double distanceScale = config.getEntityPullDistanceMultiplier();
         double horizontalPower = baseMultiplier + (distance * distanceScale);
 
         return new Vector3d(
-                direction.x * horizontalPower,
-                1 + (distance * config.getEntityYMultiplier()),
-                direction.z * horizontalPower
+                direction.x * horizontalPower * rodMult,
+                1 + (distance * config.getEntityYMultiplier()) * rodMult,
+                direction.z * horizontalPower * rodMult
         ).mul(5);
     }
 }

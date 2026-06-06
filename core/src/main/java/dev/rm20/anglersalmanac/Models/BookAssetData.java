@@ -164,7 +164,7 @@ public class BookAssetData implements JsonAssetWithMap<String, DefaultAssetMap<S
                     .flatMap(spread -> Stream.of(spread.LeftPage, spread.RightPage))
                     .filter(id -> id != null && !id.isEmpty())
                     .distinct()
-                    .map(id -> new FishEntry(id, FishLootManager.getFishData(id) != null))
+                    .map(id -> new FishEntry(id, FishLootManager.getInternalFishData(id) != null))
                     .toList();
 
             newCache.put(habitat.ZoneName.toLowerCase(), Collections.unmodifiableList(fishList));

@@ -14,6 +14,7 @@ import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import dev.rm20.anglersalmanac.api.ILootProvider;
 import dev.rm20.codecannotation.AutoCodecBuilder;
 
@@ -87,7 +88,11 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
 
-    public static Collection<FishLootManager> getAllLoot() {
+    @Override
+    public Collection<FishLootManager> getAllLoot() {
+        return getAssetStore().getAssetMap().getAssetMap().values();
+    }
+    public static Collection<FishLootManager> getInternalAllLoot() {
         return getAssetStore().getAssetMap().getAssetMap().values();
     }
 
@@ -99,7 +104,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     private static final LoadingCache<GeoKey, List<FishLootManager>> geoLootCache = Caffeine.newBuilder()
             .expireAfterAccess(15, TimeUnit.MINUTES)
             .softValues()
-            .build(key -> getAllLoot().stream().filter(loot -> isEligible(loot, key)).toList());
+            .build(key -> getInternalAllLoot().stream().filter(loot -> isEligible(loot, key)).toList());
 
     public static void invalidateCache() {
         geoLootCache.invalidateAll();
@@ -171,9 +176,18 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
         return geoLootCache.get(key);
     }
 
-    public static FishLootManager getFishData(String id) {
+    @Override
+    public FishLootManager getFishData(String id) {
         if (id == null) return null;
         return getAllLoot().stream().filter(loot -> loot.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
+    }
+
+    public static FishLootManager getInternalFishData(String id) {
+        if (id == null) return null;
+        return getInternalAllLoot().stream()
+                .filter(loot -> loot.getId().equalsIgnoreCase(id))
+                .findFirst()
+                .orElse(null);
     }
 
     private static boolean isEligible(FishLootManager loot, GeoKey key) {
@@ -303,7 +317,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
     public static int getRarityWeight(String fishId) {
-        var data = FishLootManager.getFishData(fishId);
+        var data = FishLootManager.getInternalFishData(fishId);
         if (data == null) return 99;
 
         return switch (data.getRarity().toLowerCase()) {

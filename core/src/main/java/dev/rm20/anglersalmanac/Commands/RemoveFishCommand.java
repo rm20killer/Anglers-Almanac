@@ -36,7 +36,7 @@ public class RemoveFishCommand extends AbstractPlayerCommand {
     protected void execute(@Nonnull CommandContext commandContext, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
         String input = this.fishArg.get(commandContext);
         String uuid = playerRef.getUuid().toString();
-        Collection<FishLootManager> allFish = FishLootManager.getAllLoot();
+        Collection<FishLootManager> allFish = FishLootManager.getInternalAllLoot();
         if(!playerRef.hasPermission("AnglersAlmanac.admin"))
         {
             commandContext.sendMessage(Message.translation("anglersalmanac.cmd.error.noPerms"));
