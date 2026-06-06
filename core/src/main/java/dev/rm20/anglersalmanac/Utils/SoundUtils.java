@@ -38,7 +38,7 @@ public class SoundUtils {
             com.hypixel.hytale.protocol.SoundEvent modifiedSound = originalSound.toPacket();
             modifiedSound.volume = newVolume;
             int soundIndex = assetMap.getIndex(soundId);
-            Map<Integer, com.hypixel.hytale.protocol.SoundEvent> updates = new HashMap();
+            Map<Integer, com.hypixel.hytale.protocol.SoundEvent> updates = new HashMap<>();
             updates.put(soundIndex, modifiedSound);
             UpdateSoundEvents packet = new UpdateSoundEvents(UpdateType.AddOrUpdate, assetMap.getNextIndex(), updates);
             playerRef.getPacketHandler().write(packet);

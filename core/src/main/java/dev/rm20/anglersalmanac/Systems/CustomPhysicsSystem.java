@@ -2,8 +2,11 @@ package dev.rm20.anglersalmanac.Systems;
 
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.component.spatial.SpatialData;
+import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.shape.Box;
+import com.hypixel.hytale.protocol.PhysicsConfig;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
@@ -22,6 +25,8 @@ import dev.rm20.anglersalmanac.Components.BobberComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
     @Override
@@ -32,13 +37,29 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         TransformComponent transform = archetypeChunk.getComponent(index, TransformComponent.getComponentType());
         Velocity velocityComp = archetypeChunk.getComponent(index, Velocity.getComponentType());
         BoundingBox boundingBoxComponent = archetypeChunk.getComponent(index, BoundingBox.getComponentType());
-
+        Boolean shouldHookEntity = AnglersAlmanac.MOD_CONFIG.get().getHookEntities();
         if (transform == null || velocityComp == null || boundingBoxComponent == null) return;
 
         World world = store.getExternalData().getWorld();
         Vector3d position = new Vector3d(transform.getPosition());
         Vector3d velocity = new Vector3d();
         velocityComp.assignVelocityTo(velocity);
+
+        if (bobberComp != null && bobberComp.isHookedToEntity()) {
+            Ref<EntityStore> targetRef = bobberComp.getHookedEntity();
+            if (targetRef != null && targetRef.isValid()) {
+                TransformComponent targetTransform = targetRef.getStore().getComponent(targetRef, TransformComponent.getComponentType());
+                if (targetTransform != null) {
+                    Vector3d attachedPos = new Vector3d(targetTransform.getPosition()).add(0, 0.8, 0);
+                    transform.setPosition(attachedPos);
+                    velocityComp.set(new Vector3d(0, 0, 0)); // Zero out physics velocity while hooked
+                }
+                //stop physic check
+                return;
+            } else {
+                bobberComp.setHookedEntity(null);
+            }
+        }
 
         // 1. Precise Fluid Check
         // We check the fluid at the current position
@@ -72,14 +93,63 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         // 3. Collision
         Vector3d scaledVel = new Vector3d();
         velocity.mul(dt, scaledVel);
-        CollisionResult result = new CollisionResult();
+        CollisionResult result = new CollisionResult(true, true);
         Box box = boundingBoxComponent.getBoundingBox();
+        result.acquireCollisionModule();
+        ArrayList<Ref<EntityStore>> candidates = new ArrayList<>();
+        SpatialResource<Ref<EntityStore>, EntityStore> spatialTree = store.getResource(CollisionModule.get().getTangibleEntitySpatialResourceType());
 
-        if (CollisionModule.isBelowMovementThreshold(scaledVel)) {
-            CollisionModule.findBlockCollisionsShortDistance(world, box, position, scaledVel, result);
-        } else {
-            CollisionModule.findBlockCollisionsIterative(world, box, position, scaledVel, true, result);
+        //entity check start here
+        if (spatialTree != null && !bobberComp.isHookedToEntity() && !bobberComp.isMinigameActive() && shouldHookEntity) {
+            Box searchVolume = box.clone().offset(position).extend(scaledVel.x, scaledVel.y, scaledVel.z);
+            searchVolume.expand(1f);
+            Vector3d minBound = searchVolume.getMin();
+            Vector3d maxBound = searchVolume.getMax();
+
+            spatialTree.getSpatialStructure().collectBox(minBound, maxBound, candidates);
+            if (!candidates.isEmpty()) {
+                Ref<EntityStore> selfRef = archetypeChunk.getReferenceTo(index);
+                Ref<EntityStore> ownerRef = (bobberComp.getPlayer() != null) ? bobberComp.getPlayer().getReference() : null;
+
+                for (int idx = candidates.size() - 1; idx >= 0; idx--) {
+                    Ref<EntityStore> targetRef = candidates.get(idx);
+                    if (targetRef == null || !targetRef.isValid() || targetRef.equals(selfRef) || targetRef.equals(ownerRef)) {
+                        candidates.remove(idx);
+                    }
+                }
+            }
         }
+        result.collisionEntities = candidates;
+
+        CollisionModule.findCollisions(
+                box,
+                position,
+                scaledVel,
+                true,
+                result,
+                store
+        );
+
+        if (!bobberComp.isHookedToEntity() && result.getCharacterCollisionCount() > 0) {
+            com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData targetData = result.getCharacterCollision(0);
+
+            if (targetData != null && targetData.entityReference != null && targetData.entityReference.isValid()) {
+                Ref<EntityStore> finalTargetRef = targetData.entityReference;
+                TransformComponent targetTransform = finalTargetRef.getStore().getComponent(finalTargetRef, TransformComponent.getComponentType());
+
+                if (targetTransform != null) {
+                    bobberComp.setHookedEntity(finalTargetRef);
+                    bobberComp.setInWater(false);
+
+                    Vector3d attachPoint = new Vector3d(targetTransform.getPosition()).add(0, 0.8, 0);
+                    transform.setPosition(attachPoint);
+                    velocityComp.set(new Vector3d(0, 0, 0));
+
+                    return;
+                }
+            }
+        }
+        // entity check ends here
 
         if (result.getFirstBlockCollision() != null) {
             BlockCollisionData data = result.getFirstBlockCollision();
@@ -116,7 +186,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         }
 
         // Water Bobbing
-        if (inWater && bobberComp != null) {
+        if (inWater) {
             long time = System.currentTimeMillis();
             double freq = bobberComp.isCanCatch() ? 0.02 : 0.005;
             double amp = bobberComp.isCanCatch() ? 0.04 : 0.01;

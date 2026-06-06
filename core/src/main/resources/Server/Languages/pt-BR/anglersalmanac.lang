@@ -45,6 +45,9 @@ config.LocationCheck.tooltip = Desabilitar vai marcar todos os peixes como globa
 config.EnvironmentCheck.text = Teste de Ambiente
 config.EnvironmentCheck.tooltip = Se o mod deve fazer o teste de Ambiente, ex. coordenada y, tempo, profundidade etc
 
+config.HookEntities.text = Should hook entities
+config.HookEntities.tooltip = Se entidades puderem ser conectadas (incluindo jogadores)
+
 ### Fishing
 fishing.bait.no = SEM ISCA
 fishing.bait.used = foi usada

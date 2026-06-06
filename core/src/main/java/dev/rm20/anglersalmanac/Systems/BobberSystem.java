@@ -52,7 +52,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 }
                 try {
                     commandBuffer.getExternalData().getWorld().execute(() -> {
-                        if(archetypeChunk.getReferenceTo(i).isValid() && archetypeChunk.getReferenceTo(i) !=null)
+                        if(archetypeChunk.getReferenceTo(i).isValid())
                         {
                             store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
                         }

@@ -2,11 +2,16 @@ package dev.rm20.anglersalmanac.Components;
 
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class BobberComponent implements Component<EntityStore> {
     private static final int MAX_CATCH_TIME = 120;
 
@@ -20,6 +25,8 @@ public class BobberComponent implements Component<EntityStore> {
     private String baitName;
     public ItemStack fishingRod = null;
     public byte slot = 0;
+    private boolean minigameActive = false;
+    private Ref<EntityStore> hookedEntity = null;
     public BobberComponent() {
         this.bobberAge = 0;
         this.canCatch = false;
@@ -27,6 +34,8 @@ public class BobberComponent implements Component<EntityStore> {
         this.catchTimer = 0;
         this.InWater = false;
         this.WaterDepth = 0;
+        this.minigameActive = false;
+
         this.baitName = null;
     }
 
@@ -37,6 +46,8 @@ public class BobberComponent implements Component<EntityStore> {
         this.catchTimer = 0;
         this.InWater = false;
         this.WaterDepth = 0;
+        this.minigameActive = false;
+
         this.baitName = Bait;
     }
 
@@ -45,17 +56,7 @@ public class BobberComponent implements Component<EntityStore> {
         return AnglersAlmanac.bobberComponent;
     }
 
-    public float getBobberAge() {
-        return bobberAge;
-    }
 
-    public void setBobberAge(float bobberAge) {
-        this.bobberAge = bobberAge;
-    }
-
-    public boolean isCanCatch() {
-        return canCatch;
-    }
 
     public void setCanCatch(boolean canCatch) {
         this.canCatch = canCatch;
@@ -66,60 +67,24 @@ public class BobberComponent implements Component<EntityStore> {
         }
     }
 
-    public void setCatchTimer(float catchTimer) {
-        this.catchTimer = catchTimer;
-    }
-
-    public float getTimeUntilCatch() {
-        return timeUntilCatch;
-    }
-
-    public void setTimeUntilCatch(float timeUntilCatch) {
-        this.timeUntilCatch = timeUntilCatch;
-    }
-
     public void resetTimeUntilCatch() {
         this.timeUntilCatch = -1;
     }
 
-    public float getCatchTimer() {
-        return catchTimer;
-    }
 
     public boolean canCatchFish() {
         return this.canCatch && this.catchTimer > 0;
     }
-    public void setInWater(boolean inWater)
-    {
-        this.InWater = inWater;
-    }
+
     public boolean InWater()
     {
         return this.InWater;
     }
-    public int getWaterDepth() {
-        return WaterDepth;
+
+    public boolean isHookedToEntity() {
+        return this.hookedEntity != null && this.hookedEntity.isValid();
     }
 
-    public void setWaterDepth(int waterDepth) {
-        WaterDepth = waterDepth;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public String getBaitName() {
-        return baitName;
-    }
-
-    public void setBaitName(String baitName) {
-        this.baitName = baitName;
-    }
 
     @Override
     public Component<EntityStore> clone() {
@@ -132,6 +97,8 @@ public class BobberComponent implements Component<EntityStore> {
         component.WaterDepth = this.WaterDepth;
         component.player = this.player;
         component.baitName = this.baitName;
+        component.hookedEntity = this.hookedEntity;
+        component.minigameActive = this.minigameActive;
         return component;
     }
 }

@@ -78,7 +78,7 @@ public class StatUiPage extends InteractiveCustomUIPage<pageUtils.AlmanacGuiData
 
         if (stats.topFish != null && !stats.topFish.isEmpty()) {
             String fishId = stats.topFish.get(0).name();
-            var fishData = FishLootManager.getFishData(fishId);
+            var fishData = FishLootManager.getInternalFishData(fishId);
 
             if (fishData != null) {
                 topFish = fishData.getName();
@@ -97,7 +97,7 @@ public class StatUiPage extends InteractiveCustomUIPage<pageUtils.AlmanacGuiData
 
             if (i < sortedFish.size()) {
                 Map.Entry<String, Integer> entry = sortedFish.get(i);
-                FishLootManager loot = FishLootManager.getFishData(entry.getKey());
+                FishLootManager loot = FishLootManager.getInternalFishData(entry.getKey());
                 if(loot == null)
                 {
                     uiCommandBuilder.set(labelId + ".TextSpans", Message.raw("- " + entry.getKey() + " : " + entry.getValue()));

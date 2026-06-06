@@ -1,7 +1,5 @@
 package dev.rm20.anglersalmanac.Config;
 
-import com.hypixel.hytale.codec.Codec;
-import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -15,6 +13,8 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import dev.rm20.codecannotation.AutoCodecBuilder;
 
 import javax.annotation.Nonnull;
 
@@ -25,17 +25,26 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
     }
 
     public static class BindingData {
-        public static final BuilderCodec<BindingData> CODEC = BuilderCodec.builder(BindingData.class, BindingData::new)
-                .addField(new KeyedCodec<>("@BaitRequired", Codec.BOOLEAN), (data, s) -> data.BaitRequired = s, data -> data.BaitRequired)
-                .addField(new KeyedCodec<>("@TensionBarEnabled", Codec.BOOLEAN), (data, s) -> data.TensionBarEnabled = s, data -> data.TensionBarEnabled)
-                .addField(new KeyedCodec<>("@LocationCheck", Codec.BOOLEAN), (data, s) -> data.LocationCheck = s, data -> data.LocationCheck)
-                .addField(new KeyedCodec<>("@EnvironmentCheck", Codec.BOOLEAN), (data, s) -> data.EnvironmentCheck = s, data -> data.EnvironmentCheck)
-                .build();
+        public static final BuilderCodec<BindingData> CODEC =
+                AutoCodecBuilder.create(BindingData.class, BindingData::new);
 
+        @CodecAnnotations.Field("@BaitRequired")
         public Boolean BaitRequired;
+
+        @CodecAnnotations.Field("@TensionBarEnabled")
         public Boolean TensionBarEnabled;
+
+        @CodecAnnotations.Field("@LocationCheck")
         public Boolean LocationCheck;
+
+        @CodecAnnotations.Field("@EnvironmentCheck")
         public Boolean EnvironmentCheck;
+
+        @CodecAnnotations.Field("@HookEntites")
+        public Boolean HookEntities;
+
+        public BindingData() {
+        }
     }
 
 
@@ -49,6 +58,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
         uiCommandBuilder.set("#BaitRequired.TooltipText", Message.translation("anglersalmanac.config.baitRequired.tooltip"));
         uiCommandBuilder.set("#LocationCheck.TooltipText", Message.translation("anglersalmanac.config.LocationCheck.tooltip"));
         uiCommandBuilder.set("#EnvironmentCheck.TooltipText", Message.translation("anglersalmanac.config.EnvironmentCheck.tooltip"));
+        uiCommandBuilder.set("#HookEntites.TooltipText", Message.translation("anglersalmanac.config.HookEntities.tooltip"));
 
 
         var config = AnglersAlmanac.MOD_CONFIG;
@@ -56,6 +66,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TensionBarEnabled #CheckBox", EventData.of("@TensionBarEnabled", "#TensionBarEnabled #CheckBox.Value"), false);
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#LocationCheck #CheckBox", EventData.of("@LocationCheck", "#LocationCheck #CheckBox.Value"), false);
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#EnvironmentCheck #CheckBox", EventData.of("@EnvironmentCheck", "#EnvironmentCheck #CheckBox.Value"), false);
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#HookEntites #CheckBox", EventData.of("@HookEntites", "#HookEntites #CheckBox.Value"), false);
 
 
         uiCommandBuilder.set("#BaitRequired #CheckBox.Value", config.get().getShouldUseBait());
@@ -64,6 +75,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
         uiCommandBuilder.set("#LocationCheck #CheckBox.Value", config.get().getShouldHabCheck());
         uiCommandBuilder.set("#EnvironmentCheck #CheckBox.Value", config.get().getShouldEnvironmentCheck());
 
+        uiCommandBuilder.set("#HookEntites #CheckBox.Value", config.get().getHookEntities());
 
     }
 
@@ -100,6 +112,12 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
         {
             config.get().setShouldEnvironmentCheck(data.EnvironmentCheck);
             this.playerRef.sendMessage(Message.raw("[AA] Environment check set to: " + data.EnvironmentCheck));
+        }
+        if(data.HookEntities != null)
+        {
+            config.get().setHookEntities(data.HookEntities);
+            this.playerRef.sendMessage(Message.raw("[AA] Hook Entities set to: " + data.HookEntities));
+
         }
         AnglersAlmanac.MOD_CONFIG.save();
     }

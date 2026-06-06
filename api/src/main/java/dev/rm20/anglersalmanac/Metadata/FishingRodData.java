@@ -1,44 +1,41 @@
 package dev.rm20.anglersalmanac.Metadata;
 
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import dev.rm20.codecannotation.AutoCodecBuilder;
+import dev.rm20.codecannotation.Annotations.CodecAnnotations;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
 public class FishingRodData {
     public static final String KEY = "AnglersAlmanacBoundBobber";
-    public static final BuilderCodec<FishingRodData> CODEC = BuilderCodec.builder(FishingRodData.class, FishingRodData::new)
-            .append(new KeyedCodec<>("BoundBobber", Codec.UUID_BINARY), (metaData, value) -> metaData.boundBobber = value, (config) -> config.boundBobber).add()
-            .append(new KeyedCodec<>("BoundMinigame", Codec.UUID_BINARY), (metaData, value) -> metaData.boundMinigame = value, (config) -> config.boundMinigame).add()
-            .append(new KeyedCodec<>("Mode", Codec.INTEGER), (metaData, value) -> metaData.mode = value, (config) -> config.mode).add()
-            //.append(RodStats.KEYED_CODEC, (s, v) -> s.rodStats = v, (g) -> g.rodStats).add()
-            .build();
+
+    public static final BuilderCodec<FishingRodData> CODEC =
+            AutoCodecBuilder.create(FishingRodData.class, FishingRodData::new);
+
     public static final KeyedCodec<FishingRodData> KEYED_CODEC = new KeyedCodec<>(KEY, CODEC);
 
+    @Getter
+    @Setter
+    @CodecAnnotations.Field("BoundBobber")
     private UUID boundBobber = null;
-    public UUID getBoundBobber() {
-        return this.boundBobber;
-    }
-    public void setBoundBobber(UUID uuid) {
-        this.boundBobber = uuid;
-    }
 
+    @Getter
+    @Setter
+    @CodecAnnotations.Field("BoundMinigame")
     private UUID boundMinigame = null;
-    public UUID getBoundMinigame() {
-        return this.boundMinigame;
-    }
-    public void setBoundMinigame(UUID uuid) {
-        this.boundMinigame = uuid;
+
+    @Getter
+    @Setter
+    @CodecAnnotations.Field("Mode")
+    private int Mode = 0;
+
+    public FishingRodData() {
     }
 
-    private int mode = 0;
-    public int getMode() {
-        return this.mode;
-    }
-    public void setMode(int i) {
-        this.mode = i;
-    }
+
 
     /*private RodStats rodStats;
     public RodStats getRodStats() {return this.rodStats;

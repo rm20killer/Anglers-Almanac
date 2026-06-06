@@ -158,7 +158,7 @@ public class FishZoneUiPage extends InteractiveCustomUIPage<pageUtils.AlmanacGui
             String slotPath = rowId + "[" + colIndex + "]";
 
             BookAssetData.FishEntry currentFish = validFishItems.get(i);
-            FishLootManager actualItem = FishLootManager.getFishData(currentFish.id());
+            FishLootManager actualItem = FishLootManager.getInternalFishData(currentFish.id());
 
             uiEventBuilder.addEventBinding(
                     CustomUIEventBindingType.Activating,

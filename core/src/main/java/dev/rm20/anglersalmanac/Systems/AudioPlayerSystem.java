@@ -21,7 +21,7 @@ public class AudioPlayerSystem extends EntityTickingSystem<EntityStore> {
                     try {
                         store.removeEntity(ref, RemoveReason.REMOVE);
                     } catch (RuntimeException e) {
-                        AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove Audio Player System: "+ref.toString());
+                        AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove Audio Player System: "+ ref);
                     }
                 }
             });

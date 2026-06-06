@@ -3,41 +3,25 @@ package dev.rm20.anglersalmanac.MinigameManager;
 import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class Minigame {
 
     // How long a player has been playing
+    @Getter
+    @Setter
     private float TimePlayed = 0;
     // Total points that the player has
+    @Getter
+    @Setter
     private int Points = 0;
     // PerfectScore
+    @Getter
+    @Setter
     private float perfectScore = 100;
 
     public FishLootManager fishHooked;
-
-    public float getTimePlayed() {
-        return TimePlayed;
-    }
-
-    public void setTimePlayed(float timePlayed) {
-        TimePlayed = timePlayed;
-    }
-
-    public  int getPoints() {
-        return Points;
-    }
-
-    public void setPoints(int points) {
-        Points = points;
-    }
-
-    public float getPerfectScore() {
-        return perfectScore;
-    }
-
-    public void setPerfectScore(float perfectScore) {
-        this.perfectScore = perfectScore;
-    }
 
     public int getPerformancePercentage(){
         return (int) (Points / perfectScore) * 100;

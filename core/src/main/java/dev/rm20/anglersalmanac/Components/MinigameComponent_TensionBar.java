@@ -47,7 +47,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
 
     }
 
-    private boolean DEBUG = true;
+    private final boolean DEBUG = true;
 
     // Internal use:
     public float fightProgress = 0.25f; // The progress to successful catch. Success when progress is at 1f.
