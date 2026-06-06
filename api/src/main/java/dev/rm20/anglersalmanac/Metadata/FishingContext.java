@@ -13,5 +13,5 @@ public record FishingContext(
         String weather,
         int waterDepth,
         String baitAsset,
-        int fishingPower
+        float fishingPower
 ) { }

@@ -83,7 +83,7 @@ public class GlossaryPage extends InteractiveCustomUIPage<pageUtils.AlmanacGuiDa
             String slotPath = rowId + "[" + colIndex + "]";
 
             BookAssetData.FishEntry currentFish = validFishItems.get(i);
-            FishLootManager actualItem = FishLootManager.getFishData(currentFish.id());
+            FishLootManager actualItem = FishLootManager.getInternalFishData(currentFish.id());
 
             uiEventBuilder.addEventBinding(
                     CustomUIEventBindingType.Activating,

@@ -36,6 +36,11 @@ Group #Group {
         TooltipText: "Should the mod check environment check, e.g y level, time, depth etc";
         Padding: (Top: 10);
       }
+      $C.@CheckBoxWithLabel #HookEntites {
+        @Text = "Should hook entities";
+        TooltipText: "If entities can be hooked (including players)";
+        Padding: (Top: 10);
+      }
     }
   }
 }

@@ -5,10 +5,9 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.hypixel.hytale.math.vector.Rotation3fc;
+import dev.rm20.anglersalmanac.IEvents.PreFishRollEvent;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -141,13 +140,34 @@ public class CatchUtils {
                 "clear",
                 depth,
                 baitID,
-                1
+                FishingPowerUtils.getTotalFishingPower(store,player.getReference())
         );
         // get fish
 
-        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier, FishingPowerUtils.getTotalFishingPower(store,player.getReference()));
+
+        var eventBus = HytaleServer.get().getEventBus();
+        PreFishRollEvent event = new PreFishRollEvent(bobberRef,player,LocationInfo);
+
+        eventBus.dispatchFor(PreFishRollEvent.class).dispatch(event);
+
+        if (event.isCancelled()) {
+            String itemId = event.getOverriddenLootId();
+            String modOverriding = event.getOverridingModName();
+            if(itemId == null) {
+                itemId = "Stick";
+            }
+            FishLootManager lootEntry = FishLootManager.getInternalFishData(itemId);
+            if (lootEntry == null) {
+                AnglersAlmanac.LOGGER.atWarning().log(modOverriding + " tried to override the item to: " + itemId + " which does not exist, fall back to normal system");
+            }
+            else{
+                return lootEntry;
+            }
+        }
+
+        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         if (lootEntry == null) {
-            return FishLootManager.getFishData("Stick");
+            return FishLootManager.getInternalFishData("Stick");
         }
         String lootID = lootEntry.getItemID();
         return lootEntry;
@@ -159,7 +179,6 @@ public class CatchUtils {
 
         assert player.getReference() != null;
         TransformComponent transform = player.getReference().getStore().getComponent(player.getReference(), TransformComponent.getComponentType());
-
         ItemUtils.interactivelyPickupItem(player.getReference(), loot, transform.getPosition(), commandBuffer);
 
         //TODO

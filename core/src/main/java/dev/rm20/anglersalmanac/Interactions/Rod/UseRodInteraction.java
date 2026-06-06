@@ -107,10 +107,8 @@ public class UseRodInteraction extends SimpleInstantInteraction {
             return false;
         }
         // Choose reel or cast depending on rod state.
-        if (meta != null && meta.getBoundBobber() != null) {
-            if (meta.getMode() == 0) {
-                return false;
-            }
+        if (meta.getBoundBobber() != null) {
+            return meta.getMode() != 0;
         }
 
         return true;

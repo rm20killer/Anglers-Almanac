@@ -1,0 +1,77 @@
+# ============================================================
+# Angler's Almanac - Italian (IT) Translation File
+# Language: it-IT
+# Keys format: {category}.{key}
+# Usage: anglersalmanac.{category}.{key}
+# ============================================================
+
+### book stuff
+book.name = Almanacco Del Pescatore Di {name}
+book.description = Connesso all'ID:
+book.item.name = Almanacco del Pescatore
+book.item.description = Click destro per legare a te
+
+### Command general error
+cmd.error.notPlayer = Questo comando può essere eseguito solo da un giocatore!
+cmd.error.noPerms = Non hai il permesso di eseguire questo comando
+cmd.invalidFish = ID del pesce non valido: {name}
+
+### Command - add Fish
+cmd.addFish.all = Aggiunti tutti i {count} pesci nel tuo almanacco!
+cmd.addFish.fish = Aggiunto/a {name} al tuo Almanacco!
+
+### Command - removed fish
+cmd.removeFish.all = Rimossi tutti i {count} pesci dal tuo almanacco!
+cmd.removeFish.fish = Rimosso/a {name} dal tuo Almanacco!
+
+### Command - Sim
+cmd.sim.done = Simulazione completata. Controlla la console per i risultati.
+
+
+### Config UI
+config.label = Configurazione di Angler's Almanac
+config.tensionBar.text = Abilita il test TensionBar
+config.tensionBar.tooltip = Abilitato il minigame di Stardew Valley, spegnerlo significa nessun minigioco
+
+config.baitRequired.text = Esca per pescare richiesta
+config.baitRequired.tooltip = È richiesta un'esca per poter pescare
+
+config.xpEnabled.text = XP dalla pesca
+config.xpEnabled.tooltip = [WIP] ottieni XP dalla pesca se hai una mod XP
+
+config.LocationCheck.text = Controllo habitat
+config.LocationCheck.tooltip = Disabilitato marcherà tutti i pesci come globali
+
+config.EnvironmentCheck.text = Controllo ambiente
+config.EnvironmentCheck.tooltip = Se la mod dovrebbe controllare l'ambiente, per esempio livello y, tempo, profondità, eccetera
+
+### Fishing
+fishing.bait.no = NO ESCA
+fishing.bait.used = è stata usata
+fishing.bait.retuned = è tornata
+
+fishing.caught.legDiscovered = SCOPERTA LEGGENDARIA
+fishing.caught.newFish = Nuovo Pesce Trovato
+
+### Almanac
+almanac.unknown = Sconosciuto
+almanac.glossaryTab.tooltip = Vai al Glossario
+almanac.statsTab.tooltip = Vai alle Statistiche
+### Almanac stats
+almanac.stats.player= Statistiche Del Giocatore:
+almanac.stats.total = Pesci Totali: {count}
+almanac.stats.most = Più Trovati: {name}
+almanac.stats.legendary = Pesci Leggendari: {count}
+almanac.stats.perfect = Perfetto: {count}
+almanac.stats.great = Grande: {count}
+almanac.stats.top = Top 10 Catture:
+
+almanac.stats.collection = Progresso Collezione
+almanac.stats.glossary = Clicca per andare al Glossario
+
+almanac.stats.habitat_tooltip = {caught}/{total} -> Clicca per vedere
+
+### Almanac Fish
+almanac.fish.totalLabel = Totale catturati:
+almanac.fish.speciesLabel = Famiglia:
+almanac.fish.habitatLabel = Si Aggira In:

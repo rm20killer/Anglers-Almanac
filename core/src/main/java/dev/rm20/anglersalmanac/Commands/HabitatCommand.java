@@ -12,7 +12,6 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.ZoneInfo;
 import dev.rm20.anglersalmanac.Registration.CommandInfo;
@@ -21,7 +20,6 @@ import dev.rm20.anglersalmanac.Utils.TimeUtils;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 @CommandInfo(
         name = "zoneinfo",
@@ -33,7 +31,6 @@ public class HabitatCommand extends AbstractPlayerCommand {
         super(name, description);
     }
 
-    @Nullable
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
         if(!playerRef.hasPermission("AnglersAlmanac.admin"))
@@ -42,7 +39,7 @@ public class HabitatCommand extends AbstractPlayerCommand {
             return;
         }
 
-        Player player = playerRef.getComponent(Player.getComponentType());
+        Player player = store.getComponent(ref, Player.getComponentType());
         if(player == null)
         {
             context.sendMessage(Message.translation("anglersalmanac.cmd.error.notPlayer"));

@@ -1,0 +1,80 @@
+# ============================================================
+# Angler's Almanac - Portuguese (BR) Translation File
+# Language: pt-BR
+# Keys format: {category}.{key}
+# Usage: anglersalmanac.{category}.{key}
+# ============================================================
+
+### book stuff
+book.name = Almanaque do Pescador de {name}
+book.description = Ligado ao ID:
+book.item.name = Almanaque do Pescador
+book.item.description = Botão direito para ligar à você
+
+### Command general error
+cmd.error.notPlayer = Este comando só pode ser usado por um Jogador!
+cmd.error.noPerms = Você não tem permissão para usar este comando
+cmd.invalidFish = ID de peixe inválido: {name}
+
+### Command - add Fish
+cmd.addFish.all = {count} peixes foram adicionados ao seu Almanaque!
+cmd.addFish.fish = {name} adicionado ao seu Almanaque!
+
+### Command - removed fish
+cmd.removeFish.all = {count} peixes removidos do seu Almanaque!
+cmd.removeFish.fish = {name} removido do seu Almanaque!
+
+### Command - Sim
+cmd.sim.done = Simulação completa. Cheque o console do servidor para o resumo.
+
+
+### Config UI
+config.label = Configuração do Anglers Almanac
+config.tensionBar.text = Habilitar teste de Barra de tensão
+config.tensionBar.tooltip = Minigame de Stardew Valley habilitado, desabilitar significa que não haverá minigame.
+
+config.baitRequired.text = Necessitar isca para pescar
+config.baitRequired.tooltip = Habilite para tornar necessário o uso de isca para pescar
+
+config.xpEnabled.text = Ganhar XP ao pescar
+config.xpEnabled.tooltip = [WIP] Ganhar XP ao pescar caso tenha um mod de XP
+
+config.LocationCheck.text = Teste de Habitat
+config.LocationCheck.tooltip = Desabilitar vai marcar todos os peixes como globais
+
+config.EnvironmentCheck.text = Teste de Ambiente
+config.EnvironmentCheck.tooltip = Se o mod deve fazer o teste de Ambiente, ex. coordenada y, tempo, profundidade etc
+
+config.HookEntities.text = Should hook entities
+config.HookEntities.tooltip = Se entidades puderem ser conectadas (incluindo jogadores)
+
+### Fishing
+fishing.bait.no = SEM ISCA
+fishing.bait.used = foi usada
+fishing.bait.retuned = foi retornada
+
+fishing.caught.legDiscovered = DESCOBERTA LENDÁRIA
+fishing.caught.newFish = Novo peixe encontrado
+
+### Almanac
+almanac.unknown = Desconhecido
+almanac.glossaryTab.tooltip = Ir para página do Glossário
+almanac.statsTab.tooltip = Ir para página Inicial
+### Almanac stats
+almanac.stats.player= Status do Jogador:
+almanac.stats.total = Peixes totais: {count}
+almanac.stats.most = Mais encontrado: {name}
+almanac.stats.legendary = Peixes Lendários: {count}
+almanac.stats.perfect = Perfeitos: {count}
+almanac.stats.great = Excelentes: {count}
+almanac.stats.top = Top 10 Pescas:
+
+almanac.stats.collection = Progresso de Coleção
+almanac.stats.glossary = Clique para ir ao Glossário
+
+almanac.stats.habitat_tooltip = {caught}/{total} -> Clique para ver
+
+### Almanac Fish
+almanac.fish.totalLabel = Total pêgo:
+almanac.fish.speciesLabel = Classe da Espécie:
+almanac.fish.habitatLabel = Espreita em:

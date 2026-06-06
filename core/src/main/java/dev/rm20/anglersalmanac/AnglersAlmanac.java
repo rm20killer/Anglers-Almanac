@@ -17,11 +17,13 @@ import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Utils.Intergration.MMOSkillTree;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
+import lombok.Getter;
 
 
 import javax.annotation.Nonnull;
 
 public class AnglersAlmanac extends JavaPlugin {
+    @Getter
     private static AnglersAlmanac instance;
     public static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static ComponentType<EntityStore, BobberComponent> bobberComponent;
@@ -39,9 +41,6 @@ public class AnglersAlmanac extends JavaPlugin {
         instance = this;
         MINIGAME_CONFIG_TENSIONBAR = this.withConfig(MinigameConfig_TensionBar.KEY, MinigameConfig_TensionBar.CODEC);
         MOD_CONFIG = this.withConfig(AnglersAlmanacConfig.KEY, AnglersAlmanacConfig.CODEC);
-    }
-    public static AnglersAlmanac getInstance() {
-        return instance;
     }
 
 

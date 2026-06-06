@@ -45,6 +45,9 @@ config.LocationCheck.tooltip = Disabled will mark all fish as global
 config.EnvironmentCheck.text = Environment check
 config.EnvironmentCheck.tooltip = Should the mod check environment check, e.g y level, time, depth etc
 
+config.HookEntities.text = Should hook entities
+config.HookEntities.tooltip = If entities can be hooked (including players)
+
 ### Fishing
 fishing.bait.no = NO BAIT
 fishing.bait.used = has been used

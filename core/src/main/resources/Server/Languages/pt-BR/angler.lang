@@ -1,0 +1,39 @@
+# ============================================================
+# Angler's item - Portuguese (BR) Translation File
+# Language: pt-BR
+# Keys format: {category}.{key}
+# Usage: angler.{category}.{key}
+# ============================================================
+
+fish.swordfish.name = Peixe-Espada
+fish.swordfish.description = Tem um nariz mais duro que adamantita.
+
+fish.catfish.golden.name = Bagre Dourado
+fish.catfish.golden.description = Um bagre coberto de ouro.
+
+fish.minnow.golden.name = Vairão Dourado
+fish.minnow.golden.description = Um vairão coberto de ouro.
+
+fish.bluegill.golden.name = Peixe-Sol Dourado
+fish.bluegill.golden.description = Um peixe-sol coberto de ouro.
+
+fish.salmon.golden.name = Salmão Dourado
+fish.salmon.golden.description = Um salmão coberto de ouro.
+
+bait.golden.name = Isca de Peixe Dourada
+bait.golden.description = Aumenta as chances de pescar um peixe dourado.
+
+fish.trout.silverscaled.name = Trura de Escamas Prateadas
+fish.trout.silverscaled.description = Uma truta que cresceu e evoluiu no subsolo.
+
+fish.bonefish.white.name = Peixe-Osso
+fish.bonefish.white.description = Um esqueleto reanimado que deriva pelas correntes.
+
+fish.bonefish.frost.name = Peixe-Osso Gélido
+fish.bonefish.frost.description = Um esqueleto frio congelado no tempo.
+
+fish.bonefish.burnt.name = Peixe-Osso Chamuscado
+fish.bonefish.burnt.description = Restos queimados que ainda brilham com as brasas de uma terra arruinada.
+
+fish.bonefish.sand.name = Peixe-Osso do Deserto
+fish.bonefish.sand.description = Ossos descoloridos no sol que nadam pelas dunas.

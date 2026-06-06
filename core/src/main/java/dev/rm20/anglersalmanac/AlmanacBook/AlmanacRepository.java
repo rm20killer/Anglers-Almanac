@@ -12,14 +12,7 @@ public class AlmanacRepository {
     private static final String DB_PATH = "mods/dev.rm20_AnglersAlmanac/Data/BookIDs.db";
     private static Connection connection;
 
-    public static class BookEntry {
-        public final String customId;
-        public final String playerName;
-
-        public BookEntry(String customId, String playerName) {
-            this.customId = customId;
-            this.playerName = playerName;
-        }
+    public record BookEntry(String customId, String playerName) {
     }
 
     public AlmanacRepository() {

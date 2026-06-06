@@ -92,22 +92,23 @@ public class BookPageManager {
             pageManager.openCustomPage(playerRef, playerRef.getStore(), statUiPage);
         } else if (currentSpread.isDoublePage) {
             //TODO: 1 context 2 pages
+
         } else if (UiFile.equalsIgnoreCase("Almanac/Fish/AlmanacFishZone.ui")) {
             FishLootManager FishDataRight = null;
             if (currentSpread.RightPage != null && !currentSpread.RightPage.isEmpty()) {
-                FishDataRight = FishLootManager.getFishData(currentSpread.RightPage);
+                FishDataRight = FishLootManager.getInternalFishData(currentSpread.RightPage);
             }
             FishZoneUiPage fishZoneUiPage = new FishZoneUiPage(playerRef1, playerUUID, playerName, stats, currentSpread.LeftPage, FishDataRight, page,getCurrentZoneInfo(bookAsset.getHabitats(),page));
             pageManager.openCustomPage(playerRef, playerRef.getStore(), fishZoneUiPage);
         } else if (UiFile.startsWith("Almanac/Fish/AlmanacFish")) {
             FishLootManager FishDataLeft = null;
             if (currentSpread.LeftPage != null && !currentSpread.LeftPage.isEmpty()) {
-                FishDataLeft = FishLootManager.getFishData(currentSpread.LeftPage);
+                FishDataLeft = FishLootManager.getInternalFishData(currentSpread.LeftPage);
             }
 
             FishLootManager FishDataRight = null;
             if (currentSpread.RightPage != null && !currentSpread.RightPage.isEmpty()) {
-                FishDataRight = FishLootManager.getFishData(currentSpread.RightPage);
+                FishDataRight = FishLootManager.getInternalFishData(currentSpread.RightPage);
             }
 
             String uiFile = pages.get(page).uiFile;

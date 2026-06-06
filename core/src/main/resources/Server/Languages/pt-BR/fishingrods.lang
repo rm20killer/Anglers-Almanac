@@ -1,0 +1,21 @@
+# ============================================================
+# Angler's Almanac Fishing rods - Portuguese (BR) Translation FileCrude Fishing Rod
+# Language: pt-BR
+# Keys format: {category}.{key}
+# Usage: fishingrods.{category}.{key}
+# ============================================================
+
+crude.name = Vara de Pesca Bruta
+crude.description = Usada para pegar peixes da água
+
+iron.name = Vara de Pesca de Ferro
+iron.description = Usada para pegar peixes da água
+
+cobalt.name = Vara de Pesca de Cobalto
+cobalt.description = Usada para pegar peixes da água
+
+reef.name = Vara de Pesca do Recife
+reef.description = Usada para pegar peixes da água
+
+saltworn.name = Vara Desgastada pelo Sal
+saltworn.description = A vara de um pescador veterano. Desgastada pelo uso.
