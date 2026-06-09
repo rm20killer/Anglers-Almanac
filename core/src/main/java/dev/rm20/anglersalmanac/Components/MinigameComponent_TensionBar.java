@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.math.vector.Rotation3f;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.InteractionType;
@@ -119,13 +120,13 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         holder.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(id));
 
         Vector3d spawnPos = new Vector3d(commandBuffer.getComponent(bobberRef, TransformComponent.getComponentType()).getPosition());
-        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(spawnPos.add(0, AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().minigameModelVerticalOffset, 0), new Rotation3f(0,0,0)));
+        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(spawnPos.add(0, AnglersAlmanacAPI.getMinigameConfig().get().minigameModelVerticalOffset, 0), new Rotation3f(0,0,0)));
 
 
         //  --- Minigame --------
         MinigameComponent_TensionBar game = new MinigameComponent_TensionBar(playerRef, bobberRef, id);
         // Set minigame config as defaults.
-        game.gameConfig = AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().clone();
+        game.gameConfig = AnglersAlmanacAPI.getMinigameConfig().get().clone();
         // Assign fish and apply modifiers.
         game.fishHooked = CatchUtils.FirstRoll(bobberRef, commandBuffer.getComponent(playerRef, Player.getComponentType()), commandBuffer, commandBuffer.getComponent(bobberRef, BobberComponent.getComponentType()).getWaterDepth());
         assert game.fishHooked != null;
@@ -145,7 +146,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
 
         // Adjust minigame initialisation variables:
         double distanceFromPlayer = bobberPos.distance(commandBuffer.getComponent(playerRef, TransformComponent.getComponentType()).getPosition());
-        game.minigameScale = Math.clamp((float) distanceFromPlayer * AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().minigameScaleMultiplier, AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().minigameScaleMin, AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().minigameScaleMax);
+        game.minigameScale = Math.clamp((float) distanceFromPlayer * AnglersAlmanacAPI.getMinigameConfig().get().minigameScaleMultiplier, AnglersAlmanacAPI.getMinigameConfig().get().minigameScaleMin, AnglersAlmanacAPI.getMinigameConfig().get().minigameScaleMax);
 
         commandBuffer.getExternalData().getWorld().execute(() -> {
             commandBuffer.addEntity(holder, AddReason.SPAWN);
@@ -566,9 +567,9 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         //AnglersAlmanac.LOGGER.atInfo().log("Running TensionBar Minigame interaction");
 
         //Move bar up.
-        barVelocity = Math.clamp(barVelocity + (AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().barSpeed * AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().barAcceleration)
-                        + (AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().barGravity * AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().barAcceleration)
-                , -AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().barGravity, AnglersAlmanac.MINIGAME_CONFIG_TENSIONBAR.get().barSpeed);
+        barVelocity = Math.clamp(barVelocity + (AnglersAlmanacAPI.getMinigameConfig().get().barSpeed * AnglersAlmanacAPI.getMinigameConfig().get().barAcceleration)
+                        + (AnglersAlmanacAPI.getMinigameConfig().get().barGravity * AnglersAlmanacAPI.getMinigameConfig().get().barAcceleration)
+                , -AnglersAlmanacAPI.getMinigameConfig().get().barGravity, AnglersAlmanacAPI.getMinigameConfig().get().barSpeed);
     }
 
 

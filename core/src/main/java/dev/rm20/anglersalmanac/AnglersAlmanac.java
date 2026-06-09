@@ -1,6 +1,7 @@
 package dev.rm20.anglersalmanac;
 
 import com.al3x.HStats;
+import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -17,6 +18,7 @@ import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Utils.Intergration.MMOSkillTree;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
+import dev.rm20.anglersalmanac.triggereffects.GiveRodEffect;
 import lombok.Getter;
 
 
@@ -28,8 +30,7 @@ public class AnglersAlmanac extends JavaPlugin {
     public static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     public static ComponentType<EntityStore, BobberComponent> bobberComponent;
 
-    public static Config<MinigameConfig_TensionBar> MINIGAME_CONFIG_TENSIONBAR;
-    public static Config<AnglersAlmanacConfig> MOD_CONFIG;
+
     public AlmanacDatabase database;
     public AlmanacRepository Book_IDs;
     public FishLootManager fishLootManager;
@@ -39,8 +40,8 @@ public class AnglersAlmanac extends JavaPlugin {
     public AnglersAlmanac(@Nonnull JavaPluginInit init) {
         super(init);
         instance = this;
-        MINIGAME_CONFIG_TENSIONBAR = this.withConfig(MinigameConfig_TensionBar.KEY, MinigameConfig_TensionBar.CODEC);
-        MOD_CONFIG = this.withConfig(AnglersAlmanacConfig.KEY, AnglersAlmanacConfig.CODEC);
+        AnglersAlmanacAPI.setMinigameConfig(this.withConfig(MinigameConfig_TensionBar.KEY, MinigameConfig_TensionBar.CODEC));
+        AnglersAlmanacAPI.setConfig(this.withConfig(AnglersAlmanacConfig.KEY, AnglersAlmanacConfig.CODEC));
     }
 
 
@@ -58,13 +59,14 @@ public class AnglersAlmanac extends JavaPlugin {
 
         //System Interaction
         SystemRegisteration.registerSystem(this);
+        TriggerEffect.CODEC.register("GiveRod", GiveRodEffect.class, GiveRodEffect.CODEC);
 
 
         //start database
         this.database = new AlmanacDatabase();
         this.Book_IDs = new AlmanacRepository();
-        MOD_CONFIG.save();
-        MINIGAME_CONFIG_TENSIONBAR.save();
+        AnglersAlmanacAPI.getConfig().save();
+        AnglersAlmanacAPI.getMinigameConfig().save();
 
         AnglersAlmanacAPI.setImplementation(database);
         fishLootManager = new FishLootManager();

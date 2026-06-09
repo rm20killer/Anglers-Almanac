@@ -26,6 +26,7 @@ import dev.rm20.anglersalmanac.Metadata.RodStats;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
 import dev.rm20.anglersalmanac.Models.MinigameRodStats;
 import dev.rm20.anglersalmanac.Utils.BaitUtils;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.joml.Vector3d;
 import org.jspecify.annotations.NonNull;
 
@@ -143,7 +144,7 @@ public class ReelBobberInteraction extends SimpleInstantInteraction {
     }
 
     private static @NonNull Vector3d getVector3d(double distance, Vector3d direction, float rodMult) {
-        AnglersAlmanacConfig config = AnglersAlmanac.MOD_CONFIG.get();
+        AnglersAlmanacConfig config = AnglersAlmanacAPI.getConfig().get();
         double baseMultiplier = config.getEntityPullBaseForce();
         double distanceScale = config.getEntityPullDistanceMultiplier();
         double horizontalPower = baseMultiplier + (distance * distanceScale);

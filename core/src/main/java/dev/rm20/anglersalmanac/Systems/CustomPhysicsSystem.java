@@ -7,6 +7,7 @@ import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.protocol.PhysicsConfig;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
@@ -37,7 +38,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         TransformComponent transform = archetypeChunk.getComponent(index, TransformComponent.getComponentType());
         Velocity velocityComp = archetypeChunk.getComponent(index, Velocity.getComponentType());
         BoundingBox boundingBoxComponent = archetypeChunk.getComponent(index, BoundingBox.getComponentType());
-        Boolean shouldHookEntity = AnglersAlmanac.MOD_CONFIG.get().getHookEntities();
+        Boolean shouldHookEntity = AnglersAlmanacAPI.getConfig().get().getHookEntities();
         if (transform == null || velocityComp == null || boundingBoxComponent == null) return;
 
         World world = store.getExternalData().getWorld();

@@ -2,13 +2,11 @@ package dev.rm20.anglersalmanac.Commands;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.pages.PageManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -16,8 +14,6 @@ import dev.rm20.anglersalmanac.Config.ConfigUI;
 import dev.rm20.anglersalmanac.Registration.CommandInfo;
 
 import javax.annotation.Nonnull;
-
-import static com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime.CanDismissOrCloseThroughInteraction;
 
 @CommandInfo(
         name = "OpenConfig",

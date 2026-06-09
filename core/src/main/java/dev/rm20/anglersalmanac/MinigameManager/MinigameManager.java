@@ -15,6 +15,7 @@ import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
 import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
 import dev.rm20.anglersalmanac.Metadata.*;
 import dev.rm20.anglersalmanac.Utils.*;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.jspecify.annotations.NonNull;
 
 public class MinigameManager {
@@ -35,7 +36,7 @@ public class MinigameManager {
         }
 
         // Select which minigame to use from the config and set it up.
-        switch (AnglersAlmanac.MOD_CONFIG.get().getMinigameToUse()) {
+        switch (AnglersAlmanacAPI.getConfig().get().getMinigameToUse()) {
             case "TensionBar":
                 FishingRodData meta = fishingRod.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
                 if (meta == null) {
@@ -62,7 +63,7 @@ public class MinigameManager {
 
 
         // Select which minigame to use from the config and cancel it.
-        switch (AnglersAlmanac.MOD_CONFIG.get().getMinigameToUse()) {
+        switch (AnglersAlmanacAPI.getConfig().get().getMinigameToUse()) {
             case "TensionBar":
                 //AnglersAlmanac.LOGGER.atInfo().log("Canceling TensionBar Minigame");
                 MinigameComponent_TensionBar minigame = commandBuffer.getComponent(minigameRef, MinigameComponent_TensionBar.COMPONENT_TYPE);
@@ -81,7 +82,7 @@ public class MinigameManager {
 
 
     public static boolean DoMinigameInteraction(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> minigameRef, @NonNull InteractionType interactionType, @NonNull InteractionContext context, @NonNull CooldownHandler cooldownHandler) {
-        switch (AnglersAlmanac.MOD_CONFIG.get().getMinigameToUse()) {
+        switch (AnglersAlmanacAPI.getConfig().get().getMinigameToUse()) {
             case "TensionBar":
                 MinigameComponent_TensionBar minigame = commandBuffer.getComponent(minigameRef, MinigameComponent_TensionBar.COMPONENT_TYPE);
                 if (minigame == null) {
