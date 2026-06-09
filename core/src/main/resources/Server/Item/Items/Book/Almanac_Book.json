@@ -64,13 +64,6 @@
   },
   "ItemSoundSetId": "ISS_Weapons_Books",
   "Interactions": {
-    "Secondary": {
-      "Interactions": [
-        {
-          "Parent": "Open_Almanac_Interaction"
-        }
-      ]
-    }
   },
   "Icon": "Icons/ItemsGenerated/Almanac_Book.png",
   "Recipe": {

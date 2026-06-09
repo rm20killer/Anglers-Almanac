@@ -3,7 +3,6 @@ package dev.rm20.anglersalmanac.Utils;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.rm20.anglersalmanac.AnglersAlmanac;
 
 public class FishingPowerUtils {
 
@@ -11,7 +10,7 @@ public class FishingPowerUtils {
     public static float getTotalFishingPower(Store<EntityStore> store, Ref<EntityStore> ref)
     {
         //level based
-        int fishingLevel = AnglersAlmanac.getInstance().skillTree.getFishingLevel(store,ref);
+        int fishingLevel = 1;
 
         float maxLevel = 100f;
         float maxPowerAtCap = 5.0f;
@@ -20,7 +19,7 @@ public class FishingPowerUtils {
 
         //luck
         float luckMultiplier = 5.0f;
-        double fishingLuck = AnglersAlmanac.getInstance().skillTree.getFishingLuck(store,ref);
+        double fishingLuck = 0f;
 
         //200% = 10
         float luckBonus = (float) (fishingLuck * luckMultiplier);

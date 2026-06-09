@@ -26,6 +26,5 @@ public class FishingPower extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNull CommandContext commandContext, @NonNull Store<EntityStore> store, @NonNull Ref<EntityStore> ref, @NonNull PlayerRef playerRef, @NonNull World world) {
         AnglersAlmanac.LOGGER.atInfo().log(String.valueOf(FishingPowerUtils.getTotalFishingPower(store,ref)));
-        AnglersAlmanac.LOGGER.atInfo().log(String.valueOf(AnglersAlmanac.getInstance().skillTree.getFishingLuck(store,ref)));
     }
 }

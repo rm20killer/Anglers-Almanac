@@ -30,7 +30,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.util.InventoryHelper;
-import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.IEvents.LootCaughtEvent;
@@ -263,22 +262,12 @@ public class CatchUtils {
         assert uuid != null;
         boolean isLegendary = loot.getRarity().equalsIgnoreCase("Legendary");
         MinigamePRating.PerformanceRating rating = Minigame.getPerformanceRating(ratingScore);
-        CompletableFuture.supplyAsync(() -> {
-            return AnglersAlmanac.getInstance().database.saveCatch(uuid.getUuid().toString(), loot.getId(), isLegendary, rating);
-        }).thenAccept(isNewDiscovery -> {
-            long endTime = System.currentTimeMillis();
-            long duration = endTime - startTime;
-            if (duration > 100) {
-                AnglersAlmanac.LOGGER.atWarning().log("Slow DB Write: " + duration + "ms for player " + uuid.getUuid());
-            }
-
-            //AnglersAlmanac.LOGGER.atInfo().log("DB Write: " +duration+"ms for player "+uuid.getUuid());
 
 
             if (playerRef1 == null) return;
-            dispatchCaughtFishEvents(loot, isNewDiscovery, isLegendary, player, ratingScore);
-            if (isNewDiscovery) {
-                ItemStack itemStack = new ItemStack(loot.getItemID(),1);
+            dispatchCaughtFishEvents(loot, true, isLegendary, player, ratingScore);
+            if (true) {
+                ItemStack itemStack = new ItemStack(loot.getItemID(), 1);
                 String fishDisplayName = Message.translation(itemStack.getItem().getTranslationKey()).getAnsiMessage();
                 if (isLegendary) {
                     showDiscoveryUI(playerRef1, fishDisplayName, "anglersalmanac.fishing.caught.legDiscovered", Color.YELLOW);
@@ -296,11 +285,6 @@ public class CatchUtils {
                     });
                 }
             }
-            BookPageManager.invalidateCache(String.valueOf(playerRef1.getUuid()));
-        }).exceptionally(ex -> {
-            AnglersAlmanac.LOGGER.atSevere().withCause(ex).log("Database error");
-            return null;
-        });
     }
 
     public static void dispatchCaughtFishEvents(FishLootManager item, boolean isNew, boolean isLegendary, Player player, int ratingScore) {

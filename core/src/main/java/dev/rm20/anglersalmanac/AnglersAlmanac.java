@@ -1,24 +1,17 @@
 package dev.rm20.anglersalmanac;
 
 import com.al3x.HStats;
-import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.Config;
-import dev.rm20.anglersalmanac.AlmanacBook.AlmanacDatabase;
-import dev.rm20.anglersalmanac.AlmanacBook.AlmanacRepository;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Config.AnglersAlmanacConfig;
 import dev.rm20.anglersalmanac.Config.MinigameConfig_TensionBar;
-import dev.rm20.anglersalmanac.Models.BookAssetData;
 import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
-import dev.rm20.anglersalmanac.Utils.Intergration.MMOSkillTree;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
-import dev.rm20.anglersalmanac.triggereffects.GiveRodEffect;
 import lombok.Getter;
 
 
@@ -31,12 +24,8 @@ public class AnglersAlmanac extends JavaPlugin {
     public static ComponentType<EntityStore, BobberComponent> bobberComponent;
 
 
-    public AlmanacDatabase database;
-    public AlmanacRepository Book_IDs;
     public FishLootManager fishLootManager;
-    public BookAssetData bookAssetData;
 
-    public MMOSkillTree skillTree;
     public AnglersAlmanac(@Nonnull JavaPluginInit init) {
         super(init);
         instance = this;
@@ -59,16 +48,12 @@ public class AnglersAlmanac extends JavaPlugin {
 
         //System Interaction
         SystemRegisteration.registerSystem(this);
-        TriggerEffect.CODEC.register("GiveRod", GiveRodEffect.class, GiveRodEffect.CODEC);
 
 
         //start database
-        this.database = new AlmanacDatabase();
-        this.Book_IDs = new AlmanacRepository();
         AnglersAlmanacAPI.getConfig().save();
         AnglersAlmanacAPI.getMinigameConfig().save();
 
-        AnglersAlmanacAPI.setImplementation(database);
         fishLootManager = new FishLootManager();
         AnglersAlmanacAPI.setLootProvider(fishLootManager);
         // Plugin Mod Analytics
@@ -79,13 +64,6 @@ public class AnglersAlmanac extends JavaPlugin {
     @Override
     protected void shutdown() {
         super.shutdown();
-        if (this.database != null) {
-            this.database.close();
-        }
-        if(this.Book_IDs != null)
-        {
-            this.Book_IDs.close();
-        }
     }
 
 
