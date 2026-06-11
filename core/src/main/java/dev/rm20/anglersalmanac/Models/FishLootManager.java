@@ -191,7 +191,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
     private static boolean isEligible(FishLootManager loot, GeoKey key) {
-        if(!AnglersAlmanac.MOD_CONFIG.get().getShouldHabCheck()) return true;
+        if(!AnglersAlmanacAPI.getConfig().get().getShouldHabCheck()) return true;
         Habitats hab = loot.getHabitats();
         if (hab == null) return true;
 
@@ -241,7 +241,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
     private static boolean checkEnvironment(FishLootManager loot, FishingContext ctx) {
-        if(AnglersAlmanac.MOD_CONFIG.get().getShouldEnvironmentCheck()) return true;
+        if(AnglersAlmanacAPI.getConfig().get().getShouldEnvironmentCheck()) return true;
         Habitats hab = loot.getHabitats();
         if (hab == null) return true;
 

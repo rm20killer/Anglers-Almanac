@@ -4,6 +4,7 @@ import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
@@ -171,7 +172,7 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
         } else {
             float timeUntilCatch = component.getTimeUntilCatch();
             if (timeUntilCatch <= 0) {
-                boolean requiresBait = AnglersAlmanac.MOD_CONFIG.get().getShouldUseBait();
+                boolean requiresBait = AnglersAlmanacAPI.getConfig().get().getShouldUseBait();
                 String baitName = component.getBaitName();
                 if (requiresBait && (baitName == null || baitName.isEmpty())) {
                     SendBaitNotification(player);

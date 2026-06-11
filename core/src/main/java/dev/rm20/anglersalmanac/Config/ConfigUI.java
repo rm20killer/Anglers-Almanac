@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import dev.rm20.codecannotation.Annotations.CodecAnnotations;
 import dev.rm20.codecannotation.AutoCodecBuilder;
 
@@ -61,7 +62,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
         uiCommandBuilder.set("#HookEntites.TooltipText", Message.translation("anglersalmanac.config.HookEntities.tooltip"));
 
 
-        var config = AnglersAlmanac.MOD_CONFIG;
+        var config = AnglersAlmanacAPI.getConfig();
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#BaitRequired #CheckBox", EventData.of("@BaitRequired", "#BaitRequired #CheckBox.Value"), false);
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TensionBarEnabled #CheckBox", EventData.of("@TensionBarEnabled", "#TensionBarEnabled #CheckBox.Value"), false);
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#LocationCheck #CheckBox", EventData.of("@LocationCheck", "#LocationCheck #CheckBox.Value"), false);
@@ -83,7 +84,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull BindingData data) {
         super.handleDataEvent(ref, store, data);
 
-        var config = AnglersAlmanac.MOD_CONFIG;
+        var config = AnglersAlmanacAPI.getConfig();
         if (data.BaitRequired != null) {
             // Logic for @BaitRequired
             config.get().setShouldUseBait(data.BaitRequired);
@@ -119,6 +120,6 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.BindingData> {
             this.playerRef.sendMessage(Message.raw("[AA] Hook Entities set to: " + data.HookEntities));
 
         }
-        AnglersAlmanac.MOD_CONFIG.save();
+        AnglersAlmanacAPI.getConfig().save();
     }
 }
