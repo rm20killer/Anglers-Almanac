@@ -8,11 +8,13 @@ on:
     branches: 
       - main
       - SmallerImages
+      - Version/NoBook
     tags: [ 'v*' ]
   pull_request:
     branches: 
       - main
       - SmallerImages
+      - Version/NoBook
 
 jobs:
   build:
