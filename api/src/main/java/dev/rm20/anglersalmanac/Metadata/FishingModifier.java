@@ -44,6 +44,12 @@ public class FishingModifier {
         @CodecAnnotations.Field("Items")
         public FishingModifier[] itemModifiers;
 
+        @CodecAnnotations.Field("Rarity")
+        public FishingModifier[] rarityModifiers;
+
+        @CodecAnnotations.Field("Category")
+        public FishingModifier[] categoryModifiers;
+
         @CodecAnnotations.Field("DefaultMultiplier")
         public float defaultMultiplier = 1.0f;
 
@@ -59,8 +65,10 @@ public class FishingModifier {
         java.util.Map<String, Float> regionMap = new java.util.HashMap<>();
         java.util.Map<String, Float> familyMap = new java.util.HashMap<>();
         java.util.Map<String, Float> itemMap = new java.util.HashMap<>();
+        java.util.Map<String, Float> rarityMap = new java.util.HashMap<>();
+        java.util.Map<String, Float> categoryMap = new java.util.HashMap<>();
         float combinedDefault = 1.0f;
-        float combinedPower = 1.0f;
+        float combinedPower = 0f;
         for (FishingModifier.Modifiers mod : modifiers) {
             if (mod == null) continue;
             combinedPower+=mod.fishingPower;
@@ -69,6 +77,8 @@ public class FishingModifier {
             mergeIntoMap(regionMap, mod.regionModifiers);
             mergeIntoMap(familyMap, mod.familyModifiers);
             mergeIntoMap(itemMap, mod.itemModifiers);
+            mergeIntoMap(rarityMap, mod.rarityModifiers);
+            mergeIntoMap(categoryMap, mod.categoryModifiers);
 
             combinedDefault *= mod.defaultMultiplier;
         }
@@ -78,6 +88,8 @@ public class FishingModifier {
         master.regionModifiers = mapToArray(regionMap);
         master.familyModifiers = mapToArray(familyMap);
         master.itemModifiers = mapToArray(itemMap);
+        master.rarityModifiers = mapToArray(rarityMap);
+        master.categoryModifiers = mapToArray(categoryMap);
         master.defaultMultiplier = combinedDefault;
 
         return master;
