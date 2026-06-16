@@ -65,8 +65,10 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         // 1. Precise Fluid Check
         // We check the fluid at the current position
         int fluidId = world.getFluidId((int)position.x, (int)Math.floor(position.y), (int)position.z);
-        boolean inWater = (fluidId == 7||fluidId == 8||fluidId == 12);
-//        playedWaterSFX =false;
+        // AnglersAlmanac.LOGGER.atInfo().log("Liquid: " + fluidId);
+        // water 2 and 9
+        boolean inWater = (fluidId == 2||fluidId == 9);
+        // playedWaterSFX =false;
         // 2. Apply Forces
         if (inWater) {
             if(!bobberComp.InWater())
