@@ -238,7 +238,8 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         // Scan upwards from current block to find air
         // Limit to 10 blocks to prevent lag
         for (int y = startY; y < startY + 10; y++) {
-            if (world.getFluidId(x, y + 1, z) != 7) {
+            int fluidId = world.getFluidId(x, y + 1, z);
+            if (fluidId == 2 || fluidId == 9) {
                 return (double) y + 1.0;
             }
         }
@@ -254,7 +255,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         for (int i = 0; i < 32; i++) {
             int currentY = startY - i;
             int fluidId = world.getFluidId(x, currentY, z);
-            if (fluidId == 7 || fluidId == 8 || fluidId == 12) {
+            if (fluidId == 2 || fluidId == 9) {
                 depth++;
             } else {
                 break;
