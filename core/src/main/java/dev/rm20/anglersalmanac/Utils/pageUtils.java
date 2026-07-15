@@ -64,6 +64,7 @@ public class pageUtils {
 
             // Text
             ui.set(slotPath + "#FishImage" + ".AssetPath", imagePath);
+            ui.set(slotPath + "#FishImage" + ".Visible", true); //BlueOrbit
             ui.set(slotPath + "#Header" + ".TextSpans", Message.raw(data.getName()));
             ui.set(slotPath + "#CountNumber" + ".TextSpans", Message.raw(String.valueOf(fishCount)));
             ui.set(slotPath + "#Family" + ".TextSpans", Message.raw(TextUtils.formatDisplayName(data.getFamilyId())));
@@ -73,12 +74,13 @@ public class pageUtils {
             //Not caught
             String imagePath = (data.getBookInfo() != null && data.getBookInfo().image_file != null)
                     ? data.getBookInfo().image_file
-                    : "UI/Custom/Almanac/Fish/FishAssets/" + imageFile + "_Missing.png";
+                    : "UI/Custom/Almanac/Fish/FishAssets/" + imageFile + ".png";
             ui.set(slotPath + "#Header" + ".TextSpans", Message.raw(TextUtils.seededScrambleText(data.getName())));
             ui.set(slotPath + "#CountNumber" + ".TextSpans", Message.raw(" Not found"));
             ui.set(slotPath + "#Family"  + ".TextSpans", Message.raw(TextUtils.seededScrambleText(data.getFamilyId())));
             ui.set(slotPath + "#Description"  + ".TextSpans", Message.raw(TextUtils.seededScrambleText(data.getDescription())));
-            ui.set(slotPath + "#FishImage"  + ".AssetPath", imagePath);
+            ui.set(slotPath + "#MaskFishImage"  + ".AssetPath", imagePath); //BlueOrbit
+            ui.set(slotPath + "#MaskFishImage"  + ".Visible", true); //BlueOrbit
             ui.set(slotPath + "#StampImage"  + ".Visible", false);
             ui.set(slotPath + "#HabitatSection" + ".Visible", false);
         }

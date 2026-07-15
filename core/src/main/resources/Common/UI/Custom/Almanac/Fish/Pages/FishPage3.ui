@@ -20,9 +20,15 @@ Group #FPageContent {
     }
   }
 
-  Group #FishContainer {
-    Anchor: (Top: 70, Left: 30, Width: 250, Height: 250);
+Group #FishContainer {
+    Anchor: (Top: 100, Left: 50, Width: 250, Height: 250);
     AssetImage #FishImage {
+      Visible: false;
+    }
+
+    AssetImage #MaskFishImage {
+      Visible: true;
+      MaskTexturePath:"HiddenFishMask.png";
     }
   }
 

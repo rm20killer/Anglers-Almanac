@@ -18,9 +18,16 @@ Group #PageContent {
     }
   }
 
-  Group #FishContainer {
+Group #FishContainer {
     Anchor: (Top: 100, Left: 50, Width: 250, Height: 250);
-    AssetImage #FishImage {}
+    AssetImage #FishImage {
+      Visible: false;
+    }
+
+    AssetImage #MaskFishImage {
+      Visible: true;
+      MaskTexturePath:"HiddenFishMask.png";
+    }
   }
 
   Group #QuickStats {

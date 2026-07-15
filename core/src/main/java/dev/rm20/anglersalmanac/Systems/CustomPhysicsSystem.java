@@ -239,7 +239,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         // Limit to 10 blocks to prevent lag
         for (int y = startY; y < startY + 10; y++) {
             int fluidId = world.getFluidId(x, y + 1, z);
-            if (fluidId == 2 || fluidId == 9) {
+            if (fluidId == 2) {
                 return (double) y + 1.0;
             }
         }
