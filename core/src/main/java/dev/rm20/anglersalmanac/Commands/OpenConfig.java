@@ -23,6 +23,7 @@ public class OpenConfig extends AbstractPlayerCommand {
 
     public OpenConfig(@Nonnull String name, @Nonnull String description) {
         super(name, description);
+        requirePermission("AnglersAlmanac.admin");
     }
 
     @Override

@@ -4,8 +4,15 @@ import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.math.vector.Rotation3fc;
+import com.hypixel.hytale.protocol.BlockMaterial;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.fluid.Fluid;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.FluidSection;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
+import dev.rm20.anglersalmanac.AnglersAlmanac;
 import org.joml.*;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -131,9 +138,15 @@ public class TransformUtils {
     }
 
     public static boolean isInFluid(Vector3i pos, World world){
-        int occupiedBlockId = world.getFluidId(pos.x, pos.y, pos.z);
-        // Is any fluid.
-        return occupiedBlockId != 0;
+        int chunkX = ChunkUtil.chunkCoordinate(pos.x);
+        int sectionY = ChunkUtil.indexSection(pos.y);
+        int chunkZ = ChunkUtil.chunkCoordinate(pos.z);
+        int blockIndex = ChunkUtil.indexBlock(pos.x,pos.y,pos.z);
+        Ref<ChunkStore> sectionRef = world.getChunkStore().getChunkSectionReference(chunkX, sectionY, chunkZ);
+        FluidSection fluidSection = world.getChunkStore().getStore().getComponent(sectionRef, FluidSection.getComponentType());
+        int fluid = fluidSection.getFluidId(blockIndex);
+        //AnglersAlmanac.LOGGER.atInfo().log(String.valueOf(fluid));
+        return fluid != 0;
     }
 
     public static float lerp(float start, float end, float t) {

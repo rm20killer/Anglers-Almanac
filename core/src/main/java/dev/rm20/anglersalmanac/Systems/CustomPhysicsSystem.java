@@ -2,14 +2,13 @@ package dev.rm20.anglersalmanac.Systems;
 
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
-import com.hypixel.hytale.component.spatial.SpatialData;
 import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.shape.Box;
-import com.hypixel.hytale.protocol.PhysicsConfig;
-import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
-import org.joml.Vector3d;
+import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.protocol.SoundCategory;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.fluid.Fluid;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.modules.collision.BlockCollisionData;
 import com.hypixel.hytale.server.core.modules.collision.CollisionModule;
@@ -19,20 +18,25 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.accessor.LocalCachedChunkAccessor;
+import com.hypixel.hytale.server.core.universe.world.accessor.OverridableChunkAccessor;
+import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.FluidSection;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
-import dev.rm20.anglersalmanac.Components.PhysicsComponent;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
+import dev.rm20.anglersalmanac.Components.PhysicsComponent;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
+import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
     @Override
-    public void tick(float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk,
-                     @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+    public void tick(float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
 
         BobberComponent bobberComp = archetypeChunk.getComponent(index, BobberComponent.getComponentType());
         TransformComponent transform = archetypeChunk.getComponent(index, TransformComponent.getComponentType());
@@ -63,28 +67,23 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         }
 
         // 1. Precise Fluid Check
-        // We check the fluid at the current position
-        int fluidId = world.getFluidId((int)position.x, (int)Math.floor(position.y), (int)position.z);
-        // AnglersAlmanac.LOGGER.atInfo().log("Liquid: " + fluidId);
-        // water 2 and 9
-        boolean inWater = (fluidId == 2||fluidId == 9);
+        boolean inWater = isInWater(world, position);
+
         // playedWaterSFX =false;
         // 2. Apply Forces
         if (inWater) {
-            if(!bobberComp.InWater())
-            {
+            if (!bobberComp.InWater()) {
                 bobberComp.setInWater(true);
                 //Audio
                 int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Water");
                 EntityStore store2 = world.getEntityStore();
                 world.execute(() -> {
-                    SoundUtil.playSoundEvent3d(audio,SoundCategory.SFX, position, store2.getStore());
+                    SoundUtil.playSoundEvent3d(audio, SoundCategory.SFX, position, store2.getStore());
                 });
             }
             applyWaterForces(dt, position, velocity, bobberComp, world);
         } else {
-            if(bobberComp.InWater())
-            {
+            if (bobberComp.InWater()) {
                 bobberComp.setInWater(false);
             }
             // Apply Air Gravity
@@ -124,14 +123,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         }
         result.collisionEntities = candidates;
 
-        CollisionModule.findCollisions(
-                box,
-                position,
-                scaledVel,
-                true,
-                result,
-                store
-        );
+        CollisionModule.findCollisions(box, position, scaledVel, true, result, store);
 
         if (!bobberComp.isHookedToEntity() && result.getCharacterCollisionCount() > 0) {
             com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData targetData = result.getCharacterCollision(0);
@@ -214,8 +206,8 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
     }
 
     private void applyWaterForces(float dt, Vector3d position, Vector3d velocity, BobberComponent bobber, World world) {
-        double waterTop = getWaterSurfaceLevel(world,position);
-        bobber.setWaterDepth(calculateWaterDepth(world,position,waterTop));
+        double waterTop = getWaterSurfaceLevel(world, position);
+        bobber.setWaterDepth(calculateWaterDepth(world, position, waterTop));
 //        AnglersAlmanac.LOGGER.atInfo().log(String.valueOf(bobber.getWaterDepth()));
         double targetY = waterTop - 0.25;
 
@@ -232,18 +224,19 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
 
     private double getWaterSurfaceLevel(World world, Vector3d position) {
         int startY = (int) Math.floor(position.y);
-        int x = (int) position.x;
-        int z = (int) position.z;
+        int x = (int) Math.floor(position.x);
+        int z = (int) Math.floor(position.z);
 
         // Scan upwards from current block to find air
         // Limit to 10 blocks to prevent lag
         for (int y = startY; y < startY + 10; y++) {
-            int fluidId = world.getFluidId(x, y + 1, z);
-            if (fluidId == 2 || fluidId == 9) {
-                return (double) y + 1.0;
+            // If the block above is water, continue stepping up
+            if (isInWater(world, new Vector3d(x, y + 1, z))) {
+                continue;
             }
+            return (double) y + 1.0;
         }
-        return startY + 1.0;
+        return (double) startY + 1.0;
     }
 
     private int calculateWaterDepth(World world, Vector3d position, double surfaceY) {
@@ -254,13 +247,13 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         //limit to 32
         for (int i = 0; i < 32; i++) {
             int currentY = startY - i;
-            int fluidId = world.getFluidId(x, currentY, z);
-            if (fluidId == 2 || fluidId == 9) {
+            if (isInWater(world, new Vector3d(x, currentY + 1, z))) {
                 depth++;
             } else {
                 break;
             }
         }
+
         return depth;
     }
 
@@ -270,8 +263,28 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         return Query.and(PhysicsComponent.getComponentType());
     }
 
-    private void playWaterSFX()
-    {
+    private void playWaterSFX() {
 
+    }
+
+
+    public static boolean isInWater(World world, Vector3d pos) {
+        if (world == null || pos == null) return false;
+
+
+        Fluid fluidId = getFluidId((int) pos.x, (int) pos.y, (int) pos.z, world);
+        if(fluidId == null) return false;
+        return fluidId.getId().toLowerCase().contains("water");
+    }
+
+    public static Fluid getFluidId(int x, int y, int z, World world) {
+        int chunkX = ChunkUtil.chunkCoordinate(x);
+        int sectionY = ChunkUtil.indexSection(y);
+        int chunkZ = ChunkUtil.chunkCoordinate(z);
+        int blockIndex = ChunkUtil.indexBlock(x,y,z);
+        Ref<ChunkStore> sectionRef = world.getChunkStore().getChunkSectionReference(chunkX, sectionY, chunkZ);
+        FluidSection fluidSection = world.getChunkStore().getStore().getComponent(sectionRef, FluidSection.getComponentType());
+        Fluid fluid = fluidSection.getFluid(blockIndex);
+        return fluid;
     }
 }

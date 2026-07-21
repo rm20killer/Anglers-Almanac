@@ -16,7 +16,6 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.PersistentModel;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
@@ -43,7 +42,6 @@ import java.util.concurrent.TimeUnit;
 public class MinigameComponent_TensionBar extends Minigame implements Component<EntityStore> {
     public static ComponentType<EntityStore, MinigameComponent_TensionBar> COMPONENT_TYPE;
 
-
     public MinigameComponent_TensionBar() {
 
     }
@@ -66,7 +64,6 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
     public enum Trigger {NOTRIGGER, FISHMOVE, SUCCESS, FAIL, DONE}
 
     public Trigger stateTrigger = Trigger.NOTRIGGER;
-    public UUID minigameFishModelId;
     //public UUID minigameBarModelId;
     public HashMap<String, UUID> gameModels = new HashMap<>();
     public UUID audioPlayerId;
@@ -102,13 +99,22 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         component.setPoints(getPoints());
         component.setPerfectScore(getPerfectScore());
         component.stateTrigger = this.stateTrigger;
+
+        component.gameModels = new HashMap<>(this.gameModels);
+        component.barModelEntityIds = new ArrayList<>(this.barModelEntityIds);
+        component.audioPlayerId = this.audioPlayerId;
+        component.gameConfig = this.gameConfig != null ? this.gameConfig.clone() : null;
+        component.fishStats = this.fishStats;
+        component.fishingRod = this.fishingRod;
+        component.Slot = this.Slot;
+        component.DroppedItem = this.DroppedItem;
+
         return component;
     }
 
     public static ComponentType<EntityStore, MinigameComponent_TensionBar> getComponentType() {
         return COMPONENT_TYPE;
     }
-
 
     public static MinigameComponent_TensionBar spawnMinigame(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> playerRef, Ref<EntityStore> bobberRef, String rodAssetId) {
         Vector3d bobberPos = new Vector3d(commandBuffer.getComponent(bobberRef, TransformComponent.getComponentType()).getPosition());
@@ -247,6 +253,8 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         Holder<EntityStore> fishModelEntity = EntityStore.REGISTRY.newHolder();
         UUID fishModelId = UUIDUtil.generateVersion3UUID();
         fishModelEntity.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(fishModelId));
+        fishModelEntity.addComponent(MinigameWidgetComponent.COMPONENT_TYPE, new MinigameWidgetComponent(selfUUID));
+
         gameModels.put("fish", fishModelId);
 
 
@@ -261,7 +269,6 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(fishIcon);
         if (modelAsset == null) modelAsset = ModelAsset.DEBUG;
         Model model = Model.createScaledModel(modelAsset, 0.5f * minigameScale);
-        fishModelEntity.addComponent(PersistentModel.getComponentType(), new PersistentModel(model.toReference()));
         fishModelEntity.addComponent(ModelComponent.getComponentType(), new ModelComponent(model));
         fishModelEntity.addComponent(BoundingBox.getComponentType(), new BoundingBox(model.getBoundingBox()));
 
@@ -290,10 +297,12 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
             Holder<EntityStore> barModelEntity = EntityStore.REGISTRY.newHolder();
             UUID barModelEntityId = UUID.randomUUID();
             barModelEntity.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(barModelEntityId));
+            barModelEntity.addComponent(MinigameWidgetComponent.COMPONENT_TYPE, new MinigameWidgetComponent(selfUUID));
             gameModels.put("bar_" + i, barModelEntityId);
             barModelEntityIds.add(barModelEntityId);
 
             // Assign transform to minigame and move it above the bobber.
+
             barModelEntity.addComponent(TransformComponent.getComponentType(), new TransformComponent());
             Vector3d newBarPos = new Vector3d(gamePos);
             newBarPos.add(new Vector3d(0, (barPos * minigameScale), 0));
@@ -313,7 +322,6 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
             Model barModel = Model.createScaledModel(barModelAsset, minigameScale);
 
             ModelComponent barModelComponent = new ModelComponent(barModel);
-            barModelEntity.addComponent(PersistentModel.getComponentType(), new PersistentModel(barModel.toReference()));
             barModelEntity.addComponent(ModelComponent.getComponentType(), barModelComponent);
             barModelEntity.addComponent(BoundingBox.getComponentType(), new BoundingBox(barModel.getBoundingBox()));
 
@@ -360,6 +368,8 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         Holder<EntityStore> frameUpperModelEntity = EntityStore.REGISTRY.newHolder();
         UUID frameUpperModelEntityId = UUID.randomUUID();
         frameUpperModelEntity.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(frameUpperModelEntityId));
+
+        frameUpperModelEntity.addComponent(MinigameWidgetComponent.COMPONENT_TYPE, new MinigameWidgetComponent(selfUUID));
         gameModels.put("frameUpper", frameUpperModelEntityId);
 
         frameUpperModelEntity.addComponent(TransformComponent.getComponentType(), new TransformComponent());
@@ -376,6 +386,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         frameLowerModelEntity.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(frameLowerModelEntityId));
         gameModels.put("frameLower", frameLowerModelEntityId);
 
+        frameLowerModelEntity.addComponent(MinigameWidgetComponent.COMPONENT_TYPE, new MinigameWidgetComponent(selfUUID));
         frameLowerModelEntity.addComponent(TransformComponent.getComponentType(), new TransformComponent());
         Vector3d lowerFramePos = new Vector3d(gamePos);
         layering = new Vector3d(lowerFramePos).add(TransformUtils.moveAwayFrom(new Vector3d(lowerFramePos), new Vector3d(playerPos), 0.2));
@@ -390,12 +401,10 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         if (frameModelAsset == null) frameModelAsset = ModelAsset.DEBUG;
 
         Model frameModel = Model.createScaledModel(frameModelAsset, minigameScale * 0.5f);
-        frameUpperModelEntity.addComponent(PersistentModel.getComponentType(), new PersistentModel(frameModel.toReference()));
         frameUpperModelEntity.addComponent(ModelComponent.getComponentType(), new ModelComponent(frameModel));
         frameUpperModelEntity.addComponent(BoundingBox.getComponentType(), new BoundingBox(frameModel.getBoundingBox()));
 
         //Model frameLowerModel = Model.createScaledModel(frameModelAsset, minigameScale * 0.5f);
-        frameLowerModelEntity.addComponent(PersistentModel.getComponentType(), new PersistentModel(frameModel.toReference()));
         frameLowerModelEntity.addComponent(ModelComponent.getComponentType(), new ModelComponent(frameModel));
         frameLowerModelEntity.addComponent(BoundingBox.getComponentType(), new BoundingBox(frameModel.getBoundingBox()));
 
@@ -416,6 +425,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         Holder<EntityStore> catchZoneEntity = EntityStore.REGISTRY.newHolder();
         UUID catchZoneEntityId = UUID.randomUUID();
         catchZoneEntity.addComponent(UUIDComponent.getComponentType(), new UUIDComponent(catchZoneEntityId));
+        catchZoneEntity.addComponent(MinigameWidgetComponent.COMPONENT_TYPE, new MinigameWidgetComponent(selfUUID));
         gameModels.put("catchZone", catchZoneEntityId);
 
         Vector3d catchZonePos = new Vector3d(gamePos);
@@ -429,7 +439,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
             //AnglersAlmanac.LOGGER.atInfo().log("i: %s, stepping: %s",i, checkPos.clone());
             if (TransformUtils.isInFluid(new Vector3i((int) checkPos.x, (int) checkPos.y, (int) checkPos.z), world)) {
                 catchZonePos = new Vector3d((int) checkPos.x, (int) checkPos.y, (int) checkPos.z).add(new Vector3d(0.5, 1.0, 0.5));
-                //AnglersAlmanac.LOGGER.atInfo().log("in water: %s", catchZonePos.clone());
+                //AnglersAlmanac.LOGGER.atInfo().log("in water: %s", catchZonePos.toString());
                 break;
             }
         }
@@ -439,7 +449,6 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
 
         ModelAsset catchZoneModelAsset = ModelAsset.getAssetMap().getAsset("AA_FishCatchZone");
         Model catchZoneModel = Model.createScaledModel(catchZoneModelAsset, 2f);
-        catchZoneEntity.addComponent(PersistentModel.getComponentType(), new PersistentModel(catchZoneModel.toReference()));
         catchZoneEntity.addComponent(ModelComponent.getComponentType(), new ModelComponent(catchZoneModel));
         catchZoneEntity.addComponent(BoundingBox.getComponentType(), new BoundingBox(catchZoneModel.getBoundingBox()));
 
