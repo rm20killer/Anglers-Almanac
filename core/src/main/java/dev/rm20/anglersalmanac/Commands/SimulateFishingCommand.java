@@ -31,6 +31,7 @@ public class SimulateFishingCommand extends AbstractPlayerCommand {
 
     public SimulateFishingCommand(String name, String description) {
         super(name, description);
+        requirePermission("AnglersAlmanac.admin");
     }
 
     @Override

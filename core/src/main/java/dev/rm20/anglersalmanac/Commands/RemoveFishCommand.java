@@ -29,6 +29,7 @@ public class RemoveFishCommand extends AbstractPlayerCommand {
 
     public RemoveFishCommand(@Nonnull String name, @Nonnull String description) {
         super(name, description);
+        requirePermission("AnglersAlmanac.admin");
         this.fishArg = this.withRequiredArg("fishId", "The fish ID or '*' for all", ArgTypes.STRING);
     }
 

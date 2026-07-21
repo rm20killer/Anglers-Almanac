@@ -29,6 +29,7 @@ public class HabitatCommand extends AbstractPlayerCommand {
 
     public HabitatCommand(String name, String description) {
         super(name, description);
+        requirePermission("AnglersAlmanac.admin");
     }
 
     @Override
