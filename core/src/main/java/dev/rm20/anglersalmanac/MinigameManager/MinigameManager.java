@@ -9,19 +9,20 @@ import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
-import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
-import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
 import dev.rm20.anglersalmanac.Metadata.*;
+import dev.rm20.anglersalmanac.Minigame.FishingMinigameHandler;
+import dev.rm20.anglersalmanac.Minigame.MinigameRegistry;
 import dev.rm20.anglersalmanac.Utils.*;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.jspecify.annotations.NonNull;
 
 public class MinigameManager {
-    public static void StartGame(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
 
-        InventoryComponent.Hotbar hotbarComp = player.getReference().getStore().getComponent(player.getReference(), InventoryComponent.Hotbar.getComponentType());
+    public static void StartGame(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
+        InventoryComponent.Hotbar hotbarComp = player.getReference().getStore().getComponent(
+                player.getReference(), InventoryComponent.Hotbar.getComponentType()
+        );
         if (hotbarComp == null) {
             return;
         }
@@ -30,74 +31,37 @@ public class MinigameManager {
         if (fishingRod == null) {
             return;
         }
+
+        String minigameKey = resolveMinigame();
+
         BobberComponent bobberComp = bobberRef.getStore().getComponent(bobberRef, BobberComponent.getComponentType());
         if (bobberComp != null) {
             bobberComp.setMinigameActive(true);
+            bobberComp.setMinigameId(minigameKey);
         }
+        FishingMinigameHandler handler = MinigameRegistry.get(minigameKey)
+                .orElseGet(() -> MinigameRegistry.get("NoMinigame").orElseThrow());
 
-        // Select which minigame to use from the config and set it up.
-        switch (AnglersAlmanacAPI.getConfig().get().getMinigameToUse()) {
-            case "TensionBar":
-                FishingRodData meta = fishingRod.getFromMetadataOrNull(FishingRodData.KEYED_CODEC);
-                if (meta == null) {
-                    UseRodInteraction.cancelFishing(commandBuffer, player, fishingRod);
-                    break;
-                }
-                MinigameComponent_TensionBar minigame = MinigameComponent_TensionBar.spawnMinigame(commandBuffer, player.getReference(), bobberRef, fishingRod.getItemId());
-                UseRodInteraction.updateMetadata(hotbarComp, hotbarComp.getActiveSlot(), hotbarComp.getActiveItem(), meta.getBoundBobber(), minigame.selfUUID, 1);
-                break;
-            case "NoMinigame":
-                CatchUtils.DropLoot(CatchUtils.FirstRoll(bobberRef, player, commandBuffer, depth), player, commandBuffer, bobberRef, -1);
-                UseRodInteraction.cancelFishing(commandBuffer, player, fishingRod);
-                break;
-            default: // No Minigame, just reel fish.
-                CatchUtils.DropLoot(CatchUtils.FirstRoll(bobberRef, player, commandBuffer, depth), player, commandBuffer, bobberRef, -1);
-                UseRodInteraction.cancelFishing(commandBuffer, player, fishingRod);
-                break;
-        }
-
-
+        handler.startGame(bobberRef, player, commandBuffer, depth, fishingRod);
     }
 
     public static void CancelGame(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> minigameRef) {
+        String minigameKey = resolveMinigame();
 
-
-        // Select which minigame to use from the config and cancel it.
-        switch (AnglersAlmanacAPI.getConfig().get().getMinigameToUse()) {
-            case "TensionBar":
-                //AnglersAlmanac.LOGGER.atInfo().log("Canceling TensionBar Minigame");
-                MinigameComponent_TensionBar minigame = commandBuffer.getComponent(minigameRef, MinigameComponent_TensionBar.COMPONENT_TYPE);
-                if (minigame == null) {
-                    AnglersAlmanac.LOGGER.atWarning().log("Missing ref for minigame");
-                    return;
-                } else {
-                    minigame.despawnSelf(commandBuffer.getExternalData().getWorld());
-                }
-                break;
-            default: //no Minigame
-                break;
-        }
-
+        MinigameRegistry.get(minigameKey).ifPresent(handler -> handler.cancelGame(commandBuffer, minigameRef));
     }
-
 
     public static boolean DoMinigameInteraction(CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> minigameRef, @NonNull InteractionType interactionType, @NonNull InteractionContext context, @NonNull CooldownHandler cooldownHandler) {
-        switch (AnglersAlmanacAPI.getConfig().get().getMinigameToUse()) {
-            case "TensionBar":
-                MinigameComponent_TensionBar minigame = commandBuffer.getComponent(minigameRef, MinigameComponent_TensionBar.COMPONENT_TYPE);
-                if (minigame == null) {
-                    CancelGame(commandBuffer, minigameRef);
-                    AnglersAlmanac.LOGGER.atWarning().log("Missing ref for minigame");
-                    return false;
-                } else {
-                    minigame.DoInteraction(interactionType, context, cooldownHandler);
-                }
-                break;
-            default: //no Minigame
-                break;
-        }
-        return true;
+        String minigameKey = resolveMinigame();
+
+        return MinigameRegistry.get(minigameKey)
+                .map(handler -> handler.handleInteraction(commandBuffer, minigameRef, interactionType, context, cooldownHandler))
+                .orElse(false);
     }
 
 
+
+    private static String resolveMinigame() {
+        return AnglersAlmanacAPI.getConfig().get().getMinigameToUse();
+    }
 }

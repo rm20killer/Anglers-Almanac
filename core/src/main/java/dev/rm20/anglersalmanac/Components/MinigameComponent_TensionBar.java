@@ -47,7 +47,6 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
     }
 
     private final boolean DEBUG = true;
-
     // Internal use:
     public float fightProgress = 0.25f; // The progress to successful catch. Success when progress is at 1f.
     public float fishPos = 0f; // The position of the fish in the bar as a scale from 0 - 1.

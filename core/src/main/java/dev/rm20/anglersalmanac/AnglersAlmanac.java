@@ -13,6 +13,9 @@ import dev.rm20.anglersalmanac.AlmanacBook.AlmanacRepository;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Config.AnglersAlmanacConfig;
 import dev.rm20.anglersalmanac.Config.MinigameConfig_TensionBar;
+import dev.rm20.anglersalmanac.Minigame.MinigameRegistry;
+import dev.rm20.anglersalmanac.MinigameManager.Handlers.NoMinigameHandler;
+import dev.rm20.anglersalmanac.MinigameManager.Handlers.TensionBarMinigameHandler;
 import dev.rm20.anglersalmanac.Models.BookAssetData;
 import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
@@ -71,6 +74,8 @@ public class AnglersAlmanac extends JavaPlugin {
         AnglersAlmanacAPI.setImplementation(database);
         fishLootManager = new FishLootManager();
         AnglersAlmanacAPI.setLootProvider(fishLootManager);
+        MinigameRegistry.register("TensionBar", new TensionBarMinigameHandler());
+        MinigameRegistry.register("NoMinigame", new NoMinigameHandler());
         // Plugin Mod Analytics
         new HStats("55078602-d7a1-4794-b30c-f42529f3d1d4", getManifest().getVersion().toString());
     }

@@ -26,6 +26,7 @@ public class BobberComponent implements Component<EntityStore> {
     public ItemStack fishingRod = null;
     public byte slot = 0;
     private boolean minigameActive = false;
+    private String minigameId = null;
     private Ref<EntityStore> hookedEntity = null;
     public BobberComponent() {
         this.bobberAge = 0;
@@ -35,7 +36,7 @@ public class BobberComponent implements Component<EntityStore> {
         this.InWater = false;
         this.WaterDepth = 0;
         this.minigameActive = false;
-
+        this.minigameId = null;
         this.baitName = null;
     }
 
@@ -47,7 +48,7 @@ public class BobberComponent implements Component<EntityStore> {
         this.InWater = false;
         this.WaterDepth = 0;
         this.minigameActive = false;
-
+        this.minigameId = null;
         this.baitName = Bait;
     }
 
@@ -99,6 +100,7 @@ public class BobberComponent implements Component<EntityStore> {
         component.baitName = this.baitName;
         component.hookedEntity = this.hookedEntity;
         component.minigameActive = this.minigameActive;
+        component.minigameId = this.minigameId;
         return component;
     }
 }

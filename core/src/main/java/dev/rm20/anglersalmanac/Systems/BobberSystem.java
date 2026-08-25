@@ -3,16 +3,16 @@ package dev.rm20.anglersalmanac.Systems;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
-import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
-import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -21,6 +21,8 @@ import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
+import dev.rm20.anglersalmanac.Utils.LineRender.FishingLineRender;
+import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
@@ -42,23 +44,19 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
         BobberComponent component = archetypeChunk.getComponent(i, BobberComponent.getComponentType());
         TransformComponent transform = archetypeChunk.getComponent(i, TransformComponent.getComponentType());
         Player player;
-        if(component !=null)
-        {
+        TransformComponent playerTransform = null;
+        if (component != null) {
             player = component.getPlayer();
             if (player == null) {
                 UUIDComponent uuidComponent = archetypeChunk.getComponent(i, UUIDComponent.getComponentType());
-                if(uuidComponent != null)
-                {
+                if (uuidComponent != null) {
                     AnglersAlmanac.LOGGER.atInfo().log("No player found for BobberSystem: " + uuidComponent.getUuid());
                 }
                 try {
                     commandBuffer.getExternalData().getWorld().execute(() -> {
-                        if(archetypeChunk.getReferenceTo(i).isValid())
-                        {
+                        if (archetypeChunk.getReferenceTo(i).isValid()) {
                             store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
-                        }
-                        else
-                        {
+                        } else {
                             AnglersAlmanac.LOGGER.atWarning().log("Something went wrong with the bobber");
                         }
                     });
@@ -66,20 +64,14 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                     AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                 }
                 return;
-            }
-            else
-            {
-                if(player.getReference() == null)
-                {
+            } else {
+                if (player.getReference() == null) {
                     AnglersAlmanac.LOGGER.atInfo().log("BobberSystem was attached to player that no longer is there, removing");
                     try {
                         commandBuffer.getExternalData().getWorld().execute(() -> {
-                            if(archetypeChunk.getReferenceTo(i).isValid())
-                            {
+                            if (archetypeChunk.getReferenceTo(i).isValid()) {
                                 store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
-                            }
-                            else
-                            {
+                            } else {
                                 AnglersAlmanac.LOGGER.atWarning().log("Something went wrong with the bobber");
                             }
                         });
@@ -87,16 +79,12 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                         AnglersAlmanac.LOGGER.atWarning().withCause(e).log("Failed to remove bobber");
                     }
                 }
-                if(player.getReference() == null)
-                {
+                if (player.getReference() == null) {
                     try {
                         commandBuffer.getExternalData().getWorld().execute(() -> {
-                            if(archetypeChunk.getReferenceTo(i).isValid())
-                            {
+                            if (archetypeChunk.getReferenceTo(i).isValid()) {
                                 store.removeEntity(archetypeChunk.getReferenceTo(i), RemoveReason.REMOVE);
-                            }
-                            else
-                            {
+                            } else {
                                 AnglersAlmanac.LOGGER.atWarning().log("Something went wrong with the bobber (no player ref)");
                             }
                         });
@@ -105,20 +93,19 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                     }
                     return;
                 }
-                TransformComponent playerTransform = commandBuffer.getComponent(player.getReference(), TransformComponent.getComponentType());
-                Vector3d playerPos = playerTransform != null ? playerTransform.getPosition() : new Vector3d(0,-64,0);
-                double distSq = getDistanceSquared(playerPos, transform != null ? transform.getPosition() : new Vector3d(0,-129,0));
+                playerTransform = commandBuffer.getComponent(player.getReference(), TransformComponent.getComponentType());
+                Vector3d playerPos = playerTransform != null ? playerTransform.getPosition() : new Vector3d(0, -64, 0);
+                double distSq = getDistanceSquared(playerPos, transform != null ? transform.getPosition() : new Vector3d(0, -129, 0));
                 if (distSq > DespawnRange) {
                     Ref<EntityStore> playerref = player.getReference();
                     if (playerref != null) {
                         UseRodInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
                     }
                     PlayerRef playerRef1 = playerref.getStore().getComponent(playerref, PlayerRef.getComponentType());
-                    if(playerRef1 == null)
-                    {
+                    if (playerRef1 == null) {
                         UseRodInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
                     }
-                    AnglersAlmanac.LOGGER.atInfo().log(playerRef1.getUsername()+" To far away from bobber, Despawn");
+                    AnglersAlmanac.LOGGER.atInfo().log(playerRef1.getUsername() + " To far away from bobber, Despawn");
                     UseRodInteraction.cancelFishing(commandBuffer, player, component.fishingRod, component.slot);
                     return;
                 }
@@ -199,6 +186,8 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 component.setTimeUntilCatch(timeUntilCatch - v);
             }
         }
+
+
     }
 
     /**
