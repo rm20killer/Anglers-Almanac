@@ -16,11 +16,30 @@ Group #Group {
     }
     #Content {
       Anchor: (Width: 400, Height: 500);
-      $C.@CheckBoxWithLabel #TensionBarEnabled {
-        @Text = "Enable TensionBar";
-        TooltipText: "Enabled the Stardew valley minigame, turning it off means no no minigame";
-        Padding: (Top: 10);
+      Group #MinigameContainer {
+        LayoutMode: Top;
+        Anchor: (Top: 24);
+
+        Group {
+          LayoutMode: Left;
+          Anchor: (Height: 25);
+
+          Label #MinigameLabel {
+            Text: "Minigame";
+            Anchor: (Top: -3);
+            }
+        }
+
+        $C.@ContentSeparator {}
+
+        DropdownBox #MinigameDropdown {
+          Anchor: (Width: 250, Top: 10, Height: 32, Left: 0);
+          Style: $C.@DefaultDropdownBoxStyle;
+        }
       }
+
+      $C.@ContentSeparator {}
+
       $C.@CheckBoxWithLabel #BaitRequired {
         @Text = "Require Bait to fish";
         TooltipText: "When fishing bait is needed for";

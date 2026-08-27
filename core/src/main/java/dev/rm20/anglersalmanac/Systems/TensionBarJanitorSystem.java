@@ -28,10 +28,10 @@ public class TensionBarJanitorSystem extends EntityTickingSystem<EntityStore> {
 
         boolean shouldDespawn = false;
 
-        if (now - widget.spawnedAtMs > SAFETY_CEILING_MS) {
+        if (now - widget.spawnedAtMs() > SAFETY_CEILING_MS) {
             shouldDespawn = true;
         } else {
-            Ref<EntityStore> ownerRef = world.getEntityRef(widget.ownerGameId);
+            Ref<EntityStore> ownerRef = world.getEntityRef(widget.ownerGameId());
             if (ownerRef == null || !ownerRef.isValid()) {
                 shouldDespawn = true;
             }

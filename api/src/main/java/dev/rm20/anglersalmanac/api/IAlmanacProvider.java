@@ -11,7 +11,6 @@ public interface IAlmanacProvider {
     boolean hasPlayerCaught(String playerUUID, String fishId);
 
     Map<String, Integer> getAllFishCounts(String playerUUID);
-
     record FishEntry(String name, int count) {}
 
     class PlayerStatsData {

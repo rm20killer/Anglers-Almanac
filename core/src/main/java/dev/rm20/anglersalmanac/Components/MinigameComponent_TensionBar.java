@@ -26,7 +26,7 @@ import com.hypixel.hytale.server.core.util.UUIDUtil;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Config.MinigameConfig_TensionBar;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
-import dev.rm20.anglersalmanac.MinigameManager.Minigame;
+import dev.rm20.anglersalmanac.Minigame.Minigame;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Models.MinigameRodStats;
 import dev.rm20.anglersalmanac.Utils.CatchUtils;
@@ -166,7 +166,7 @@ public class MinigameComponent_TensionBar extends Minigame implements Component<
         }
         else
         {
-            AnglersAlmanac.LOGGER.atWarning().log("Missing fish icon on" + game.fishHooked.getId());
+            AnglersAlmanac.LOGGER.atWarning().log("Missing fish icon on" + game.fishHooked.getItemID());
         }
         game.spawnMinigameAdditionals(commandBuffer, new Vector3d(spawnPos), fishIcon);
 

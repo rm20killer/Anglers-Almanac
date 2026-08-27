@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Metadata.*;
 import dev.rm20.anglersalmanac.Minigame.FishingMinigameHandler;
@@ -39,9 +40,23 @@ public class MinigameManager {
             bobberComp.setMinigameActive(true);
             bobberComp.setMinigameId(minigameKey);
         }
-        FishingMinigameHandler handler = MinigameRegistry.get(minigameKey)
-                .orElseGet(() -> MinigameRegistry.get("NoMinigame").orElseThrow());
+        var config = AnglersAlmanacAPI.getConfig();
+        String activeKey = minigameKey;
+        FishingMinigameHandler handler = MinigameRegistry.get(activeKey).orElse(null);
 
+        if (handler == null) {
+            activeKey = "TensionBar";
+            handler = MinigameRegistry.get(activeKey).orElse(null);
+            if (handler == null) {
+                activeKey = "NoMinigame";
+                handler = MinigameRegistry.get(activeKey)
+                        .orElseThrow(() -> new IllegalStateException("No valid fallback fishing minigame registered."));
+            }
+
+            AnglersAlmanac.LOGGER.atWarning().log("Minigame '%s' not found. Resetting to default '%s'", config.get().getMinigameToUse(), activeKey);
+            config.get().setMinigameToUse(activeKey);
+            config.save();
+        }
         handler.startGame(bobberRef, player, commandBuffer, depth, fishingRod);
     }
 

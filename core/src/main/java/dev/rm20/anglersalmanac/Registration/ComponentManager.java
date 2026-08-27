@@ -7,7 +7,10 @@ import dev.rm20.anglersalmanac.Components.*;
 
 public class ComponentManager {
     public static void registerComponent(AnglersAlmanac plugin) {
-        AnglersAlmanac.bobberComponent = plugin.getEntityStoreRegistry().registerComponent(BobberComponent.class, BobberComponent::new);
+        ComponentType<EntityStore, BobberComponent> registeredType = plugin.getEntityStoreRegistry().registerComponent(BobberComponent.class, BobberComponent::new);
+        BobberComponent.setComponentType(registeredType);
+
+
         MinigameComponent_TensionBar.COMPONENT_TYPE = plugin.getEntityStoreRegistry().registerComponent(MinigameComponent_TensionBar.class, MinigameComponent_TensionBar::new);
         AudioPlayerComponent.COMPONENT_TYPE = plugin.getEntityStoreRegistry().registerComponent(AudioPlayerComponent.class, AudioPlayerComponent::new);
         MinigameWidgetComponent.COMPONENT_TYPE = plugin.getEntityStoreRegistry().registerComponent(MinigameWidgetComponent.class, MinigameWidgetComponent::new);

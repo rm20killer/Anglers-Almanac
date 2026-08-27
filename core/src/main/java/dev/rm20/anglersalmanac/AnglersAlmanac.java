@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
 import dev.rm20.anglersalmanac.AlmanacBook.AlmanacDatabase;
 import dev.rm20.anglersalmanac.AlmanacBook.AlmanacRepository;
+import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Config.AnglersAlmanacConfig;
 import dev.rm20.anglersalmanac.Config.MinigameConfig_TensionBar;
@@ -17,8 +18,11 @@ import dev.rm20.anglersalmanac.Minigame.MinigameRegistry;
 import dev.rm20.anglersalmanac.MinigameManager.Handlers.NoMinigameHandler;
 import dev.rm20.anglersalmanac.MinigameManager.Handlers.TensionBarMinigameHandler;
 import dev.rm20.anglersalmanac.Models.BookAssetData;
+import dev.rm20.anglersalmanac.Models.FishBaitData;
+import dev.rm20.anglersalmanac.Models.MinigameRodStats;
 import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
+import dev.rm20.anglersalmanac.Utils.BaitUtils;
 import dev.rm20.anglersalmanac.Utils.Intergration.MMOSkillTree;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import dev.rm20.anglersalmanac.triggereffects.GiveRodEffect;
@@ -31,7 +35,6 @@ public class AnglersAlmanac extends JavaPlugin {
     @Getter
     private static AnglersAlmanac instance;
     public static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    public static ComponentType<EntityStore, BobberComponent> bobberComponent;
 
 
     public AlmanacDatabase database;
@@ -74,6 +77,19 @@ public class AnglersAlmanac extends JavaPlugin {
         AnglersAlmanacAPI.setImplementation(database);
         fishLootManager = new FishLootManager();
         AnglersAlmanacAPI.setLootProvider(fishLootManager);
+
+        AnglersAlmanacAPI.setBaitResolver(baitName -> {
+            FishBaitData baitAsset = BaitUtils.getBaitData(baitName);
+            return baitAsset != null ? baitAsset.modifiers : null;
+        });
+
+        AnglersAlmanacAPI.setRodResolver(MinigameRodStats::getModifiersFromRodId);
+
+        AnglersAlmanacAPI.setCacheInvalidator(
+                BookPageManager::invalidateCache,
+                BookPageManager::invalidateCache
+        );
+
         MinigameRegistry.register("TensionBar", new TensionBarMinigameHandler());
         MinigameRegistry.register("NoMinigame", new NoMinigameHandler());
         // Plugin Mod Analytics

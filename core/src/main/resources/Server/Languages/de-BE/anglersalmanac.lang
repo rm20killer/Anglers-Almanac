@@ -30,7 +30,7 @@ cmd.sim.done = Simulation abgeschlossen. Details findest du in der Serverkonsole
 ### Konfigurations-Menü (UI)
 config.label = Angler-Almanach Konfiguration
 config.tensionBar.text = Spannungsanzeige-Test aktivieren
-config.tensionBar.tooltip = Aktiviert das Stardew Valley Minispiel. Wenn deaktiviert, findet kein Minispiel statt.
+config.tensionBar.tooltip = Ändert das Angel-Minispiel, das die meisten Spieler spielen werden.
 
 config.baitRequired.text = Köder zum Fischen benötigt
 config.baitRequired.tooltip = Legt fest, ob Köder zum Angeln zwingend erforderlich sind.

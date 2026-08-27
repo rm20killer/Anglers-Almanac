@@ -330,4 +330,17 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
             default -> 99; // Default weight for unknown rarities
         };
     }
+
+    public static FishLootManager getFishDataByItemID(String itemID) {
+        if (itemID == null) return null;
+        return getInternalAllLoot().stream()
+                .filter(loot -> loot.getItemID() != null && loot.getItemID().equalsIgnoreCase(itemID))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static String getIdFromItemID(String itemID) {
+        FishLootManager data = getFishDataByItemID(itemID);
+        return data != null ? data.getId() : null;
+    }
 }

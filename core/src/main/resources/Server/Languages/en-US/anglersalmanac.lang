@@ -31,7 +31,7 @@ cmd.sim.done = Simulation complete. Check server console for breakdown.
 ### Config UI
 config.label = Anglers Almanac's Config
 config.tensionBar.text = Enable TensionBar test
-config.tensionBar.tooltip = Enabled the Stardew Valley minigame, turning it off means no no minigame
+config.tensionBar.tooltip = Changes the fishing minigame most players will play.
 
 config.baitRequired.text = Require Bait to fish
 config.baitRequired.tooltip = When fishing bait is needed for

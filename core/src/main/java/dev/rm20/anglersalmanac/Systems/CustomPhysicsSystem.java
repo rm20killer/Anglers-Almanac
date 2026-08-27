@@ -7,10 +7,10 @@ import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.protocol.SoundCategory;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.fluid.Fluid;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.modules.collision.BlockCollisionData;
+import com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData;
 import com.hypixel.hytale.server.core.modules.collision.CollisionModule;
 import com.hypixel.hytale.server.core.modules.collision.CollisionResult;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
@@ -18,9 +18,6 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.accessor.LocalCachedChunkAccessor;
-import com.hypixel.hytale.server.core.universe.world.accessor.OverridableChunkAccessor;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.FluidSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -83,7 +80,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
             }
             applyWaterForces(dt, position, velocity, bobberComp, world);
         } else {
-            if (bobberComp.InWater()) {
+            if (bobberComp != null && bobberComp.InWater()) {
                 bobberComp.setInWater(false);
             }
             // Apply Air Gravity
@@ -126,7 +123,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         CollisionModule.findCollisions(box, position, scaledVel, true, result, store);
 
         if (!bobberComp.isHookedToEntity() && result.getCharacterCollisionCount() > 0) {
-            com.hypixel.hytale.server.core.modules.collision.CharacterCollisionData targetData = result.getCharacterCollision(0);
+            CharacterCollisionData targetData = result.getCharacterCollision(0);
 
             if (targetData != null && targetData.entityReference != null && targetData.entityReference.isValid()) {
                 Ref<EntityStore> finalTargetRef = targetData.entityReference;

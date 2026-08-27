@@ -7,24 +7,15 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
-public class MinigameWidgetComponent implements Component<EntityStore> {
+public record MinigameWidgetComponent(UUID ownerGameId, long spawnedAtMs) implements Component<EntityStore> {
     public static ComponentType<EntityStore, MinigameWidgetComponent> COMPONENT_TYPE;
-
-    public final UUID ownerGameId;
-    public final long spawnedAtMs;
-
-    public MinigameWidgetComponent(UUID ownerGameId, long spawnedAtMs) {
-        this.ownerGameId = ownerGameId;
-        this.spawnedAtMs = spawnedAtMs;
-    }
 
     public MinigameWidgetComponent(UUID ownerGameId) {
         this(ownerGameId, System.currentTimeMillis());
     }
 
     public MinigameWidgetComponent() {
-        this.ownerGameId = null;
-        this.spawnedAtMs = System.currentTimeMillis();
+        this(null, System.currentTimeMillis());
     }
 
     public static ComponentType<EntityStore, MinigameWidgetComponent> getComponentType() {

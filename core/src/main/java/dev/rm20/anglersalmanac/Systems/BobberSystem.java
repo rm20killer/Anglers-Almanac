@@ -138,9 +138,12 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
         } else {
             player = null;
         }
-
-        if (component == null || !component.InWater()) return;
-
+        if (component == null){
+            AnglersAlmanac.LOGGER.atWarning().log("no bobber component");
+            return;
+        }
+        if (!component.InWater()) return;
+        //AnglersAlmanac.LOGGER.atInfo().log(String.valueOf(component.getBobberAge()));
         float newAge = component.getBobberAge() + v;
         component.setBobberAge(newAge);
 

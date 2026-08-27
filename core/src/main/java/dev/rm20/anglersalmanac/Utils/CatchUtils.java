@@ -6,6 +6,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import dev.rm20.anglersalmanac.IEvents.PreFishRollEvent;
+import dev.rm20.anglersalmanac.Minigame.Minigame;
+import dev.rm20.anglersalmanac.Models.FishLoot;
+import dev.rm20.anglersalmanac.api.ICatchManager;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
@@ -38,7 +41,6 @@ import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
 import dev.rm20.anglersalmanac.Metadata.ZoneInfo;
-import dev.rm20.anglersalmanac.MinigameManager.Minigame;
 import dev.rm20.anglersalmanac.Models.FishBaitData;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Models.MinigameRodStats;
@@ -50,8 +52,26 @@ import java.util.concurrent.CompletableFuture;
 
 import static dev.rm20.anglersalmanac.Metadata.FishingModifier.mergeModifiers;
 
-public class CatchUtils {
-    public static FishLootManager FirstRoll(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
+public class CatchUtils implements ICatchManager {
+    private static final CatchUtils INSTANCE = new CatchUtils();
+    public static CatchUtils getInstance() { return INSTANCE; }
+
+    @Override
+    public FishLoot firstRoll(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
+        return FirstRoll(bobberRef, player, commandBuffer, depth);
+    }
+
+    @Override
+    public void dropItem(ItemStack loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef) {
+        DropItem(loot, player, commandBuffer, bobberRef);
+    }
+
+    @Override
+    public void dropLoot(FishLoot loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef, int rating) {
+        DropLoot(loot, player, commandBuffer, bobberRef, rating);
+    }
+
+    public static FishLoot FirstRoll(Ref<EntityStore> bobberRef, Player player, CommandBuffer<EntityStore> commandBuffer, int depth) {
         //AnglersAlmanac.LOGGER.atInfo().log("Doing first roll");
         //AnglersAlmanac plugin = AnglersAlmanac.getInstance();
 
@@ -156,7 +176,7 @@ public class CatchUtils {
             if(itemId == null) {
                 itemId = "Stick";
             }
-            FishLootManager lootEntry = FishLootManager.getInternalFishData(itemId);
+            FishLoot lootEntry = FishLootManager.getInternalFishData(itemId);
             if (lootEntry == null) {
                 AnglersAlmanac.LOGGER.atWarning().log(modOverriding + " tried to override the item to: " + itemId + " which does not exist, fall back to normal system");
             }
@@ -165,7 +185,7 @@ public class CatchUtils {
             }
         }
 
-        FishLootManager lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
+        FishLoot lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         if (lootEntry == null) {
             return FishLootManager.getInternalFishData("Stick");
         }
@@ -186,7 +206,7 @@ public class CatchUtils {
 
     }
 
-    public static void DropLoot(FishLootManager loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef, int rating) {
+    public static void DropLoot(FishLoot loot, Player player, CommandBuffer<EntityStore> commandBuffer, Ref<EntityStore> bobberRef, int rating) {
         //AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID());
         if (loot == null) return;
         if (loot.getEntityID() !=null)
@@ -253,7 +273,7 @@ public class CatchUtils {
 
     }
 
-    public static void SaveLoot(Player player, FishLootManager loot, int ratingScore) {
+    public static void SaveLoot(Player player, FishLoot loot, int ratingScore) {
         long startTime = System.currentTimeMillis();
         //save to database
         var playerRef = player.getReference();
@@ -264,7 +284,12 @@ public class CatchUtils {
         boolean isLegendary = loot.getRarity().equalsIgnoreCase("Legendary");
         MinigamePRating.PerformanceRating rating = Minigame.getPerformanceRating(ratingScore);
         CompletableFuture.supplyAsync(() -> {
-            return AnglersAlmanac.getInstance().database.saveCatch(uuid.getUuid().toString(), loot.getId(), isLegendary, rating);
+            String lootid = FishLootManager.getIdFromItemID(loot.getItemID());
+            if(lootid == null)
+            {
+                lootid = loot.getItemID();
+            }
+            return AnglersAlmanac.getInstance().database.saveCatch(uuid.getUuid().toString(), lootid, isLegendary, rating);
         }).thenAccept(isNewDiscovery -> {
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
@@ -303,7 +328,7 @@ public class CatchUtils {
         });
     }
 
-    public static void dispatchCaughtFishEvents(FishLootManager item, boolean isNew, boolean isLegendary, Player player, int ratingScore) {
+    public static void dispatchCaughtFishEvents(FishLoot item, boolean isNew, boolean isLegendary, Player player, int ratingScore) {
         var eventBus = HytaleServer.get().getEventBus();
         LootCaughtEvent mainEvent = new LootCaughtEvent(item, isNew,isLegendary, player, ratingScore);
         eventBus.dispatchFor(LootCaughtEvent.class).dispatch(mainEvent);

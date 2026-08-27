@@ -3,35 +3,20 @@ package dev.rm20.anglersalmanac.Interactions.Rod;
 
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.*;
-import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import com.hypixel.hytale.protocol.*;
-import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
-import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
-import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.*;
-import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
-import com.hypixel.hytale.server.core.modules.physics.component.PhysicsValues;
-import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
-import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.MinigameManager.MinigameManager;
-import dev.rm20.anglersalmanac.Components.BobberComponent;
-import dev.rm20.anglersalmanac.Components.PhysicsComponent;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
-import dev.rm20.anglersalmanac.Utils.BaitUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -134,11 +119,9 @@ public class UseRodInteraction extends SimpleInstantInteraction {
                 }
             }
 
-            if (shouldReset) {
-                //meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
-                return false; // Something has broken.
-            }
-            return true; // All seems okay.
+            //meta = heldItem.getFromMetadataOrNull(FishingRodData.KEY, FishingRodData.CODEC);
+            return !shouldReset; // Something has broken.
+// All seems okay.
         }
         return false; // No metadata found.
     }
@@ -159,10 +142,8 @@ public class UseRodInteraction extends SimpleInstantInteraction {
                 }
             }
 
-            if (shouldReset) {
-                return false; // Something has broken.
-            }
-            return true; // All seems okay.
+            return !shouldReset; // Something has broken.
+// All seems okay.
         }
         return false; // No metadata found.
     }

@@ -7,17 +7,17 @@ import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.IEvents.FishingFailedEvent;
 import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
-import dev.rm20.anglersalmanac.MinigameManager.Minigame;
+import dev.rm20.anglersalmanac.Minigame.Minigame;
 import dev.rm20.anglersalmanac.Components.AudioPlayerComponent;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.MinigameComponent_TensionBar;
 import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
+import dev.rm20.anglersalmanac.Models.FishLoot;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Utils.CatchUtils;
 import dev.rm20.anglersalmanac.Utils.TransformUtils;
@@ -164,10 +164,11 @@ public class MinigameSystem_TensionBar extends EntityTickingSystem<EntityStore> 
                 game.stateTrigger = MinigameComponent_TensionBar.Trigger.DONE;
                 if(game.fishHooked!=null)
                 {
+
                     CatchUtils.DropLoot(game.fishHooked, player, commandBuffer,game.bobberRef,game.getPerformancePercentage());
                 }
                 else {
-                    FishLootManager lootID = CatchUtils.FirstRoll(game.bobberRef, player, commandBuffer, store.getComponent(game.bobberRef, BobberComponent.getComponentType()).getWaterDepth());
+                    FishLoot lootID = CatchUtils.FirstRoll(game.bobberRef, player, commandBuffer, store.getComponent(game.bobberRef, BobberComponent.getComponentType()).getWaterDepth());
                     CatchUtils.DropLoot(lootID, player, commandBuffer, game.bobberRef, game.getPerformancePercentage());
                 }
 

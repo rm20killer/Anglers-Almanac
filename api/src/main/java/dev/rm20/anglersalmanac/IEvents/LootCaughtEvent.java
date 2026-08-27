@@ -12,34 +12,15 @@ import dev.rm20.anglersalmanac.Models.FishLoot;
  * performance score, and whether the catch represents a new discovery.
  * </p>
  */
-public class LootCaughtEvent implements IEvent<Void> {
-    private final FishLoot loot;
-    private final Player player;
-    private final boolean newDiscovery;
-    private final boolean isLegendary;
-    private final float performance;
+public record LootCaughtEvent(FishLoot loot, boolean newDiscovery, boolean isLegendary, Player player,
+                              float performance) implements IEvent<Void> {
 
-    /**
-     * Constructs a new LootCaughtEvent.
-     *
-     * @param lootId         The {@link FishLoot} object containing catch details.
-     * @param newDiscovery True if this is the player's first time catching this item.
-     * @param isLegendary  True if the item carries the Legendary flag.
-     * @param player       The {@link Player} who performed the catch.
-     * @param performance  The raw precision score from the minigame.
-     */
-    public LootCaughtEvent(FishLoot lootId, boolean newDiscovery, boolean isLegendary, Player player, int performance) {
-        this.loot = lootId;
-        this.player = player;
-        this.newDiscovery = newDiscovery;
-        this.isLegendary = isLegendary;
-        this.performance = performance;
-    }
 
     /**
      * @return The full loot manager object containing comprehensive catch details.
      */
-    public FishLoot getLoot() {
+    @Override
+    public FishLoot loot() {
         return loot;
     }
 
@@ -55,20 +36,23 @@ public class LootCaughtEvent implements IEvent<Void> {
     /**
      * @return The Player who performed the catch.
      */
-    public Player getPlayer() {
+    @Override
+    public Player player() {
         return player;
     }
 
     /**
      * @return True if this is the first time the player has caught this specific loot.
      */
-    public boolean isNewDiscovery() {
+    @Override
+    public boolean newDiscovery() {
         return newDiscovery;
     }
 
     /**
      * @return True if the caught item has the Legendary flag enabled.
      */
+    @Override
     public boolean isLegendary() {
         return isLegendary;
     }
@@ -76,7 +60,8 @@ public class LootCaughtEvent implements IEvent<Void> {
     /**
      * @return The raw precision score (0-100) of the minigame completion.
      */
-    public float getPerformance() {
+    @Override
+    public float performance() {
         return performance;
     }
 

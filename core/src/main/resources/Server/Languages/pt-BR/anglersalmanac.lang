@@ -31,7 +31,7 @@ cmd.sim.done = Simulação completa. Cheque o console do servidor para o resumo.
 ### Config UI
 config.label = Configuração do Anglers Almanac
 config.tensionBar.text = Habilitar teste de Barra de tensão
-config.tensionBar.tooltip = Minigame de Stardew Valley habilitado, desabilitar significa que não haverá minigame.
+config.tensionBar.tooltip = Altera o minigame de pesca que a maioria dos jogadores vai jogar.
 
 config.baitRequired.text = Necessitar isca para pescar
 config.baitRequired.tooltip = Habilite para tornar necessário o uso de isca para pescar

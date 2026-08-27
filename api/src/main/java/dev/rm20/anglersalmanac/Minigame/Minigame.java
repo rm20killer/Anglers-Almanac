@@ -1,9 +1,8 @@
-package dev.rm20.anglersalmanac.MinigameManager;
+package dev.rm20.anglersalmanac.Minigame;
 
 import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
 import dev.rm20.anglersalmanac.Metadata.RodStats;
-import dev.rm20.anglersalmanac.Models.FishLootManager;
-import lombok.Getter;
+import dev.rm20.anglersalmanac.Models.FishLoot;import lombok.Getter;
 import lombok.Setter;
 
 public abstract class Minigame {
@@ -21,7 +20,7 @@ public abstract class Minigame {
     @Setter
     private float perfectScore = 100;
 
-    public FishLootManager fishHooked;
+    public FishLoot fishHooked;
 
     public int getPerformancePercentage(){
         return (int) (Points / perfectScore) * 100;
@@ -46,10 +45,10 @@ public abstract class Minigame {
     }
 
 
-    public abstract void applyDifficultyModifer(FishLootManager.MinigameStats stats);
-    public abstract void applyFishBehaviourModifer(FishLootManager.MinigameStats stats);
-    public abstract void applyFishStaminaModifer(FishLootManager.MinigameStats stats);
-    public void applyFishModifiers(FishLootManager.MinigameStats stats){
+    public abstract void applyDifficultyModifer(FishLoot.MinigameStats stats);
+    public abstract void applyFishBehaviourModifer(FishLoot.MinigameStats stats);
+    public abstract void applyFishStaminaModifer(FishLoot.MinigameStats stats);
+    public void applyFishModifiers(FishLoot.MinigameStats stats){
         applyDifficultyModifer(stats);
         applyFishBehaviourModifer(stats);
         applyFishStaminaModifer(stats);
