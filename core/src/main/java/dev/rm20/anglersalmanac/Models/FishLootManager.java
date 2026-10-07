@@ -241,7 +241,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
 
     private static boolean checkEnvironment(FishLootManager loot, FishingContext ctx) {
-        if(AnglersAlmanacAPI.getConfig().get().getShouldEnvironmentCheck()) return true;
+        if(!AnglersAlmanacAPI.getConfig().get().getShouldEnvironmentCheck()) return true;
         Habitats hab = loot.getHabitats();
         if (hab == null) return true;
 
