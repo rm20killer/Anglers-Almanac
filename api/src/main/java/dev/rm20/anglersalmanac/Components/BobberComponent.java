@@ -38,6 +38,11 @@ public class BobberComponent implements Component<EntityStore> {
     private boolean minigameActive = false;
     private String minigameId = null;
     private Ref<EntityStore> hookedEntity = null;
+    private boolean fishApproaching = false;
+    private double fishApproachStartX = 0;
+    private double fishApproachStartZ = 0;
+    private float fishApproachDuration = 0;
+    private float fishParticleTimer = 0;
 
     public BobberComponent() {
         this.bobberAge = 0;
@@ -49,6 +54,11 @@ public class BobberComponent implements Component<EntityStore> {
         this.minigameActive = false;
         this.minigameId = null;
         this.baitName = null;
+        this.fishApproaching = false;
+        this.fishApproachStartX = 0;
+        this.fishApproachStartZ = 0;
+        this.fishApproachDuration = 0;
+        this.fishParticleTimer = 0;
     }
 
     public BobberComponent(String bait) {
@@ -69,6 +79,14 @@ public class BobberComponent implements Component<EntityStore> {
         this.timeUntilCatch = -1;
     }
 
+
+    public void resetFishApproach() {
+        this.fishApproaching = false;
+        this.fishApproachStartX = 0;
+        this.fishApproachStartZ = 0;
+        this.fishApproachDuration = 0;
+        this.fishParticleTimer = 0;
+    }
 
     public boolean canCatchFish() {
         return this.canCatch && this.catchTimer > 0;
@@ -99,6 +117,11 @@ public class BobberComponent implements Component<EntityStore> {
         component.hookedEntity = this.hookedEntity;
         component.minigameActive = this.minigameActive;
         component.minigameId = this.minigameId;
+        component.fishApproaching = this.fishApproaching;
+        component.fishApproachStartX = this.fishApproachStartX;
+        component.fishApproachStartZ = this.fishApproachStartZ;
+        component.fishApproachDuration = this.fishApproachDuration;
+        component.fishParticleTimer = this.fishParticleTimer;
         return component;
     }
 }

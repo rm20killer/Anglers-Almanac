@@ -1,0 +1,21 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Water_Circle_Run",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0.02,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "Water_Small_Burst",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0.05,
+        "Z": 0
+      }
+    }
+  ],
+  "LifeSpan": 1.0
+}

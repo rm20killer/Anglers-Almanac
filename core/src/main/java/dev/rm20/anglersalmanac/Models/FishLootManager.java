@@ -165,6 +165,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
         float randomIndex = ThreadLocalRandom.current().nextFloat() * totalWeight;
         float currentSum = 0f;
         for (FishLootManager loot : possibleLoot) {
+            //AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID());
             currentSum += calculatedWeights.get(loot);
             if (randomIndex < currentSum) return loot;
         }
@@ -248,20 +249,39 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
 
         // Time of day
         if (hab.time_of_day != null && hab.time_of_day.length > 0) {
-            boolean match = Arrays.stream(hab.time_of_day).anyMatch(t -> t != null && (t.equals(TimePeriod.ANY) || t.equals(ctx.time())));
+            boolean match = false;
+            TimePeriod currentTime = ctx.time();
+            for (TimePeriod period : hab.time_of_day) {
+                if (period != null && (period == TimePeriod.ANY || period.equals(currentTime))) {
+                    match = true;
+                    break;
+                }
+            }
             if (!match) return false;
         }
         // Weather TODO: READD To CODEC
         if (hab.required_weather != null && hab.required_weather.length > 0) {
-            boolean match = Arrays.stream(hab.required_weather).anyMatch(w -> w != null && (w.equalsIgnoreCase("any") || w.equalsIgnoreCase(ctx.weather())));
+            boolean match = false;
+            String currentWeather = ctx.weather();
+            for (String w : hab.required_weather) {
+                if (w != null && (w.equalsIgnoreCase("any") || (w.equalsIgnoreCase(currentWeather)))) {
+                    match = true;
+                    break;
+                }
+            }
             if (!match) return false;
         }
 
         // Moon phase
         if (hab.moon_phase != null && hab.moon_phase.length > 0) {
-            boolean match = Arrays.stream(hab.moon_phase)
-                    .anyMatch(p -> p == -1 || p == ctx.moonPhase());
-
+            boolean match = false;
+            int currentMoon = ctx.moonPhase();
+            for (int phase : hab.moon_phase) {
+                if (phase == -1 || phase == currentMoon) {
+                    match = true;
+                    break;
+                }
+            }
             if (!match) return false;
         }
         // Water
@@ -278,11 +298,26 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     public int getExclusionWeight(FishLootManager loot, FishingContext ctx) {
         if (loot.habitats == null) return this.weight;
 
+        boolean tierExcluded = false;
+        if (loot.habitats.exclude_tiers != null) {
+            for (int t : loot.habitats.exclude_tiers) {
+                if (t == ctx.tier()) {
+                    tierExcluded = true;
+                    break;
+                }
+            }
+        }
+
+        boolean baitMissing = false;
+        if (loot.habitats.required_bait != null && loot.habitats.required_bait.length > 0) {
+            baitMissing = !containsIgnoreCase(loot.habitats.required_bait, ctx.baitAsset());
+        }
+
         boolean isExcluded = containsIgnoreCase(loot.habitats.exclude_biomes, ctx.biome()) ||
                 containsIgnoreCase(loot.habitats.exclude_regions, ctx.region()) ||
                 containsIgnoreCase(loot.habitats.exclude_zones, ctx.zone()) ||
-                Arrays.asList(loot.habitats.exclude_tiers).contains(ctx.tier()) ||
-                containsIgnoreCase(loot.habitats.required_bait, ctx.baitAsset());
+                tierExcluded ||
+                baitMissing;
 
         if (isExcluded) {
             return Math.round(this.weight * loot.habitats.weight_multiplier);

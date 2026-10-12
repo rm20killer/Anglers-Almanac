@@ -24,6 +24,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Components.PhysicsComponent;
+import dev.rm20.anglersalmanac.Utils.WaterUtils;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.joml.Vector3d;
 
@@ -244,7 +245,7 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         //limit to 32
         for (int i = 0; i < 32; i++) {
             int currentY = startY - i;
-            if (isInWater(world, new Vector3d(x, currentY + 1, z))) {
+            if (WaterUtils.isInWater(world, x, currentY, z)) {
                 depth++;
             } else {
                 break;
@@ -266,22 +267,10 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
 
 
     public static boolean isInWater(World world, Vector3d pos) {
-        if (world == null || pos == null) return false;
-
-
-        Fluid fluidId = getFluidId((int) pos.x, (int) pos.y, (int) pos.z, world);
-        if(fluidId == null) return false;
-        return fluidId.getId().toLowerCase().contains("water");
+        return WaterUtils.isInWater(world, pos);
     }
 
     public static Fluid getFluidId(int x, int y, int z, World world) {
-        int chunkX = ChunkUtil.chunkCoordinate(x);
-        int sectionY = ChunkUtil.indexSection(y);
-        int chunkZ = ChunkUtil.chunkCoordinate(z);
-        int blockIndex = ChunkUtil.indexBlock(x,y,z);
-        Ref<ChunkStore> sectionRef = world.getChunkStore().getChunkSectionReference(chunkX, sectionY, chunkZ);
-        FluidSection fluidSection = world.getChunkStore().getStore().getComponent(sectionRef, FluidSection.getComponentType());
-        Fluid fluid = fluidSection.getFluid(blockIndex);
-        return fluid;
+        return WaterUtils.getFluidId(x, y, z, world);
     }
 }

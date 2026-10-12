@@ -129,7 +129,10 @@ public class CatchUtils implements ICatchManager {
         } else {
             World world = player.getWorld();
             //AnglersAlmanac.LOGGER.atInfo().log(world.getName());
-            String worldName = world.getName();
+            String worldName = null;
+            if (world != null) {
+                worldName = world.getName();
+            }
             if (worldName.contains("Portals_Taiga")) {
                 zone = "3";
                 Region = "Portals_Taiga";
@@ -185,8 +188,16 @@ public class CatchUtils implements ICatchManager {
             }
         }
 
+//        AnglersAlmanac.LOGGER.atInfo().log(String.format(
+//                "Roll Context -> Zone: %s, Region: %s, Biome: %s, Tier: %d, Depth: %d, Y: %.2f, Modifiers: %s",
+//                LocationInfo.zone(), LocationInfo.region(), LocationInfo.biome(),
+//                LocationInfo.tier(), LocationInfo.waterDepth(), LocationInfo.yPos(),
+//                masterModifier != null ? "active" : "none"
+//        ));
+
         FishLoot lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         if (lootEntry == null) {
+            AnglersAlmanac.LOGGER.atInfo().log("Failed fo find any valid item");
             return FishLootManager.getInternalFishData("Stick");
         }
         String lootID = lootEntry.getItemID();

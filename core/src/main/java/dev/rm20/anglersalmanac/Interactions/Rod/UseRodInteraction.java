@@ -47,7 +47,7 @@ public class UseRodInteraction extends SimpleInstantInteraction {
 
             PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
             if(playerRef1 == null) return;
-            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+playerRef1.getUsername());
+            //AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+playerRef1.getUsername());
             return;
         }
 
@@ -68,14 +68,14 @@ public class UseRodInteraction extends SimpleInstantInteraction {
 
             PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
             if(playerRef1 == null) return;
-            AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+playerRef1.getUsername());
+            //AnglersAlmanac.LOGGER.atInfo().log("Casting into UseRodInteraction for: "+playerRef1.getUsername());
         }else{
             // ReelBobberInteraction must be set as Failed interaction in rods Interaction asset.
             context.getState().state = InteractionState.Failed;
 
             PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
             if(playerRef1 == null) return;
-            AnglersAlmanac.LOGGER.atInfo().log("Not casting to UseRodInteraction for: "+playerRef1.getUsername());
+            //AnglersAlmanac.LOGGER.atInfo().log("Not casting to UseRodInteraction for: "+playerRef1.getUsername());
         }
 
 
