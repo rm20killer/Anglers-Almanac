@@ -1,6 +1,5 @@
 package dev.rm20.anglersalmanac;
 
-import com.al3x.HStats;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.logger.HytaleLogger;
@@ -90,8 +89,6 @@ public class AnglersAlmanac extends JavaPlugin {
 
         MinigameRegistry.register("TensionBar", new TensionBarMinigameHandler());
         MinigameRegistry.register("NoMinigame", new NoMinigameHandler());
-        // Plugin Mod Analytics
-        new HStats("55078602-d7a1-4794-b30c-f42529f3d1d4", getManifest().getVersion().toString());
     }
 
 
