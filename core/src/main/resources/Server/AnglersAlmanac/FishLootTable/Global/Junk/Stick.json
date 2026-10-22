@@ -8,24 +8,10 @@
   "Description": "A stick",
   "FamilyId": "Junk_Global",
   "Rarity": "Junk",
-  "IsGlobal": true,
-  "Weight": 100,
+  "IsGlobal": false,
+  "Weight": 0,
   "SellPrice": 0.01,
   "Size": 30,
-  "Habitats": {
-    "Zones": [],
-    "Tiers": [],
-    "Regions": [],
-    "Biomes": [],
-
-
-   
-    "Min_depth": 1,
-    "Height": {
-      "Min_y": 0,
-      "Max_y": -1
-    }
-  },
   "Minigame_stats": {
     "Difficulty": 0,
     "Behavior": "None",
