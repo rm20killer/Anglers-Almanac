@@ -18,7 +18,11 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
 import dev.rm20.anglersalmanac.Interactions.Rod.UseRodInteraction;
+import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Metadata.FishingRodData;
+import dev.rm20.anglersalmanac.Models.FishBaitData;
+import dev.rm20.anglersalmanac.Models.MinigameRodStats;
+import dev.rm20.anglersalmanac.Utils.BaitUtils;
 import dev.rm20.anglersalmanac.Utils.WaterUtils;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
 import org.joml.Vector3d;
@@ -27,6 +31,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.UUID;
+
+import static dev.rm20.anglersalmanac.Metadata.FishingModifier.mergeModifiers;
 
 public class BobberSystem extends EntityTickingSystem<EntityStore> {
     private final Random random = new Random();
@@ -139,11 +145,16 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
         if (!component.InWater()) return;
-        //AnglersAlmanac.LOGGER.atInfo().log(String.valueOf(component.getBobberAge()));
+
         float newAge = component.getBobberAge() + v;
         component.setBobberAge(newAge);
 
-        if (newAge < 4.0f) return;
+        float speed = getCatchSpeed(component);
+        float settleTime = 4.0f;
+        if (speed > 1.0f) {
+            settleTime = Math.max(1.0f, 4.0f / speed);
+        }
+        if (newAge < settleTime) return;
 
         if (component.isCanCatch()) {
             float catchTime = component.getCatchTimer() - v;
@@ -168,20 +179,18 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 boolean requiresBait = AnglersAlmanacAPI.getConfig().get().getShouldUseBait();
                 String baitName = component.getBaitName();
                 if (requiresBait && (baitName == null || baitName.isEmpty())) {
-                    //SendBaitNotification(player);
-                    //AnglersAlmanac.LOGGER.atInfo().log("No bait on rod");
                     component.resetFishApproach();
                     resetWaitTimer(component);
                     return;
                 }
-                //AnglersAlmanac.LOGGER.atInfo().log(baitName);
+
                 // Fish bite logic
                 component.setCanCatch(true);
                 component.setTimeUntilCatch(0);
                 component.resetFishApproach();
                 ParticleUtil.spawnParticleEffect("Fish_Alert", new Vector3d(transform.getPosition()).add(0, 0.5, 0), store);
                 ParticleUtil.spawnParticleEffect("Water_Splash", new Vector3d(transform.getPosition()).add(0, 0.1, 0), store);
-                //Audio
+                // Audio
                 int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Bubble");
                 World world = store.getExternalData().getWorld();
                 EntityStore store2 = world.getEntityStore();
@@ -203,8 +212,6 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
                 }
             }
         }
-
-
     }
 
     private void initFishApproach(BobberComponent component, TransformComponent transform, World world) {
@@ -302,14 +309,38 @@ public class BobberSystem extends EntityTickingSystem<EntityStore> {
         }
     }
 
+    private float getCatchSpeed(BobberComponent component) {
+        if (component == null) return 1.0f;
+        FishingModifier.Modifiers baitMods = null;
+        if (component.getBaitName() != null) {
+            FishBaitData baitAsset = BaitUtils.getBaitData(component.getBaitName());
+            if (baitAsset != null) {
+                baitMods = baitAsset.modifiers;
+            }
+        }
+        FishingModifier.Modifiers rodMods = null;
+        ItemStack rod = component.getFishingRod();
+        if (rod != null) {
+            rodMods = MinigameRodStats.getModifiersFromRodId(rod.getItemId());
+        }
+        FishingModifier.Modifiers merged = mergeModifiers(baitMods, rodMods);
+        return (merged != null && merged.catchSpeed > 0.001f) ? merged.catchSpeed : 1.0f;
+    }
+
     /**
-     * Resets the timer with a much wider, longer range for a "realistic" feel.
+     * Resets the timer with a range scaled by the catch speed modifier.
      */
     private void resetWaitTimer(BobberComponent component) {
         component.resetFishApproach();
         float minWait = 5.0f;
         float maxWait = 25.0f;
         float randomWait = minWait + random.nextFloat() * (maxWait - minWait);
+
+        float speed = getCatchSpeed(component);
+        if (speed > 0.001f) {
+            randomWait /= speed;
+        }
+        randomWait = Math.max(1.0f, randomWait);
 
         component.setTimeUntilCatch(randomWait);
     }

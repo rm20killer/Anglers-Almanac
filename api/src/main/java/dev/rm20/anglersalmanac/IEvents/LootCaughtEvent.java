@@ -3,6 +3,7 @@ package dev.rm20.anglersalmanac.IEvents;
 import com.hypixel.hytale.event.IEvent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import dev.rm20.anglersalmanac.Models.FishLoot;
+import dev.rm20.anglersalmanac.Models.FishSize;
 
 /**
  * Dispatched by the Minigame Manager when a player successfully completes
@@ -26,6 +27,13 @@ public record LootCaughtEvent(FishLoot loot, boolean newDiscovery, boolean isLeg
 
     public FishLoot getLoot() {
         return loot();
+    }
+
+    /**
+     * @return The size of the caught fish.
+     */
+    public FishSize getSize() {
+        return loot != null && loot.getFishSize() != null ? loot.getFishSize() : FishSize.M;
     }
 
     /**
@@ -113,5 +121,3 @@ public record LootCaughtEvent(FishLoot loot, boolean newDiscovery, boolean isLeg
         return "fail";
     }
 }
-
-

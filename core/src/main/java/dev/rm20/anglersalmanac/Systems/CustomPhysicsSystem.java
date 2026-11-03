@@ -226,8 +226,8 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         int z = (int) Math.floor(position.z);
 
         // Scan upwards from current block to find air
-        // Limit to 10 blocks to prevent lag
-        for (int y = startY; y < startY + 10; y++) {
+        // Limit to 32 blocks to prevent lag
+        for (int y = startY; y < startY + 32; y++) {
             // If the block above is water, continue stepping up
             if (isInWater(world, new Vector3d(x, y + 1, z))) {
                 continue;
@@ -245,14 +245,14 @@ public class CustomPhysicsSystem extends EntityTickingSystem<EntityStore> {
         //limit to 32
         for (int i = 0; i < 32; i++) {
             int currentY = startY - i;
-            if (isInWater(world, new Vector3d(x, currentY + 1, z))) {
+            if (isInWater(world, new Vector3d(x, currentY, z))) {
                 depth++;
             } else {
                 break;
             }
         }
 
-        return depth;
+        return Math.max(1, depth);
     }
 
     @Nullable

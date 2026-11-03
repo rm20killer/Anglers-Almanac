@@ -40,6 +40,26 @@
     }
   },
   "State": {
+    "XS": {
+      "Variant": true,
+      "Scale": 0.7
+    },
+    "S": {
+      "Variant": true,
+      "Scale": 0.85
+    },
+    "M": {
+      "Variant": true,
+      "Scale": 1.0
+    },
+    "L": {
+      "Variant": true,
+      "Scale": 1.25
+    },
+    "XL": {
+      "Variant": true,
+      "Scale": 1.5
+    },
     "Uncommon": {
       "Variant": true,
       "Quality": "Uncommon",

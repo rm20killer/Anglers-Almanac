@@ -7,7 +7,7 @@ import dev.rm20.codecannotation.Annotations.CodecAnnotations;
 import lombok.Getter;
 import lombok.Setter;
 
-
+@Setter
 public class FishLoot {
 
     @CodecAnnotations.Field("ItemId")
@@ -44,9 +44,12 @@ public class FishLoot {
     @CodecAnnotations.Min(0)
     protected int weight;
 
-    @Getter
     @CodecAnnotations.Field("SellPrice")
     protected float sellPrice;
+
+    @Getter
+    @Setter
+    protected FishSize fishSize = FishSize.M;
 
     @Getter
     @CodecAnnotations.Field("IsGlobal")
@@ -72,6 +75,42 @@ public class FishLoot {
     private int size;
 
     public FishLoot() {
+    }
+
+    public FishLoot(FishLoot other) {
+        if (other != null) {
+            this.itemID = other.itemID;
+            this.entityID = other.entityID;
+            this.Name = other.Name;
+            this.Description = other.Description;
+            this.Category = other.Category;
+            this.FamilyId = other.FamilyId;
+            this.Rarity = other.Rarity;
+            this.weight = other.weight;
+            this.sellPrice = other.sellPrice;
+            this.fishSize = other.fishSize != null ? other.fishSize : FishSize.M;
+            this.isGlobal = other.isGlobal;
+            this.habitats = other.habitats;
+            this.quantity = other.quantity;
+            this.minigameStats = other.minigameStats;
+            this.bookInfo = other.bookInfo;
+            this.size = other.size;
+        }
+    }
+
+    public FishLoot copy() {
+        return new FishLoot(this);
+    }
+
+    public float getBaseSellPrice() {
+        return this.sellPrice;
+    }
+
+    public float getSellPrice() {
+        if (this.fishSize != null) {
+            return this.sellPrice * this.fishSize.getValueMultiplier();
+        }
+        return this.sellPrice;
     }
 
     // Getters

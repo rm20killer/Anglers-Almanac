@@ -4,22 +4,13 @@ import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
 import com.hypixel.hytale.builtin.triggervolumes.manager.TriggerVolumeManager;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.hypixel.hytale.protocol.ItemWithAllMetadata;
-import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
-import com.hypixel.hytale.server.core.util.NotificationUtil;
-import dev.rm20.anglersalmanac.IEvents.PreFishRollEvent;
-import dev.rm20.anglersalmanac.Inventory.FishBagComponent;
-import dev.rm20.anglersalmanac.Minigame.Minigame;
-import dev.rm20.anglersalmanac.Models.FishLoot;
-import dev.rm20.anglersalmanac.api.ICatchManager;
-import org.joml.Quaternionf;
-import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
+import com.hypixel.hytale.protocol.ItemWithAllMetadata;
 import com.hypixel.hytale.protocol.SoundCategory;
+import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
-import com.hypixel.hytale.server.core.entity.ItemUtils;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.InventoryComponent;
@@ -30,24 +21,35 @@ import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
 import com.hypixel.hytale.server.core.universe.world.npc.INonPlayerCharacter;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.EventTitleUtil;
+import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.util.InventoryHelper;
 import dev.rm20.anglersalmanac.AlmanacBook.BookPageManager;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Components.BobberComponent;
+import com.hypixel.hytale.server.core.universe.world.WorldMapTracker;
+import dev.rm20.anglersalmanac.Metadata.ZoneInfo;
+import dev.rm20.anglersalmanac.Utils.EnvironmentParser;
 import dev.rm20.anglersalmanac.IEvents.LootCaughtEvent;
+import dev.rm20.anglersalmanac.IEvents.PreFishRollEvent;
+import dev.rm20.anglersalmanac.Inventory.FishBagComponent;
+import dev.rm20.anglersalmanac.Metadata.FishItemData;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
 import dev.rm20.anglersalmanac.Metadata.MinigamePRating;
-import dev.rm20.anglersalmanac.Metadata.ZoneInfo;
+import dev.rm20.anglersalmanac.Minigame.Minigame;
 import dev.rm20.anglersalmanac.Models.FishBaitData;
+import dev.rm20.anglersalmanac.Models.FishLoot;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
+import dev.rm20.anglersalmanac.Models.FishSize;
 import dev.rm20.anglersalmanac.Models.MinigameRodStats;
+import dev.rm20.anglersalmanac.api.ICatchManager;
 import it.unimi.dsi.fastutil.Pair;
+import org.joml.Quaternionf;
+import org.joml.Vector3d;
 
 import java.awt.*;
 import java.util.Random;
@@ -85,9 +87,7 @@ public class CatchUtils implements ICatchManager {
         String baitID = null;
         if (bobberComp != null && bobberComp.getBaitName() != null) {
             FishBaitData baitAsset = BaitUtils.getBaitData(bobberComp.getBaitName());
-            //AnglersAlmanac.LOGGER.atInfo().log(baitAsset.getId());
-            if (baitAsset != null)
-            {
+            if (baitAsset != null) {
                 baitMods = baitAsset.modifiers;
                 baitID = baitAsset.getId();
             }
@@ -112,7 +112,7 @@ public class CatchUtils implements ICatchManager {
         // time info
         WorldTimeResource timeResource = store.getResource(WorldTimeResource.getResourceType());
         var gameTime = timeResource.getGameTime().toString();
-        String timeKeyword = TimeUtils.getTimeKeyword(gameTime);
+//        String timeKeyword = TimeUtils.getTimeKeyword(gameTime);
         int moonPhase = timeResource.getMoonPhase();
 
         // Habitats info
@@ -122,38 +122,35 @@ public class CatchUtils implements ICatchManager {
         String Biome = "Unknown";
         String zone = "Unknown";
         int tier = 1;
-//        if (currentZone != null) {
-//            String RawZone = currentZone.regionName();
-//            Region = currentZone.zoneName();
-//            Biome = worldMapTracker.getCurrentBiomeName();
-//            ZoneInfo info = EnvironmentParser.parse(RawZone);
-//            zone = info.zone();
-//            tier = info.tier();
-//        } else {
-//            World world = player.getWorld();
-//            //AnglersAlmanac.LOGGER.atInfo().log(world.getName());
-//            String worldName = world.getName();
-//            if (worldName.contains("Portals_Taiga")) {
-//                zone = "3";
-//                Region = "Portals_Taiga";
-//            } else if (worldName.contains("Portals_Hedera")) {
-//                zone = "3";
-//                Region = "Portals_Hedera";
-//            } else if (worldName.contains("Portals_Oasis")) {
-//                zone = "2";
-//                Region = "Portals_Oasis";
-//            } else if (worldName.contains("Portals_Jungles")) {
-//                Region = "Portals_Jungles";
-//            } else if (worldName.contains("Portals_Henges")) {
-//                zone = "3";
-//                Region = "Portals_Henges";
-//            }
-//        }
+
+        if (player != null) {
+            try {
+                WorldMapTracker worldMapTracker = player.getWorldMapTracker();
+                if (worldMapTracker != null) {
+                    WorldMapTracker.ZoneDiscoveryInfo currentZone = worldMapTracker.getCurrentZone();
+                    if (currentZone != null) {
+                        String rawZone = currentZone.regionName();
+                        Region = currentZone.zoneName();
+                        ZoneInfo info = EnvironmentParser.parse(rawZone);
+                        if (info != null) {
+                            zone = info.zone();
+                            tier = info.tier();
+                        }
+                    }
+                    String currentBiome = worldMapTracker.getCurrentBiomeName();
+                    if (currentBiome != null) {
+                        Biome = currentBiome;
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        }
 
         TriggerVolumeManager manager = store.getResource(TriggerVolumesPlugin.get().getManagerResourceType());
 
         String triggerKey = TriggerVolumeUtils.getFishingZone(manager, transform.getPosition());
 
+        int effectiveDepth = Math.max(1, depth);
 
         // Combine
         FishingContext LocationInfo = new FishingContext(
@@ -165,43 +162,52 @@ public class CatchUtils implements ICatchManager {
                 Biome,
                 y,
                 "clear",
-                depth,
+                effectiveDepth,
                 baitID,
-                FishingPowerUtils.getTotalFishingPower(store,player.getReference()),
+                FishingPowerUtils.getTotalFishingPower(store, player.getReference()),
                 triggerKey
         );
         // get fish
 
 
         var eventBus = HytaleServer.get().getEventBus();
-        PreFishRollEvent event = new PreFishRollEvent(bobberRef,player,LocationInfo);
+        PreFishRollEvent event = new PreFishRollEvent(bobberRef, player, LocationInfo);
 
         eventBus.dispatchFor(PreFishRollEvent.class).dispatch(event);
 
+        FishLoot lootEntry = null;
         if (event.isCancelled()) {
             String itemId = event.getOverriddenLootId();
             String modOverriding = event.getOverridingModName();
-            if(itemId == null) {
+            if (itemId == null) {
                 itemId = "Stick";
             }
-            FishLoot lootEntry = FishLootManager.getInternalFishData(itemId);
+            lootEntry = FishLootManager.getInternalFishData(itemId);
             if (lootEntry == null) {
                 AnglersAlmanac.LOGGER.atWarning().log(modOverriding + " tried to override the item to: " + itemId + " which does not exist, fall back to normal system");
+                lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
             }
-            else{
-                return lootEntry;
-            }
+        } else {
+            lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         }
 
-        FishLoot lootEntry = FishLootManager.getRandomWeightedLoot(LocationInfo, masterModifier);
         if (lootEntry == null) {
-            return FishLootManager.getInternalFishData("Stick");
+            lootEntry = FishLootManager.getInternalFishData("Stick");
         }
-        String lootID = lootEntry.getItemID();
-        return lootEntry;
 
+        if (lootEntry != null) {
+            FishLoot rolledFish = lootEntry.copy();
+            if (rolledFish.getItemID() != null && rolledFish.getItemID().startsWith("Fish_")) {
+                FishSize rolledSize = FishSizeCalculator.rollSize(LocationInfo, masterModifier, rolledFish);
+                rolledFish.setFishSize(rolledSize);
+            } else {
+                rolledFish.setFishSize(null);
+            }
+            return rolledFish;
+        }
+
+        return null;
     }
-
 
     //MODIFIED
     public static final ComponentType<EntityStore, ? extends InventoryComponent>[] FISH_ROUTING = new ComponentType[]{
@@ -316,13 +322,96 @@ public class CatchUtils implements ICatchManager {
             } else {
                 int quantity = new Random().nextInt(min, max + 1);
                 fishStack.withQuantity(quantity);
-                // No idea if the thing above works need testing
             }
         }
-        if(DropItem(fishStack, player, commandBuffer, bobberRef)){
-            SaveLoot(player, loot, rating);
+
+        if (loot.getItemID().startsWith("Fish_")) {
+            FishSize size = loot.getFishSize() != null ? loot.getFishSize() : FishSize.M;
+            fishStack = FishStateManager.applyFishSizeState(fishStack, size);
+            fishStack = fishStack.withMetadata(FishItemData.KEYED_CODEC, new FishItemData(size, loot.getSellPrice()));
         }
 
+        float timeTaken = 0.0f;
+        if (bobberRef != null && bobberRef.isValid()) {
+            try {
+                BobberComponent bobberComp = bobberRef.getStore().getComponent(bobberRef, BobberComponent.getComponentType());
+                if (bobberComp != null) {
+                    timeTaken = bobberComp.getBobberAge();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (DropItem(fishStack, player, commandBuffer, bobberRef)) {
+            sendCatchNotification(player, fishStack, loot, timeTaken);
+            SaveLoot(player, loot, rating);
+        }
+    }
+
+    public static void sendCatchNotification(Player player, ItemStack fishStack, FishLoot loot, float timeTaken) {
+        Ref<EntityStore> playerRef = player.getReference();
+        if (playerRef == null) return;
+        PlayerRef playerRef1 = playerRef.getStore().getComponent(playerRef, PlayerRef.getComponentType());
+        if (playerRef1 == null) return;
+
+        ItemWithAllMetadata icon = fishStack.toPacket();
+
+        Message titleMessage = Message.join(Message.translation(fishStack.getItem().getTranslationKey()));
+        if (loot.getFishSize() != null) {
+            titleMessage = Message.join(titleMessage, Message.raw(" (" + loot.getFishSize().getDisplayName() + ")"));
+        }
+
+        Color titleColor = getColor(loot);
+        titleMessage.color(titleColor);
+
+        String timeStr;
+        if (timeTaken >= 60.0f) {
+            int minutes = (int) (timeTaken / 60);
+            float seconds = timeTaken % 60;
+            timeStr = String.format("%dm %.1fs", minutes, seconds);
+        } else if (timeTaken > 0.0f) {
+            timeStr = String.format("%.1fs", timeTaken);
+        } else {
+            timeStr = "<1s";
+        }
+
+        String subtitleText = String.format("Time: %s | Value: %.0f coins", timeStr, loot.getSellPrice());
+        Message subtitleMessage = Message.raw(subtitleText);
+        subtitleMessage.color(Color.YELLOW);
+
+        try {
+            var packetHandler = playerRef1.getPacketHandler();
+            NotificationUtil.sendNotification(
+                    packetHandler,
+                    titleMessage,
+                    subtitleMessage,
+                    icon,
+                    NotificationStyle.Success
+            );
+        } catch (Exception e) {
+            AnglersAlmanac.LOGGER.atWarning().log("Failed to send catch notification to " + playerRef1.getUsername() + ": " + e.getMessage());
+        }
+    }
+
+    private static Color getColor(FishLoot loot) {
+        Color titleColor = Color.GREEN;
+        if (loot.getRarity() != null) {
+            switch (loot.getRarity().toLowerCase()) {
+                case "legendary" -> titleColor = Color.YELLOW;
+                case "epic" -> Color.MAGENTA.getClass(); // keep magenta
+                case "rare" -> Color.CYAN.getClass();
+                case "uncommon" -> Color.GREEN.getClass();
+                default -> Color.WHITE.getClass();
+            }
+            switch (loot.getRarity().toLowerCase()) {
+                case "legendary" -> titleColor = Color.YELLOW;
+                case "epic" -> titleColor = Color.MAGENTA;
+                case "rare" -> titleColor = Color.CYAN;
+                case "uncommon" -> titleColor = Color.GREEN;
+                default -> titleColor = Color.WHITE;
+            }
+        }
+        return titleColor;
     }
 
     public static void SaveLoot(Player player, FishLoot loot, int ratingScore) {
@@ -337,8 +426,7 @@ public class CatchUtils implements ICatchManager {
         MinigamePRating.PerformanceRating rating = Minigame.getPerformanceRating(ratingScore);
         CompletableFuture.supplyAsync(() -> {
             String lootid = FishLootManager.getIdFromItemID(loot.getItemID());
-            if(lootid == null)
-            {
+            if (lootid == null) {
                 lootid = loot.getItemID();
             }
             return AnglersAlmanac.getInstance().database.saveCatch(uuid.getUuid().toString(), lootid, isLegendary, rating);
@@ -356,6 +444,10 @@ public class CatchUtils implements ICatchManager {
             dispatchCaughtFishEvents(loot, isNewDiscovery, isLegendary, player, ratingScore);
             ItemStack itemStack = new ItemStack(loot.getItemID(),1);
             String fishDisplayName = Message.translation(itemStack.getItem().getTranslationKey()).getAnsiMessage();
+            if (loot.getItemID() != null && loot.getItemID().startsWith("Fish_") && loot.getFishSize() != null) {
+                fishDisplayName = fishDisplayName + " (" + loot.getFishSize().getDisplayName() + ")";
+            }
+
             if (isNewDiscovery) {
                 if (isLegendary) {
                     showDiscoveryUI(playerRef1, fishDisplayName, "anglersalmanac.fishing.caught.legDiscovered", Color.YELLOW);
@@ -372,9 +464,7 @@ public class CatchUtils implements ICatchManager {
                         SoundUtil.playSoundEvent2dToPlayer(playerRef1, audio, SoundCategory.UI);
                     });
                 }
-            }
-            else
-            {
+            } else {
                 showDiscoveryUI(playerRef1, fishDisplayName, "anglersalmanac.fishing.caught.nonFish", Color.GREEN);
                 int audio = SoundEvent.getAssetMap().getIndex("AA_Fishing_Book_New_Fish_1");
                 assert player.getWorld() != null;
@@ -391,7 +481,7 @@ public class CatchUtils implements ICatchManager {
 
     public static void dispatchCaughtFishEvents(FishLoot item, boolean isNew, boolean isLegendary, Player player, int ratingScore) {
         var eventBus = HytaleServer.get().getEventBus();
-        LootCaughtEvent mainEvent = new LootCaughtEvent(item, isNew,isLegendary, player, ratingScore);
+        LootCaughtEvent mainEvent = new LootCaughtEvent(item, isNew, isLegendary, player, ratingScore);
         eventBus.dispatchFor(LootCaughtEvent.class).dispatch(mainEvent);
     }
 

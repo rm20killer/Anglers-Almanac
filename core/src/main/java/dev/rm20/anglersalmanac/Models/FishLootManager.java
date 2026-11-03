@@ -12,6 +12,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import dev.rm20.anglersalmanac.AnglersAlmanac;
 import dev.rm20.anglersalmanac.Metadata.FishingContext;
 import dev.rm20.anglersalmanac.Metadata.FishingModifier;
+import dev.rm20.anglersalmanac.Utils.FishStateManager;
 import dev.rm20.anglersalmanac.Registration.HytaleAsset;
 import dev.rm20.anglersalmanac.Utils.Validator.TimePeriod;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
@@ -67,7 +68,11 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
 
     public static AssetStore<String, FishLootManager, DefaultAssetMap<String, FishLootManager>> getAssetStore() {
         if (ASSET_STORE == null) {
-            ASSET_STORE = AssetRegistry.getAssetStore(FishLootManager.class);
+            try {
+                ASSET_STORE = AssetRegistry.getAssetStore(FishLootManager.class);
+            } catch (Throwable t) {
+                return null;
+            }
         }
         return ASSET_STORE;
     }
@@ -76,6 +81,19 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     private AssetExtraInfo.Data data;
 
     public FishLootManager() {
+    }
+
+    public FishLootManager(FishLootManager other) {
+        super(other);
+        if (other != null) {
+            this.id = other.id;
+            this.data = other.data;
+        }
+    }
+
+    @Override
+    public FishLoot copy() {
+        return new FishLootManager(this);
     }
 
     @Override
@@ -90,10 +108,18 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
 
     @Override
     public Collection<FishLootManager> getAllLoot() {
-        return getAssetStore().getAssetMap().getAssetMap().values();
+        AssetStore<String, FishLootManager, DefaultAssetMap<String, FishLootManager>> store = getAssetStore();
+        if (store == null || store.getAssetMap() == null) {
+            return Collections.emptyList();
+        }
+        return store.getAssetMap().getAssetMap().values();
     }
     public static Collection<FishLootManager> getInternalAllLoot() {
-        return getAssetStore().getAssetMap().getAssetMap().values();
+        AssetStore<String, FishLootManager, DefaultAssetMap<String, FishLootManager>> store = getAssetStore();
+        if (store == null || store.getAssetMap() == null) {
+            return Collections.emptyList();
+        }
+        return store.getAssetMap().getAssetMap().values();
     }
 
 
@@ -125,11 +151,8 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
 
     public static FishLootManager getRandomWeightedLoot(FishingContext ctx, @Nullable FishingModifier.Modifiers modifiers, float fishingPower) {
         GeoKey key = new GeoKey(ctx.triggerKey());
-        //List<FishLootManager> geoPossible = geoLootCache.get(key);
         List<FishLootManager> geoPossible = getInternalAllLoot().stream().filter(loot -> isEligible(loot, key)).toList();
-//        for (FishLootManager loot : geoPossible) {
-//            AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID().toString());
-//        }
+
         List<FishLootManager> possibleLoot = new ArrayList<>();
         Map<FishLootManager, Float> calculatedWeights = new HashMap<>();
         float totalWeight = 0f;
@@ -139,7 +162,6 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
         for (FishLootManager loot : Objects.requireNonNull(geoPossible)) {
             if (checkEnvironment(loot, ctx)) {
                 float weight = (float) loot.getExclusionWeight(loot, ctx);
-                //AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID() +" "+ weight);
                 if (weight > 0) {
                     if (modifiers != null) {
                         weight *= calculateFinalMultiplier(loot, ctx, modifiers);
@@ -155,7 +177,6 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
                         float powerBonus = (fishingPower - 1.0f) * 0.5f * rarityTier;
                         weight += powerBonus;
                     }
-                    //AnglersAlmanac.LOGGER.atInfo().log(loot.getItemID() +" "+ weight);
                     if (weight > 0) {
                         possibleLoot.add(loot);
                         calculatedWeights.put(loot, weight);
@@ -194,25 +215,42 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     }
     public static FishLootManager getInternalFishData(String id) {
         if (id == null) return null;
+        String baseId = id.startsWith("*") ? FishStateManager.getBaseItemId(id) : id;
         return getInternalAllLoot().stream()
                 .filter(loot ->
                         id.equalsIgnoreCase(loot.getId()) ||
-                                (loot.getItemID() != null && id.equalsIgnoreCase(loot.getItemID()))
+                                baseId.equalsIgnoreCase(loot.getId()) ||
+                                (loot.getItemID() != null && (
+                                        id.equalsIgnoreCase(loot.getItemID()) ||
+                                        baseId.equalsIgnoreCase(loot.getItemID())
+                                ))
                 )
                 .findFirst()
                 .orElse(null);
     }
 
     private static boolean isEligible(FishLootManager loot, GeoKey key) {
-        if(!AnglersAlmanacAPI.getConfig().get().getShouldHabCheck()) return true;
+        if (!AnglersAlmanacAPI.getConfig().get().getShouldHabCheck()) return true;
+
         Habitats hab = loot.getHabitats();
-        if (hab == null) return false;
-        if (containsIgnoreCase(hab.exclude_triggerVolumes, key.triggerKey) && hab.weight_multiplier == 0) return false;
+        if (hab == null) return true;
+
+        String triggerKey = (key != null) ? key.triggerKey : null;
+
+        if (triggerKey != null
+                && containsIgnoreCase(hab.exclude_triggerVolumes, triggerKey)
+                && hab.weight_multiplier <= 0) {
+            return false;
+        }
 
         if (loot.isGlobal()) return true;
-        if (containsIgnoreCase(hab.triggerVolumes, key.triggerKey)) return true;
 
-        return false;
+        boolean noTriggerVolumes = hab.triggerVolumes == null || hab.triggerVolumes.length == 0;
+        if (triggerKey == null && noTriggerVolumes) {
+            return true;
+        }
+
+        return triggerKey != null && containsIgnoreCase(hab.triggerVolumes, triggerKey);
     }
 
     private static boolean checkEnvironment(FishLootManager loot, FishingContext ctx) {
@@ -253,13 +291,6 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
     public int getExclusionWeight(FishLootManager loot, FishingContext ctx) {
         if (loot.habitats == null) return this.weight;
 
-
-//        boolean isExcluded = containsIgnoreCase(loot.habitats.exclude_biomes, ctx.biome()) ||
-//                containsIgnoreCase(loot.habitats.exclude_regions, ctx.region()) ||
-//                containsIgnoreCase(loot.habitats.exclude_zones, ctx.zone()) ||
-//                Arrays.asList(loot.habitats.exclude_tiers).contains(ctx.tier()) ||
-//                containsIgnoreCase(loot.habitats.required_bait, ctx.baitAsset());
-
         boolean isExcluded = containsIgnoreCase(loot.habitats.exclude_triggerVolumes, ctx.triggerKey());
         if (isExcluded) {
             return Math.round(this.weight * loot.habitats.weight_multiplier);
@@ -279,6 +310,7 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
         float val;
         if ((val = getVal(m.itemModifiers, loot.getItemID())) != -1f) return val;
         if ((val = getVal(m.familyModifiers, loot.getFamilyId())) != -1f) return val;
+        if (ctx.triggerKey() != null && (val = getVal(m.triggerVolumeModifiers, ctx.triggerKey())) != -1f) return val;
         if ((val = getVal(m.biomeModifiers, ctx.biome())) != -1f) return val;
         if ((val = getVal(m.zoneModifiers, ctx.zone())) != -1f) return val;
 
@@ -310,8 +342,12 @@ public class FishLootManager extends FishLoot implements JsonAssetWithMap<String
 
     public static FishLootManager getFishDataByItemID(String itemID) {
         if (itemID == null) return null;
+        String baseId = itemID.startsWith("*") ? FishStateManager.getBaseItemId(itemID) : itemID;
         return getInternalAllLoot().stream()
-                .filter(loot -> loot.getItemID() != null && loot.getItemID().equalsIgnoreCase(itemID))
+                .filter(loot -> loot.getItemID() != null && (
+                        loot.getItemID().equalsIgnoreCase(itemID) ||
+                        loot.getItemID().equalsIgnoreCase(baseId)
+                ))
                 .findFirst()
                 .orElse(null);
     }

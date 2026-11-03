@@ -21,6 +21,7 @@ import dev.rm20.anglersalmanac.Models.MinigameRodStats;
 import dev.rm20.anglersalmanac.Registration.*;
 import dev.rm20.anglersalmanac.Models.FishLootManager;
 import dev.rm20.anglersalmanac.Utils.BaitUtils;
+import dev.rm20.anglersalmanac.Utils.FishStateManager;
 import dev.rm20.anglersalmanac.Utils.Intergration.MMOSkillTree;
 import dev.rm20.anglersalmanac.Utils.Intergration.ThankmasVaultHook;
 import dev.rm20.anglersalmanac.api.AnglersAlmanacAPI;
@@ -91,6 +92,12 @@ public class AnglersAlmanac extends JavaPlugin {
         MinigameRegistry.register("NoMinigame", new NoMinigameHandler());
     }
 
+
+    @Override
+    protected void start() {
+        super.start();
+        FishStateManager.registerAllFishStates();
+    }
 
     @Override
     protected void shutdown() {
